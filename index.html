@@ -3,764 +3,1078 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusConnect | Infinity Group</title>
+    <title>CampusConnect - Infinity Group</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        /* CSS Variables for easy theme management */
-        :root {
-            --primary-color: #1877F2;
-            --secondary-color: #42b72a;
-            --background-color: #F0F2F5;
-            --card-background: #FFFFFF;
-            --text-color: #050505;
-            --text-secondary-color: #65676B;
-            --border-color: #CED0D4;
-            --error-color: #e74c3c;
-            --success-color: #2ecc71;
-        }
-
-        /* Base Styles */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        /* Custom styles */
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
         }
-
-        /* View Container */
-        .view {
-            display: none;
-            min-height: 100vh;
-            width: 100%;
-        }
-        .view.active {
-            display: block;
-        }
-        
-        /* --- Loading Spinner View --- */
-        #loadingView {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .spinner {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary-color);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* --- Authentication (Login/Signup) Styles --- */
-        .auth-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
-        }
-        .auth-card {
-            background-color: var(--card-background);
-            padding: 25px 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 420px;
-            text-align: center;
-        }
-        .auth-card h1 {
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-        }
-        .auth-card p {
-            color: var(--text-secondary-color);
-            margin-bottom: 25px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 1rem;
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
-        }
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        .btn-primary:hover {
-            background-color: #166FE5;
-        }
-        .btn-secondary {
-            background-color: var(--secondary-color);
-            color: white;
-            margin-top: 10px;
-        }
-        .btn-secondary:hover {
-            background-color: #36A420;
-        }
-        .divider {
-            border-top: 1px solid var(--border-color);
-            margin: 25px 0;
-        }
-        .auth-switch-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .auth-switch-link:hover {
-            text-decoration: underline;
-        }
-        .message-box {
-            padding: 12px;
-            margin-bottom: 15px;
-            border-radius: 6px;
+        .hidden {
             display: none;
         }
-        .message-box.error {
-            background-color: #ffebe8;
-            color: var(--error-color);
-            border: 1px solid var(--error-color);
+        /* Custom scrollbar for chat and user lists */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
         }
-        .message-box.success {
-            background-color: #e8f5e9;
-            color: var(--success-color);
-            border: 1px solid var(--success-color);
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
         }
-
-        /* --- Pending/Rejected View --- */
-        .status-card {
-            text-align: center;
-            max-width: 500px;
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
         }
-        .status-card i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
-        .status-card .fa-paper-plane { color: var(--primary-color); }
-        .status-card .fa-times-circle { color: var(--error-color); }
-
-        /* --- Main App Layout --- */
-        header {
-            background: var(--card-background);
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 60px;
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        /* Simple animation for modals */
+        .modal-enter {
+            animation: fadeIn 0.3s ease-out;
         }
-        .logo {
-            font-size: 1.7rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        .nav-btn {
-            background: none;
-            border: none;
-            font-size: 1.3rem;
-            color: var(--text-secondary-color);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .nav-btn:hover { background-color: var(--background-color); }
-        .nav-btn.admin { color: var(--secondary-color); font-weight: bold; }
-        
-        main {
-            padding: 1.5rem 2rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* --- Post Creation & Feed --- */
-        .card {
-            background: var(--card-background);
-            border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-        }
-        #postContent {
-            width: 100%;
-            border: none;
-            resize: none;
-            font-size: 1rem;
-            padding: 0.5rem;
-            min-height: 60px;
-        }
-        #postContent:focus { outline: none; }
-        .post-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid #eee;
-            padding-top: 10px;
-            margin-top: 10px;
-        }
-        #postImageUpload { display: none; }
-        .upload-label { cursor: pointer; color: var(--secondary-color); font-weight: 500; }
-        .upload-label i { margin-right: 5px; }
-
-        .post-card { padding: 0; }
-        .post-header { display: flex; align-items: center; padding: 12px 16px; gap: 10px; }
-        .post-author-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-        .post-author-info strong { font-weight: 600; }
-        .post-author-info small { color: var(--text-secondary-color); font-size: 0.8rem; }
-        .post-content { padding: 4px 16px 12px; white-space: pre-wrap; }
-        .post-image { width: 100%; max-height: 500px; object-fit: cover; }
-        .post-stats { padding: 8px 16px; color: var(--text-secondary-color); font-size: 0.9rem; border-top: 1px solid #eee; }
-        .post-footer { display: flex; justify-content: space-around; border-top: 1px solid #eee; }
-        .post-footer-btn { flex: 1; background: none; border: none; cursor: pointer; padding: 10px; border-radius: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; color: var(--text-secondary-color); }
-        .post-footer-btn:hover { background: var(--background-color); }
-        .post-footer-btn.liked { color: var(--primary-color); }
-        .comments-section { padding: 0 16px 12px; display: none; }
-        .comment-form { display: flex; gap: 10px; margin-top: 10px; }
-        .comment-input { flex-grow: 1; border: 1px solid var(--border-color); border-radius: 20px; padding: 8px 12px; }
-        .comment { display: flex; gap: 10px; margin-top: 10px; }
-        .comment-body { background: var(--background-color); padding: 8px 12px; border-radius: 18px; }
-
-        /* --- Admin Panel --- */
-        #adminView main { max-width: 960px; }
-        .user-approval-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .user-info p { margin: 2px 0; font-size: 0.9rem; }
-        .user-actions button {
-            padding: 8px 12px;
-            margin-left: 10px;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .btn-approve { background-color: var(--secondary-color); }
-        .btn-reject { background-color: var(--error-color); }
-
-        @media (max-width: 768px) {
-            header { padding: 0 1rem; }
-            main { padding: 1rem; }
-            .auth-card { box-shadow: none; border-radius: 0; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
-<body>
+<body class="text-gray-800">
 
-    <div id="loadingView" class="view active">
-        <div class="spinner"></div>
-    </div>
+    <!-- =========== Main Application Container =========== -->
+    <div id="app-container">
 
-    <!-- Login View -->
-    <div id="loginView" class="view">
-        <div class="auth-wrapper">
-            <div class="auth-card">
-                <h1>CampusConnect</h1>
-                <p>Connect with your college friends.</p>
-                <div id="loginMessage" class="message-box"></div>
-                <form id="loginForm">
-                    <div class="form-group"><input type="email" id="loginEmail" placeholder="Email Address" required></div>
-                    <div class="form-group"><input type="password" id="loginPassword" placeholder="Password" required></div>
-                    <button type="submit" class="btn btn-primary">Log In</button>
-                </form>
-                <div class="divider"></div>
-                <button id="showSignupBtn" class="btn btn-secondary">Create New Account</button>
-            </div>
+        <!-- =========== Loading Spinner =========== -->
+        <div id="loading-spinner" class="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
         </div>
-    </div>
 
-    <!-- Signup View -->
-    <div id="signupView" class="view">
-        <div class="auth-wrapper">
-            <div class="auth-card">
-                <h1>Sign Up</h1>
-                <p>It's quick and easy.</p>
-                <div id="signupMessage" class="message-box"></div>
-                <form id="signupForm">
-                    <div class="form-group"><input type="text" id="signupName" placeholder="Full Name" required></div>
-                    <div class="form-group"><input type="email" id="signupEmail" placeholder="Email Address" required></div>
-                    <div class="form-group"><input type="password" id="signupPassword" placeholder="New Password (min. 6 characters)" required></div>
-                    <div class="form-group"><input type="text" id="signupRoll" placeholder="College Roll Number" required></div>
-                    <div class="form-group"><input type="text" id="signupDept" placeholder="Department" required></div>
-                    <div class="form-group"><input type="text" id="signupClass" placeholder="Class / Year" required></div>
-                    <div class="form-group">
-                        <select id="signupGender" required>
-                            <option value="" disabled selected>Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group"><input type="text" id="signupReligion" placeholder="Religion" required></div>
-                    <button type="submit" class="btn btn-secondary">Sign Up</button>
-                </form>
-                <p style="margin-top: 15px; margin-bottom: 0;">Already have an account? <a href="#" id="showLoginBtn" class="auth-switch-link">Log In</a></p>
-            </div>
+        <!-- =========== Notification Area =========== -->
+        <div id="notification-area" class="hidden fixed top-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg z-50">
+            <p id="notification-message"></p>
         </div>
-    </div>
+        <div id="error-area" class="hidden fixed top-5 right-5 bg-red-500 text-white py-2 px-4 rounded-lg shadow-lg z-50">
+            <p id="error-message"></p>
+        </div>
 
-    <!-- Status Views (Pending/Rejected) -->
-    <div id="pendingView" class="view">
-        <div class="auth-wrapper">
-            <div class="auth-card status-card">
-                <i class="fas fa-paper-plane"></i>
-                <h1>Application Submitted!</h1>
-                <p>Your account is waiting for approval from an administrator. You will be notified once it's active.</p>
-                <button id="pendingLogoutBtn" class="btn btn-primary">Logout</button>
-            </div>
-        </div>
-    </div>
-    <div id="rejectedView" class="view">
-        <div class="auth-wrapper">
-            <div class="auth-card status-card">
-                <i class="fas fa-times-circle"></i>
-                <h1>Application Rejected</h1>
-                <p>Sorry, your application to join was not approved. Please contact the administration if you think this is a mistake.</p>
-                <button id="rejectedLogoutBtn" class="btn btn-primary">Logout</button>
-            </div>
-        </div>
-    </div>
 
-    <!-- Main App View -->
-    <div id="mainView" class="view">
-        <header>
-            <div class="logo">CampusConnect</div>
-            <nav class="nav-actions">
-                <button id="homeBtn" class="nav-btn" title="Home"><i class="fas fa-home"></i></button>
-                <button id="adminPanelBtn" class="nav-btn admin" title="Admin Panel" style="display: none;"><i class="fas fa-user-shield"></i></button>
-                <button id="logoutBtn" class="nav-btn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
-            </nav>
-        </header>
-        <main>
-            <div class="card">
-                <textarea id="postContent" placeholder="What's on your mind?"></textarea>
-                <div class="post-actions">
-                    <label for="postImageUpload" class="upload-label"><i class="fas fa-image"></i> Add Photo</label>
-                    <input type="file" id="postImageUpload" accept="image/*">
-                    <button id="submitPostBtn" class="btn btn-primary" style="width: auto; padding: 8px 20px;">Post</button>
+        <!-- =========== Login & Signup Pages =========== -->
+        <div id="auth-section">
+            <!-- Login Page -->
+            <div id="login-page" class="min-h-screen flex items-center justify-center">
+                <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+                    <h2 class="text-3xl font-bold text-center text-blue-600 mb-2">Welcome to CampusConnect</h2>
+                    <p class="text-center text-gray-500 mb-6">Login to connect with your campus.</p>
+                    <form id="login-form">
+                        <div class="mb-4">
+                            <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" id="login-email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="mb-6">
+                            <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <input type="password" id="login-password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300 font-semibold">Login</button>
+                    </form>
+                    <p class="text-center mt-4 text-sm">
+                        Don't have an account? <a href="#" id="show-signup-link" class="text-blue-600 hover:underline">Sign Up</a>
+                    </p>
                 </div>
             </div>
-            <div id="postsContainer"></div>
-        </main>
+
+            <!-- Signup Page -->
+            <div id="signup-page" class="hidden min-h-screen flex items-center justify-center py-12">
+                <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-2xl">
+                    <h2 class="text-3xl font-bold text-center text-blue-600 mb-2">Create Your Account</h2>
+                    <p class="text-center text-gray-500 mb-6">Join CampusConnect today! Your account will be pending approval.</p>
+                    <form id="signup-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Column 1 -->
+                        <div>
+                            <div class="mb-4">
+                                <label for="signup-name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                                <input type="text" id="signup-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div class="mb-4">
+                                <label for="signup-email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                                <input type="email" id="signup-email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div class="mb-4">
+                                <label for="signup-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                                <input type="password" id="signup-password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                             <div class="mb-4">
+                                <label for="signup-roll" class="block text-sm font-medium text-gray-700 mb-1">Roll Number / Student ID</label>
+                                <input type="text" id="signup-roll" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <!-- Column 2 -->
+                        <div>
+                            <div class="mb-4">
+                                <label for="signup-department" class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                                <input type="text" id="signup-department" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div class="mb-4">
+                                <label for="signup-class" class="block text-sm font-medium text-gray-700 mb-1">Class / Year</label>
+                                <input type="text" id="signup-class" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div class="mb-4">
+                                <label for="signup-gender" class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                                <select id="signup-gender" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label for="signup-religion" class="block text-sm font-medium text-gray-700 mb-1">Religion</label>
+                                <input type="text" id="signup-religion" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <div class="md:col-span-2">
+                            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300 font-semibold">Sign Up</button>
+                        </div>
+                    </form>
+                    <p class="text-center mt-4 text-sm">
+                        Already have an account? <a href="#" id="show-login-link" class="text-blue-600 hover:underline">Login</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========== Main Application (after login) =========== -->
+        <div id="main-app" class="hidden">
+            <!-- Header -->
+            <header class="bg-white shadow-md sticky top-0 z-40">
+                <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+                    <h1 class="text-2xl font-bold text-blue-600">CampusConnect</h1>
+                    <div class="flex items-center space-x-4">
+                        <button id="admin-panel-btn" class="hidden bg-yellow-500 text-white px-3 py-1 rounded-lg hover:bg-yellow-600 text-sm font-semibold">
+                            <i class="fas fa-user-shield mr-1"></i> Admin Panel
+                        </button>
+                        <div id="user-profile-menu" class="relative">
+                             <button id="user-avatar-btn" class="flex items-center space-x-2">
+                                <span id="header-username" class="font-semibold">User</span>
+                                <img id="header-avatar" src="https://placehold.co/40x40/E2E8F0/4A5568?text=U" alt="User Avatar" class="w-8 h-8 rounded-full bg-gray-300">
+                             </button>
+                        </div>
+                         <button id="logout-btn" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 text-sm font-semibold">
+                            <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="container mx-auto p-4 grid grid-cols-12 gap-6">
+                <!-- Left Sidebar (Navigation & Profile) -->
+                <aside class="col-span-12 md:col-span-3">
+                    <div class="bg-white p-4 rounded-xl shadow">
+                        <h3 class="font-bold text-lg mb-4">Navigation</h3>
+                        <nav>
+                            <ul>
+                                <li><a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100" id="feed-link"><i class="fas fa-home w-5 text-center text-blue-500"></i><span>Home Feed</span></a></li>
+                                <li><a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100" id="notices-link"><i class="fas fa-bullhorn w-5 text-center text-green-500"></i><span>Notice Board</span></a></li>
+                                <li><a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100" id="messages-link"><i class="fas fa-comments w-5 text-center text-purple-500"></i><span>Messages</span></a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </aside>
+
+                <!-- Center Content (Feed, Notices, etc.) -->
+                <div id="center-content" class="col-span-12 md:col-span-6">
+                    <!-- Home Feed Section -->
+                    <div id="feed-section">
+                        <!-- Create Post Box -->
+                        <div class="bg-white p-4 rounded-xl shadow mb-6">
+                            <textarea id="post-content" class="w-full p-2 border border-gray-200 rounded-lg" rows="3" placeholder="What's on your mind?"></textarea>
+                            <div class="flex justify-between items-center mt-2">
+                                <div>
+                                    <label for="post-image" class="cursor-pointer text-blue-500 hover:text-blue-700">
+                                        <i class="fas fa-image"></i> Add Image
+                                    </label>
+                                    <input type="file" id="post-image" class="hidden" accept="image/*">
+                                    <span id="image-name" class="text-sm text-gray-500 ml-2"></span>
+                                </div>
+                                <button id="create-post-btn" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-semibold">Post</button>
+                            </div>
+                        </div>
+                        <!-- Posts Container -->
+                        <div id="posts-container" class="space-y-6">
+                            <!-- Posts will be dynamically inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- Notice Board Section -->
+                    <div id="notices-section" class="hidden">
+                         <!-- Create Notice Box (Admin only) -->
+                        <div id="create-notice-box" class="hidden bg-white p-4 rounded-xl shadow mb-6">
+                            <h3 class="text-xl font-bold mb-2">Create New Notice</h3>
+                            <input id="notice-title" class="w-full p-2 border border-gray-200 rounded-lg mb-2" placeholder="Notice Title">
+                            <textarea id="notice-content" class="w-full p-2 border border-gray-200 rounded-lg" rows="4" placeholder="Notice details..."></textarea>
+                            <div class="text-right mt-2">
+                                <button id="create-notice-btn" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 font-semibold">Post Notice</button>
+                            </div>
+                        </div>
+                        <!-- Notices Container -->
+                        <div id="notices-container" class="space-y-6">
+                            <!-- Notices will be dynamically inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- Messages Section -->
+                    <div id="messages-section" class="hidden">
+                        <div class="bg-white rounded-xl shadow">
+                           <div id="chat-container" class="flex h-[70vh]">
+                               <!-- User List -->
+                               <div class="w-1/3 border-r border-gray-200">
+                                   <div class="p-4 border-b border-gray-200">
+                                       <h3 class="font-bold text-lg">Conversations</h3>
+                                   </div>
+                                   <div id="users-list" class="overflow-y-auto h-full custom-scrollbar">
+                                       <!-- User list for chat will be inserted here -->
+                                   </div>
+                               </div>
+                               <!-- Chat Window -->
+                               <div id="chat-window" class="w-2/3 flex flex-col">
+                                   <!-- Default view when no chat is selected -->
+                                   <div id="select-chat-view" class="flex-grow flex flex-col items-center justify-center text-gray-400">
+                                       <i class="fas fa-comments text-6xl mb-4"></i>
+                                       <p class="text-lg">Select a conversation to start chatting</p>
+                                   </div>
+                                   <!-- Active chat view -->
+                                   <div id="active-chat-view" class="hidden flex-grow flex flex-col">
+                                       <div class="p-4 border-b border-gray-200 flex items-center space-x-3">
+                                           <img id="chat-partner-avatar" src="https://placehold.co/40x40/E2E8F0/4A5568?text=U" class="w-10 h-10 rounded-full">
+                                           <h4 id="chat-partner-name" class="font-bold"></h4>
+                                       </div>
+                                       <div id="messages-display" class="flex-grow p-4 overflow-y-auto custom-scrollbar bg-gray-50 space-y-4">
+                                           <!-- Messages will be inserted here -->
+                                       </div>
+                                       <div class="p-4 border-t border-gray-200">
+                                           <form id="message-form" class="flex space-x-3">
+                                               <input id="message-input" type="text" placeholder="Type a message..." class="flex-grow px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                               <button type="submit" class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-blue-700">
+                                                   <i class="fas fa-paper-plane"></i>
+                                               </button>
+                                           </form>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar (Maybe for friends/suggestions later) -->
+                <aside class="hidden md:block md:col-span-3">
+                    <div class="bg-white p-4 rounded-xl shadow">
+                        <h3 class="font-bold text-lg mb-4">Campus Members</h3>
+                        <div id="campus-members-list" class="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
+                            <!-- Approved user list will be here -->
+                        </div>
+                    </div>
+                </aside>
+            </main>
+        </div>
+
+        <!-- =========== Admin Panel Modal =========== -->
+        <div id="admin-panel-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl h-[90vh] flex flex-col modal-enter">
+                <div class="p-4 border-b flex justify-between items-center">
+                    <h2 class="text-2xl font-bold">Admin Panel - Account Approvals</h2>
+                    <button id="close-admin-panel-btn" class="text-gray-500 hover:text-gray-800">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto flex-grow">
+                    <p class="text-gray-600 mb-4">Review new user registrations and approve or reject them.</p>
+                    <div id="pending-users-container" class="space-y-4">
+                        <!-- Pending user cards will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- =========== Comments Modal =========== -->
+        <div id="comments-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl h-[80vh] flex flex-col modal-enter">
+                 <div class="p-4 border-b flex justify-between items-center">
+                    <h2 class="text-xl font-bold">Comments</h2>
+                    <button id="close-comments-modal-btn" class="text-gray-500 hover:text-gray-800">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <div id="comments-list" class="flex-grow p-4 overflow-y-auto custom-scrollbar space-y-4">
+                    <!-- Comments will be loaded here -->
+                </div>
+                <div class="p-4 border-t">
+                    <form id="comment-form" class="flex space-x-3">
+                       <input id="comment-input" type="text" placeholder="Write a comment..." class="flex-grow px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                       <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 font-semibold">Post</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Admin Panel View -->
-    <div id="adminView" class="view">
-        <header>
-            <div class="logo">Admin Panel</div>
-            <nav class="nav-actions">
-                <button id="backToHomeBtn" class="nav-btn" title="Back to Home"><i class="fas fa-arrow-left"></i></button>
-            </nav>
-        </header>
-        <main>
-            <h2>Pending User Approvals</h2>
-            <div id="pendingUsersContainer"></div>
-        </main>
-    </div>
-
-    <!-- JavaScript with Firebase -->
+    <!-- Firebase SDKs -->
     <script type="module">
-        // Import Firebase functions
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, addDoc, serverTimestamp, orderBy, onSnapshot, updateDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+        // --------------------------------------------------------------------
+        // --- Firebase Initialization ---
+        // --------------------------------------------------------------------
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc, 
+            getDoc, 
+            collection, 
+            addDoc,
+            query, 
+            where, 
+            getDocs,
+            onSnapshot,
+            updateDoc,
+            arrayUnion,
+            arrayRemove,
+            orderBy,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+        import { 
+            getStorage, 
+            ref, 
+            uploadBytes, 
+            getDownloadURL 
+        } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-storage.js";
 
-        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
             authDomain: "campusconnect-a8447.firebaseapp.com",
             projectId: "campusconnect-a8447",
-            storageBucket: "campusconnect-a8447.appspot.com", // Make sure this is correct
+            storageBucket: "campusconnect-a8447.appspot.com",
             messagingSenderId: "512467118728",
             appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
             measurementId: "G-62XR5TLSN7"
         };
-        
+
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const storage = getStorage(app);
+
+        // Global state
+        let currentUser = null;
+        let currentUserData = null;
+        let currentChatPartnerId = null;
+        let unsubscribePosts = null;
+        let unsubscribeNotices = null;
+        let unsubscribeMessages = null;
+        let unsubscribeUsers = null;
+
+        // --------------------------------------------------------------------
+        // --- UI Element References ---
+        // --------------------------------------------------------------------
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const authSection = document.getElementById('auth-section');
+        const mainApp = document.getElementById('main-app');
+        const loginPage = document.getElementById('login-page');
+        const signupPage = document.getElementById('signup-page');
         
-        // --- ADMIN UID ---
-        // দ্বিতীয় ধাপ থেকে পাওয়া আপনার অ্যাডমিন অ্যাকাউন্টের UID এখানে পেস্ট করুন।
-        const ADMIN_UID = "আপনার কপি করা অ্যাডমিন UID এখানে পেস্ট করুন";
+        const feedSection = document.getElementById('feed-section');
+        const noticesSection = document.getElementById('notices-section');
+        const messagesSection = document.getElementById('messages-section');
 
-        // --- DOM Elements & Global State ---
-        const views = document.querySelectorAll('.view');
-        let currentUnsubscribe = null; // To hold the posts listener
-
-        // --- Helper Functions ---
-        function showView(viewId) {
-            views.forEach(v => v.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
-        }
-
-        function showMessage(elementId, text, type = 'error') {
-            const el = document.getElementById(elementId);
-            el.textContent = text;
-            el.className = `message-box ${type}`;
-            el.style.display = 'block';
-        }
-
-        function hideMessage(elementId) {
-            document.getElementById(elementId).style.display = 'none';
-        }
-
-        function formatTimestamp(timestamp) {
-            if (!timestamp) return 'a moment ago';
-            return timestamp.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
-        }
+        const adminPanelBtn = document.getElementById('admin-panel-btn');
+        const adminPanelModal = document.getElementById('admin-panel-modal');
+        const commentsModal = document.getElementById('comments-modal');
         
-        // --- Authentication State Management ---
+        // --------------------------------------------------------------------
+        // --- Utility & UI Functions ---
+        // --------------------------------------------------------------------
+        
+        const showLoading = (show) => {
+            loadingSpinner.style.display = show ? 'flex' : 'none';
+        };
+
+        const showNotification = (message, isError = false) => {
+            const area = isError ? document.getElementById('error-area') : document.getElementById('notification-area');
+            const msgElement = isError ? document.getElementById('error-message') : document.getElementById('notification-message');
+            
+            msgElement.textContent = message;
+            area.classList.remove('hidden');
+            setTimeout(() => {
+                area.classList.add('hidden');
+            }, 3000);
+        };
+
+        const switchView = (view) => {
+            // Hide all main sections first
+            feedSection.classList.add('hidden');
+            noticesSection.classList.add('hidden');
+            messagesSection.classList.add('hidden');
+
+            // Show the selected view
+            if (view === 'feed') feedSection.classList.remove('hidden');
+            else if (view === 'notices') noticesSection.classList.remove('hidden');
+            else if (view === 'messages') messagesSection.classList.remove('hidden');
+        };
+
+        // --------------------------------------------------------------------
+        // --- Authentication Logic ---
+        // --------------------------------------------------------------------
+
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                // User is signed in.
                 const userDocRef = doc(db, "users", user.uid);
-                const userDoc = await getDoc(userDocRef);
-                if (userDoc.exists()) {
-                    const { status, name } = userDoc.data();
-                    if (status === 'approved') {
-                        showView('mainView');
-                        document.getElementById('welcomeUser').textContent = `Welcome, ${name}`;
-                        if (user.uid === ADMIN_UID) {
-                            document.getElementById('adminPanelBtn').style.display = 'flex';
-                        }
-                        attachPostsListener();
-                    } else if (status === 'pending') {
-                        showView('pendingView');
-                    } else if (status === 'rejected') {
-                        showView('rejectedView');
-                    } else {
-                        handleLogout(); // Unknown status
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    if (userData.status === 'approved') {
+                        currentUser = user;
+                        currentUserData = { id: user.uid, ...userData };
+                        
+                        authSection.classList.add('hidden');
+                        mainApp.classList.remove('hidden');
+                        
+                        setupUIForLoggedInUser();
+                        fetchAllData();
+                        
+                    } else if (userData.status === 'pending') {
+                        showNotification("Your account is pending approval from an administrator.", true);
+                        await signOut(auth);
+                    } else if (userData.status === 'rejected') {
+                        showNotification("Your account registration was rejected.", true);
+                        await signOut(auth);
                     }
                 } else {
-                    handleLogout(); // Firestore document not found
+                    // This case might happen if the user doc was deleted but auth record remains.
+                    showNotification("User data not found. Please contact support.", true);
+                    await signOut(auth);
                 }
             } else {
-                showView('loginView');
-                if (currentUnsubscribe) currentUnsubscribe(); // Detach listener on logout
+                // User is signed out.
+                currentUser = null;
+                currentUserData = null;
+                authSection.classList.remove('hidden');
+                mainApp.classList.add('hidden');
+                
+                // Cleanup listeners
+                if (unsubscribePosts) unsubscribePosts();
+                if (unsubscribeNotices) unsubscribeNotices();
+                if (unsubscribeMessages) unsubscribeMessages();
+                if (unsubscribeUsers) unsubscribeUsers();
+            }
+            showLoading(false);
+        });
+
+        // Signup Handler
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showLoading(true);
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const roll = document.getElementById('signup-roll').value;
+            const department = document.getElementById('signup-department').value;
+            const userClass = document.getElementById('signup-class').value;
+            const gender = document.getElementById('signup-gender').value;
+            const religion = document.getElementById('signup-religion').value;
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Create user document in Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    name: name,
+                    email: email,
+                    roll: roll,
+                    department: department,
+                    class: userClass,
+                    gender: gender,
+                    religion: religion,
+                    status: 'pending', // 'pending', 'approved', 'rejected'
+                    role: 'student', // 'student', 'admin'
+                    createdAt: serverTimestamp(),
+                    profilePicUrl: `https://placehold.co/100x100/E2E8F0/4A5568?text=${name.charAt(0).toUpperCase()}`
+                });
+
+                showNotification("Registration successful! Your account is now pending approval.");
+                document.getElementById('signup-form').reset();
+                loginPage.classList.remove('hidden');
+                signupPage.classList.add('hidden');
+
+            } catch (error) {
+                console.error("Signup Error:", error);
+                showNotification(error.message, true);
+            } finally {
+                showLoading(false);
             }
         });
 
-        // --- UI Event Listeners ---
-        document.getElementById('showSignupBtn').addEventListener('click', (e) => { e.preventDefault(); showView('signupView'); });
-        document.getElementById('showLoginBtn').addEventListener('click', (e) => { e.preventDefault(); showView('loginView'); });
-        document.getElementById('logoutBtn').addEventListener('click', handleLogout);
-        document.getElementById('pendingLogoutBtn').addEventListener('click', handleLogout);
-        document.getElementById('rejectedLogoutBtn').addEventListener('click', handleLogout);
-        document.getElementById('homeBtn').addEventListener('click', () => showView('mainView'));
-        document.getElementById('adminPanelBtn').addEventListener('click', handleAdminPanel);
-        document.getElementById('backToHomeBtn').addEventListener('click', () => showView('mainView'));
-        
-        // --- Auth Forms ---
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        // Login Handler
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            hideMessage('loginMessage');
+            showLoading(true);
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                // onAuthStateChanged will handle the view change
+                // onAuthStateChanged will handle the rest
             } catch (error) {
-                showMessage('loginMessage', 'Incorrect email or password. Please try again.');
+                console.error("Login Error:", error);
+                showNotification("Invalid credentials or account not approved.", true);
+                showLoading(false);
             }
         });
 
-        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+        // Logout Handler
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            showLoading(true);
+            await signOut(auth);
+            // onAuthStateChanged will handle UI changes
+        });
+
+        // Auth page navigation
+        document.getElementById('show-signup-link').addEventListener('click', (e) => {
             e.preventDefault();
-            hideMessage('signupMessage');
-            const password = document.getElementById('signupPassword').value;
-            if (password.length < 6) {
-                showMessage('signupMessage', 'Password must be at least 6 characters long.');
+            loginPage.classList.add('hidden');
+            signupPage.classList.remove('hidden');
+        });
+        document.getElementById('show-login-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            loginPage.classList.remove('hidden');
+            signupPage.classList.add('hidden');
+        });
+
+        // --------------------------------------------------------------------
+        // --- Main App Setup & Data Fetching ---
+        // --------------------------------------------------------------------
+        
+        function setupUIForLoggedInUser() {
+            document.getElementById('header-username').textContent = currentUserData.name;
+            document.getElementById('header-avatar').src = currentUserData.profilePicUrl;
+
+            if (currentUserData.role === 'admin') {
+                adminPanelBtn.classList.remove('hidden');
+                document.getElementById('create-notice-box').classList.remove('hidden');
+            } else {
+                adminPanelBtn.classList.add('hidden');
+                document.getElementById('create-notice-box').classList.add('hidden');
+            }
+            switchView('feed'); // Default view
+        }
+
+        function fetchAllData() {
+            listenForPosts();
+            listenForNotices();
+            listenForUsersForChat();
+            listenForCampusMembers();
+        }
+
+        // --------------------------------------------------------------------
+        // --- Post & Feed Logic ---
+        // --------------------------------------------------------------------
+        
+        document.getElementById('create-post-btn').addEventListener('click', async () => {
+            const content = document.getElementById('post-content').value.trim();
+            const imageFile = document.getElementById('post-image').files[0];
+
+            if (!content && !imageFile) {
+                showNotification("Post cannot be empty.", true);
                 return;
             }
-
-            try {
-                const email = document.getElementById('signupEmail').value;
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                
-                await setDoc(doc(db, "users", userCredential.user.uid), {
-                    uid: userCredential.user.uid,
-                    name: document.getElementById('signupName').value,
-                    email: email,
-                    roll: document.getElementById('signupRoll').value,
-                    department: document.getElementById('signupDept').value,
-                    userClass: document.getElementById('signupClass').value,
-                    gender: document.getElementById('signupGender').value,
-                    religion: document.getElementById('signupReligion').value,
-                    status: 'pending',
-                    createdAt: serverTimestamp()
-                });
-                // onAuthStateChanged will redirect to pending view
-            } catch (error) {
-                const msg = error.code === 'auth/email-already-in-use' ? 'This email is already registered.' : 'Failed to create account. Please try again.';
-                showMessage('signupMessage', msg);
-            }
-        });
-        
-        function handleLogout() {
-            signOut(auth).catch(err => console.error("Logout failed:", err));
-        }
-        
-        // --- Main App Functionality (Posts) ---
-        function attachPostsListener() {
-            const postsQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-            currentUnsubscribe = onSnapshot(postsQuery, (snapshot) => {
-                const container = document.getElementById('postsContainer');
-                container.innerHTML = '';
-                if (snapshot.empty) {
-                    container.innerHTML = '<p style="text-align:center;">No posts yet. Be the first to share!</p>';
-                    return;
-                }
-                snapshot.docs.forEach(postDoc => {
-                    const postCard = createPostElement(postDoc.id, postDoc.data());
-                    container.appendChild(postCard);
-                });
-            });
-        }
-        
-        document.getElementById('submitPostBtn').addEventListener('click', async () => {
-            const content = document.getElementById('postContent').value.trim();
-            const imageFile = document.getElementById('postImageUpload').files[0];
-            const user = auth.currentUser;
-            if (!content && !imageFile) return alert("Post cannot be empty.");
-
-            const btn = document.getElementById('submitPostBtn');
-            btn.disabled = true;
-            btn.textContent = 'Posting...';
-
+            
+            showLoading(true);
             try {
                 let imageUrl = '';
                 if (imageFile) {
-                    const storageRef = ref(storage, `posts/${user.uid}/${Date.now()}`);
+                    const storageRef = ref(storage, `posts/${currentUser.uid}/${Date.now()}_${imageFile.name}`);
                     const snapshot = await uploadBytes(storageRef, imageFile);
                     imageUrl = await getDownloadURL(snapshot.ref);
                 }
 
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                const authorName = userDoc.data().name;
-
                 await addDoc(collection(db, "posts"), {
-                    uid: user.uid,
-                    authorName: authorName,
-                    content,
-                    imageUrl,
-                    createdAt: serverTimestamp(),
-                    likes: 0,
-                    comments: 0
+                    authorId: currentUser.uid,
+                    authorName: currentUserData.name,
+                    authorAvatar: currentUserData.profilePicUrl,
+                    content: content,
+                    imageUrl: imageUrl,
+                    likes: [],
+                    comments: [],
+                    createdAt: serverTimestamp()
                 });
 
-                document.getElementById('postContent').value = '';
-                document.getElementById('postImageUpload').value = '';
+                document.getElementById('post-content').value = '';
+                document.getElementById('post-image').value = '';
+                document.getElementById('image-name').textContent = '';
+                showNotification("Post created successfully!");
+
             } catch (error) {
                 console.error("Error creating post:", error);
-                alert("Failed to create post.");
+                showNotification("Failed to create post.", true);
             } finally {
-                btn.disabled = false;
-                btn.textContent = 'Post';
+                showLoading(false);
             }
         });
         
-        function createPostElement(postId, postData) {
-            const postEl = document.createElement('div');
-            postEl.className = 'card post-card';
-            postEl.dataset.postId = postId;
-
-            const currentUser = auth.currentUser;
-            const likeRef = doc(db, 'posts', postId, 'likes', currentUser.uid);
-            let isLiked = false;
-            getDoc(likeRef).then(doc => isLiked = doc.exists());
-
-            postEl.innerHTML = `
-                <div class="post-header">
-                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(postData.authorName)}&background=random" alt="Author" class="post-author-img">
-                    <div class="post-author-info">
-                        <strong>${postData.authorName}</strong>
-                        <small>${formatTimestamp(postData.createdAt)}</small>
-                    </div>
-                </div>
-                ${postData.content ? `<div class="post-content">${postData.content}</div>` : ''}
-                ${postData.imageUrl ? `<img src="${postData.imageUrl}" alt="Post Image" class="post-image">` : ''}
-                <div class="post-stats">
-                    <span class="likes-count">${postData.likes || 0} Likes</span> • 
-                    <span class="comments-count">${postData.comments || 0} Comments</span>
-                </div>
-                <div class="post-footer">
-                    <button class="post-footer-btn like-btn ${isLiked ? 'liked' : ''}"><i class="fas fa-thumbs-up"></i> Like</button>
-                    <button class="post-footer-btn comment-btn"><i class="fas fa-comment"></i> Comment</button>
-                </div>
-                <div class="comments-section">
-                    <div class="comment-form">
-                        <input type="text" class="comment-input" placeholder="Write a comment...">
-                    </div>
-                    <div class="comments-list"></div>
-                </div>
-            `;
-            
-            // Event Listeners for post actions
-            postEl.querySelector('.like-btn').addEventListener('click', () => handleLike(postId, postEl));
-            postEl.querySelector('.comment-btn').addEventListener('click', () => toggleComments(postId, postEl));
-            postEl.querySelector('.comment-input').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') handleComment(postId, e.target);
-            });
-            
-            return postEl;
-        }
-
-        async function handleLike(postId, postEl) {
-            const user = auth.currentUser;
-            const postRef = doc(db, "posts", postId);
-            const likeRef = doc(db, 'posts', postId, 'likes', user.uid);
-            
-            await runTransaction(db, async (transaction) => {
-                const likeDoc = await transaction.get(likeRef);
-                const postDoc = await transaction.get(postRef);
-                if (!postDoc.exists()) throw "Post not found!";
-
-                let newLikeCount = postDoc.data().likes || 0;
-                if (likeDoc.exists()) {
-                    transaction.delete(likeRef);
-                    newLikeCount--;
-                } else {
-                    transaction.set(likeRef, { uid: user.uid });
-                    newLikeCount++;
-                }
-                transaction.update(postRef, { likes: Math.max(0, newLikeCount) });
-            });
-        }
-        
-        function toggleComments(postId, postEl) {
-            const section = postEl.querySelector('.comments-section');
-            const isVisible = section.style.display === 'block';
-            section.style.display = isVisible ? 'none' : 'block';
-            if (!isVisible) {
-                fetchComments(postId, postEl);
+        document.getElementById('post-image').addEventListener('change', (e) => {
+            const fileName = e.target.files[0]?.name;
+            if(fileName) {
+                document.getElementById('image-name').textContent = fileName;
             }
-        }
-        
-        function fetchComments(postId, postEl) {
-            const listEl = postEl.querySelector('.comments-list');
-            const q = query(collection(db, "posts", postId, "comments"), orderBy("createdAt", "desc"));
-            onSnapshot(q, (snapshot) => {
-                listEl.innerHTML = '';
-                snapshot.forEach(doc => {
-                    const cData = doc.data();
-                    const commentEl = document.createElement('div');
-                    commentEl.className = 'comment';
-                    commentEl.innerHTML = `
-                        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(cData.authorName)}&background=random" class="post-author-img" style="width:32px; height:32px;">
-                        <div class="comment-body"><strong>${cData.authorName}</strong><p>${cData.text}</p></div>`;
-                    listEl.appendChild(commentEl);
+        });
+
+        function listenForPosts() {
+            const postsContainer = document.getElementById('posts-container');
+            const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+
+            if (unsubscribePosts) unsubscribePosts(); // Unsubscribe from previous listener
+            unsubscribePosts = onSnapshot(q, (querySnapshot) => {
+                postsContainer.innerHTML = '';
+                if (querySnapshot.empty) {
+                    postsContainer.innerHTML = '<p class="text-center text-gray-500">No posts yet. Be the first to share something!</p>';
+                    return;
+                }
+                querySnapshot.forEach((docSnap) => {
+                    const post = { id: docSnap.id, ...docSnap.data() };
+                    const postElement = createPostElement(post);
+                    postsContainer.appendChild(postElement);
                 });
             });
         }
 
-        async function handleComment(postId, inputEl) {
-            const text = inputEl.value.trim();
-            if (!text) return;
-            const user = auth.currentUser;
-            const userDoc = await getDoc(doc(db, "users", user.uid));
-            const authorName = userDoc.data().name;
-
-            await addDoc(collection(db, "posts", postId, "comments"), { text, uid: user.uid, authorName, createdAt: serverTimestamp() });
+        function createPostElement(post) {
+            const div = document.createElement('div');
+            div.className = 'bg-white p-4 rounded-xl shadow';
+            div.id = `post-${post.id}`;
             
+            const hasLiked = post.likes.includes(currentUser.uid);
+            const likeButtonClass = hasLiked ? 'text-blue-600' : 'text-gray-500';
+            const likeButtonText = hasLiked ? 'Liked' : 'Like';
+
+            const timeAgo = post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleString() : 'Just now';
+
+            div.innerHTML = `
+                <div class="flex items-center mb-3">
+                    <img src="${post.authorAvatar}" alt="${post.authorName}" class="w-10 h-10 rounded-full mr-3">
+                    <div>
+                        <p class="font-bold">${post.authorName}</p>
+                        <p class="text-xs text-gray-500">${timeAgo}</p>
+                    </div>
+                </div>
+                <p class="mb-3 whitespace-pre-wrap">${post.content}</p>
+                ${post.imageUrl ? `<img src="${post.imageUrl}" alt="Post image" class="rounded-lg max-h-96 w-full object-cover mb-3">` : ''}
+                <div class="flex justify-between items-center text-gray-500 text-sm mb-2">
+                    <span id="like-count-${post.id}">${post.likes.length} Likes</span>
+                    <span id="comment-count-${post.id}">${post.comments.length} Comments</span>
+                </div>
+                <div class="border-t border-b border-gray-200 py-1 flex justify-around">
+                    <button class="post-like-btn w-full py-1 rounded-md hover:bg-gray-100 ${likeButtonClass}" data-id="${post.id}">
+                        <i class="fas fa-thumbs-up"></i> ${likeButtonText}
+                    </button>
+                    <button class="post-comment-btn w-full py-1 rounded-md hover:bg-gray-100 text-gray-500" data-id="${post.id}">
+                        <i class="fas fa-comment"></i> Comment
+                    </button>
+                </div>
+            `;
+            
+            div.querySelector('.post-like-btn').addEventListener('click', () => toggleLike(post.id, hasLiked));
+            div.querySelector('.post-comment-btn').addEventListener('click', () => openCommentsModal(post.id));
+
+            return div;
+        }
+        
+        async function toggleLike(postId, hasLiked) {
             const postRef = doc(db, "posts", postId);
-            await runTransaction(db, async (t) => {
-                const postDoc = await t.get(postRef);
-                const newCount = (postDoc.data().comments || 0) + 1;
-                t.update(postRef, { comments: newCount });
-            });
-            inputEl.value = '';
+            try {
+                if (hasLiked) {
+                    await updateDoc(postRef, {
+                        likes: arrayRemove(currentUser.uid)
+                    });
+                } else {
+                    await updateDoc(postRef, {
+                        likes: arrayUnion(currentUser.uid)
+                    });
+                }
+            } catch (error) {
+                console.error("Error toggling like:", error);
+                showNotification("Could not update like.", true);
+            }
         }
 
-        // --- Admin Panel ---
-        async function handleAdminPanel() {
-            showView('adminView');
-            const container = document.getElementById('pendingUsersContainer');
-            container.innerHTML = '<div class="spinner" style="margin: 2rem auto;"></div>';
+        // --------------------------------------------------------------------
+        // --- Comments Logic ---
+        // --------------------------------------------------------------------
+        
+        let currentPostIdForComment = null;
 
-            const q = query(collection(db, "users"), where("status", "==", "pending"));
-            const snapshot = await getDocs(q);
-            
-            if (snapshot.empty) {
-                container.innerHTML = '<p>No pending user approvals.</p>';
+        function openCommentsModal(postId) {
+            currentPostIdForComment = postId;
+            commentsModal.classList.remove('hidden');
+            loadComments(postId);
+        }
+
+        document.getElementById('close-comments-modal-btn').addEventListener('click', () => {
+            commentsModal.classList.add('hidden');
+            currentPostIdForComment = null;
+        });
+        
+        async function loadComments(postId) {
+            const commentsList = document.getElementById('comments-list');
+            commentsList.innerHTML = '<p>Loading comments...</p>';
+            const postRef = doc(db, "posts", postId);
+            const postSnap = await getDoc(postRef);
+            if (postSnap.exists()) {
+                const postData = postSnap.data();
+                commentsList.innerHTML = '';
+                if(postData.comments.length === 0) {
+                    commentsList.innerHTML = '<p class="text-center text-gray-500">No comments yet.</p>';
+                } else {
+                    postData.comments.forEach(comment => {
+                        const commentEl = document.createElement('div');
+                        commentEl.className = 'flex items-start space-x-3';
+                        const commentTime = comment.createdAt ? new Date(comment.createdAt.seconds * 1000).toLocaleString() : '';
+                        commentEl.innerHTML = `
+                            <img src="${comment.authorAvatar}" class="w-9 h-9 rounded-full">
+                            <div class="bg-gray-100 p-3 rounded-xl flex-1">
+                                <p class="font-semibold">${comment.authorName}</p>
+                                <p class="text-sm">${comment.text}</p>
+                                <p class="text-xs text-gray-400 mt-1">${commentTime}</p>
+                            </div>
+                        `;
+                        commentsList.appendChild(commentEl);
+                    });
+                }
+            }
+        }
+
+        document.getElementById('comment-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const commentInput = document.getElementById('comment-input');
+            const commentText = commentInput.value.trim();
+            if(!commentText || !currentPostIdForComment) return;
+
+            const newComment = {
+                authorId: currentUser.uid,
+                authorName: currentUserData.name,
+                authorAvatar: currentUserData.profilePicUrl,
+                text: commentText,
+                createdAt: new Date() // Using client-side date for simplicity here
+            };
+
+            const postRef = doc(db, "posts", currentPostIdForComment);
+            try {
+                await updateDoc(postRef, {
+                    comments: arrayUnion(newComment)
+                });
+                commentInput.value = '';
+                loadComments(currentPostIdForComment); // Reload comments
+            } catch (error) {
+                console.error("Error adding comment:", error);
+                showNotification("Failed to add comment.", true);
+            }
+        });
+
+
+        // --------------------------------------------------------------------
+        // --- Notice Board Logic ---
+        // --------------------------------------------------------------------
+        
+        document.getElementById('create-notice-btn').addEventListener('click', async () => {
+            const title = document.getElementById('notice-title').value.trim();
+            const content = document.getElementById('notice-content').value.trim();
+            if(!title || !content) {
+                showNotification("Notice title and content cannot be empty.", true);
                 return;
             }
 
-            container.innerHTML = '';
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                const card = document.createElement('div');
-                card.className = 'card user-approval-card';
-                card.innerHTML = `
-                    <div class="user-info">
-                        <p><strong>Name:</strong> ${data.name}</p>
-                        <p><strong>Email:</strong> ${data.email}</p>
-                        <p><strong>Roll:</strong> ${data.roll} | <strong>Dept:</strong> ${data.department}</p>
-                    </div>
-                    <div class="user-actions">
-                        <button class="btn-approve" data-uid="${data.uid}">Approve</button>
-                        <button class="btn-reject" data-uid="${data.uid}">Reject</button>
-                    </div>`;
-                card.querySelector('.btn-approve').addEventListener('click', (e) => updateUserStatus(e.target.dataset.uid, 'approved', card));
-                card.querySelector('.btn-reject').addEventListener('click', (e) => updateUserStatus(e.target.dataset.uid, 'rejected', card));
-                container.appendChild(card);
+            showLoading(true);
+            try {
+                await addDoc(collection(db, "notices"), {
+                    title: title,
+                    content: content,
+                    authorId: currentUser.uid,
+                    authorName: currentUserData.name,
+                    createdAt: serverTimestamp()
+                });
+                document.getElementById('notice-title').value = '';
+                document.getElementById('notice-content').value = '';
+                showNotification("Notice posted successfully!");
+            } catch (error) {
+                console.error("Error posting notice:", error);
+                showNotification("Failed to post notice.", true);
+            } finally {
+                showLoading(false);
+            }
+        });
+
+        function listenForNotices() {
+            const noticesContainer = document.getElementById('notices-container');
+            const q = query(collection(db, "notices"), orderBy("createdAt", "desc"));
+            
+            if (unsubscribeNotices) unsubscribeNotices();
+            unsubscribeNotices = onSnapshot(q, (querySnapshot) => {
+                noticesContainer.innerHTML = '';
+                if (querySnapshot.empty) {
+                    noticesContainer.innerHTML = '<p class="text-center text-gray-500">No notices available at the moment.</p>';
+                    return;
+                }
+                querySnapshot.forEach((docSnap) => {
+                    const notice = { id: docSnap.id, ...docSnap.data() };
+                    const noticeElement = createNoticeElement(notice);
+                    noticesContainer.appendChild(noticeElement);
+                });
+            });
+        }
+
+        function createNoticeElement(notice) {
+            const div = document.createElement('div');
+            div.className = 'bg-white p-5 rounded-xl shadow border-l-4 border-green-500';
+            const timeAgo = notice.createdAt ? new Date(notice.createdAt.seconds * 1000).toLocaleString() : 'Just now';
+            div.innerHTML = `
+                <h3 class="text-xl font-bold text-gray-800 mb-1">${notice.title}</h3>
+                <p class="text-xs text-gray-500 mb-3">Posted by ${notice.authorName} on ${timeAgo}</p>
+                <p class="text-gray-700 whitespace-pre-wrap">${notice.content}</p>
+            `;
+            return div;
+        }
+        
+        // --------------------------------------------------------------------
+        // --- Messaging Logic ---
+        // --------------------------------------------------------------------
+        
+        function listenForUsersForChat() {
+            const usersListContainer = document.getElementById('users-list');
+            const q = query(collection(db, "users"), where("status", "==", "approved"));
+            
+            if(unsubscribeUsers) unsubscribeUsers();
+            unsubscribeUsers = onSnapshot(q, (querySnapshot) => {
+                usersListContainer.innerHTML = '';
+                querySnapshot.forEach((docSnap) => {
+                    const user = { id: docSnap.id, ...docSnap.data() };
+                    if (user.id === currentUser.uid) return; // Don't list self
+                    
+                    const userElement = document.createElement('div');
+                    userElement.className = 'flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-100';
+                    userElement.dataset.id = user.id;
+                    userElement.dataset.name = user.name;
+                    userElement.dataset.avatar = user.profilePicUrl;
+
+                    userElement.innerHTML = `
+                        <img src="${user.profilePicUrl}" class="w-10 h-10 rounded-full">
+                        <span class="font-semibold">${user.name}</span>
+                    `;
+                    userElement.addEventListener('click', () => startChat(user));
+                    usersListContainer.appendChild(userElement);
+                });
             });
         }
         
-        async function updateUserStatus(uid, newStatus, cardElement) {
-            await updateDoc(doc(db, "users", uid), { status: newStatus });
-            cardElement.remove();
-            alert(`User has been ${newStatus}.`);
+        function startChat(partner) {
+            currentChatPartnerId = partner.id;
+            document.getElementById('select-chat-view').classList.add('hidden');
+            document.getElementById('active-chat-view').classList.add('hidden'); // Hide first to reset
+            document.getElementById('active-chat-view').classList.remove('hidden');
+
+            document.getElementById('chat-partner-name').textContent = partner.name;
+            document.getElementById('chat-partner-avatar').src = partner.avatar;
+
+            const messagesDisplay = document.getElementById('messages-display');
+            messagesDisplay.innerHTML = ''; // Clear previous messages
+
+            const chatId = [currentUser.uid, partner.id].sort().join('_');
+            const chatRef = collection(db, "chats", chatId, "messages");
+            const q = query(chatRef, orderBy("createdAt"));
+
+            if(unsubscribeMessages) unsubscribeMessages();
+            unsubscribeMessages = onSnapshot(q, (querySnapshot) => {
+                messagesDisplay.innerHTML = '';
+                querySnapshot.forEach(docSnap => {
+                    const message = docSnap.data();
+                    displayMessage(message);
+                });
+                messagesDisplay.scrollTop = messagesDisplay.scrollHeight; // Scroll to bottom
+            });
         }
+
+        function displayMessage(message) {
+            const messagesDisplay = document.getElementById('messages-display');
+            const div = document.createElement('div');
+            const isSender = message.senderId === currentUser.uid;
+            
+            div.className = `flex items-end gap-2 ${isSender ? 'justify-end' : 'justify-start'}`;
+            const time = message.createdAt ? new Date(message.createdAt.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+
+            div.innerHTML = `
+                <div class="max-w-xs md:max-w-md">
+                    <div class="px-4 py-2 rounded-2xl ${isSender ? 'bg-blue-500 text-white rounded-br-none' : 'bg-gray-200 text-gray-800 rounded-bl-none'}">
+                        <p>${message.text}</p>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1 px-1 ${isSender ? 'text-right' : 'text-left'}">${time}</p>
+                </div>
+            `;
+            messagesDisplay.appendChild(div);
+        }
+
+        document.getElementById('message-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const messageInput = document.getElementById('message-input');
+            const text = messageInput.value.trim();
+
+            if (!text || !currentChatPartnerId) return;
+
+            const chatId = [currentUser.uid, currentChatPartnerId].sort().join('_');
+            const chatRef = collection(db, "chats", chatId, "messages");
+
+            try {
+                await addDoc(chatRef, {
+                    text: text,
+                    senderId: currentUser.uid,
+                    receiverId: currentChatPartnerId,
+                    createdAt: serverTimestamp()
+                });
+                messageInput.value = '';
+            } catch (error) {
+                console.error("Error sending message:", error);
+                showNotification("Failed to send message.", true);
+            }
+        });
+
+        // --------------------------------------------------------------------
+        // --- Campus Members List (Right Sidebar) ---
+        // --------------------------------------------------------------------
+
+        function listenForCampusMembers() {
+            const membersListContainer = document.getElementById('campus-members-list');
+            const q = query(collection(db, "users"), where("status", "==", "approved"));
+            
+            onSnapshot(q, (querySnapshot) => {
+                membersListContainer.innerHTML = '';
+                if(querySnapshot.empty) {
+                    membersListContainer.innerHTML = '<p class="text-sm text-gray-500">No members found.</p>';
+                    return;
+                }
+                querySnapshot.forEach((docSnap) => {
+                    const user = { id: docSnap.id, ...docSnap.data() };
+                     const userElement = document.createElement('div');
+                    userElement.className = 'flex items-center space-x-3';
+                    userElement.innerHTML = `
+                        <img src="${user.profilePicUrl}" class="w-9 h-9 rounded-full">
+                        <div>
+                            <p class="font-semibold text-sm">${user.name}</p>
+                            <p class="text-xs text-gray-500">${user.department}</p>
+                        </div>
+                    `;
+                    membersListContainer.appendChild(userElement);
+                });
+            });
+        }
+
+
+        // --------------------------------------------------------------------
+        // --- Admin Panel Logic ---
+        // --------------------------------------------------------------------
+
+        adminPanelBtn.addEventListener('click', () => {
+            adminPanelModal.classList.remove('hidden');
+            loadPendingUsers();
+        });
+
+        document.getElementById('close-admin-panel-btn').addEventListener('click', () => {
+            adminPanelModal.classList.add('hidden');
+        });
+
+        async function loadPendingUsers() {
+            const container = document.getElementById('pending-users-container');
+            container.innerHTML = '<p>Loading pending registrations...</p>';
+            const q = query(collection(db, "users"), where("status", "==", "pending"));
+            const querySnapshot = await getDocs(q);
+            
+            container.innerHTML = '';
+            if (querySnapshot.empty) {
+                container.innerHTML = '<p class="text-center text-gray-500 p-4">No pending approvals.</p>';
+                return;
+            }
+
+            querySnapshot.forEach((docSnap) => {
+                const user = { id: docSnap.id, ...docSnap.data() };
+                const userCard = createPendingUserCard(user);
+                container.appendChild(userCard);
+            });
+        }
+
+        function createPendingUserCard(user) {
+            const card = document.createElement('div');
+            card.className = 'bg-gray-50 border border-gray-200 p-4 rounded-lg grid grid-cols-1 md:grid-cols-3 gap-4 items-center';
+            card.innerHTML = `
+                <div class="md:col-span-2">
+                    <p class="font-bold text-lg">${user.name}</p>
+                    <p class="text-sm text-gray-600">${user.email}</p>
+                    <div class="text-xs text-gray-500 mt-2 grid grid-cols-2 gap-1">
+                        <span><strong>Roll:</strong> ${user.roll}</span>
+                        <span><strong>Department:</strong> ${user.department}</span>
+                        <span><strong>Class:</strong> ${user.class}</span>
+                        <span><strong>Gender:</strong> ${user.gender}</span>
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 justify-end">
+                    <button class="approve-btn bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 w-full md:w-auto" data-id="${user.id}">Approve</button>
+                    <button class="reject-btn bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 w-full md:w-auto" data-id="${user.id}">Reject</button>
+                </div>
+            `;
+            
+            card.querySelector('.approve-btn').addEventListener('click', () => handleApproval(user.id, 'approved'));
+            card.querySelector('.reject-btn').addEventListener('click', () => handleApproval(user.id, 'rejected'));
+
+            return card;
+        }
+
+        async function handleApproval(userId, status) {
+            showLoading(true);
+            const userRef = doc(db, "users", userId);
+            try {
+                await updateDoc(userRef, { status: status });
+                showNotification(`User has been ${status}.`);
+                loadPendingUsers(); // Refresh the list
+            } catch (error) {
+                console.error(`Error ${status} user:`, error);
+                showNotification(`Failed to ${status} user.`, true);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // --------------------------------------------------------------------
+        // --- Main App Navigation ---
+        // --------------------------------------------------------------------
+        document.getElementById('feed-link').addEventListener('click', (e) => { e.preventDefault(); switchView('feed'); });
+        document.getElementById('notices-link').addEventListener('click', (e) => { e.preventDefault(); switchView('notices'); });
+        document.getElementById('messages-link').addEventListener('click', (e) => { e.preventDefault(); switchView('messages'); });
 
     </script>
 </body>
 </html>
+
