@@ -3,50 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusConnect - Infinity Group</title>
+    <title>CampusConnect | Infinity Group</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* General Styling */
+        /* CSS Variables for easy theme management */
         :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #f5a623;
-            --background-color: #f0f2f5;
-            --card-background: #ffffff;
-            --text-color: #1c1e21;
-            --text-secondary-color: #65676b;
-            --border-color: #dddfe2;
+            --primary-color: #1877F2;
+            --secondary-color: #42b72a;
+            --background-color: #F0F2F5;
+            --card-background: #FFFFFF;
+            --text-color: #050505;
+            --text-secondary-color: #65676B;
+            --border-color: #CED0D4;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+
+        /* Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
+            font-family: 'Poppins', sans-serif;
             background-color: var(--background-color);
             color: var(--text-color);
-            overflow-x: hidden;
         }
 
-        /* --- Views --- */
+        /* View Container */
         .view {
             display: none;
             min-height: 100vh;
+            width: 100%;
         }
         .view.active {
             display: block;
         }
-
-        /* --- Loading Spinner --- */
+        
+        /* --- Loading Spinner View --- */
         #loadingView {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
         }
         .spinner {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid var(--primary-color);
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
         }
         @keyframes spin {
@@ -54,467 +64,329 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* --- Login & Signup --- */
-        .auth-container {
+        /* --- Authentication (Login/Signup) Styles --- */
+        .auth-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 40px 20px;
         }
         .auth-card {
-            background: var(--card-background);
-            padding: 2rem;
+            background-color: var(--card-background);
+            padding: 25px 30px;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 450px;
+            max-width: 420px;
+            text-align: center;
         }
         .auth-card h1 {
+            font-size: 2rem;
             color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .auth-card p {
+            color: var(--text-secondary-color);
+            margin-bottom: 25px;
         }
         .form-group {
-            margin-bottom: 1rem;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: left;
         }
         .form-group input, .form-group select {
             width: 100%;
-            padding: 0.75rem;
+            padding: 12px 15px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            box-sizing: border-box;
+            font-size: 1rem;
         }
         .form-group input:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+            box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
         }
         .btn {
-            display: block;
             width: 100%;
-            padding: 0.8rem;
+            padding: 12px;
             border: none;
             border-radius: 6px;
-            background-color: var(--primary-color);
-            color: white;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s ease;
         }
-        .btn:hover {
-            background-color: #357ABD;
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #166FE5;
         }
         .btn-secondary {
-            background: var(--secondary-color);
+            background-color: var(--secondary-color);
+            color: white;
+            margin-top: 10px;
         }
         .btn-secondary:hover {
-            background: #d48e1a;
+            background-color: #36A420;
         }
-        .auth-switch {
-            text-align: center;
-            margin-top: 1rem;
+        .divider {
+            border-top: 1px solid var(--border-color);
+            margin: 25px 0;
         }
-        .auth-switch a {
+        .auth-switch-link {
             color: var(--primary-color);
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 500;
         }
-        .error-message {
-            color: #d93025;
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 1rem;
-            text-align: center;
+        .auth-switch-link:hover {
+            text-decoration: underline;
+        }
+        .message-box {
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+        .message-box.error {
+            background-color: #ffebe8;
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+        }
+        .message-box.success {
+            background-color: #e8f5e9;
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
         }
 
-        /* --- Main App Layout --- */
-        #mainView {
-            display: flex;
-            flex-direction: column;
+        /* --- Pending/Rejected View --- */
+        .status-card {
+            text-align: center;
+            max-width: 500px;
         }
+        .status-card i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .status-card .fa-paper-plane { color: var(--primary-color); }
+        .status-card .fa-times-circle { color: var(--error-color); }
+
+        /* --- Main App Layout --- */
         header {
             background: var(--card-background);
             padding: 0 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 60px;
             border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 100;
         }
         .logo {
+            font-size: 1.7rem;
+            font-weight: 700;
             color: var(--primary-color);
-            font-size: 1.5rem;
-            font-weight: bold;
         }
         .nav-actions {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
-        .nav-actions button {
+        .nav-btn {
             background: none;
             border: none;
+            font-size: 1.3rem;
             color: var(--text-secondary-color);
-            font-size: 1rem;
             cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 4px;
+            padding: 8px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .nav-actions button:hover {
-            background: var(--background-color);
-        }
+        .nav-btn:hover { background-color: var(--background-color); }
+        .nav-btn.admin { color: var(--secondary-color); font-weight: bold; }
         
         main {
-            display: grid;
-            grid-template-columns: 1fr 2.5fr 1fr;
-            gap: 1.5rem;
             padding: 1.5rem 2rem;
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
-        .main-content {
-            grid-column: 2;
-        }
-        .left-sidebar, .right-sidebar {
-            position: sticky;
-            top: 80px;
-            align-self: flex-start;
-        }
-        
-        /* --- Post Creation --- */
-        .create-post-card {
+        /* --- Post Creation & Feed --- */
+        .card {
             background: var(--card-background);
             border-radius: 8px;
-            padding: 1rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
             margin-bottom: 1.5rem;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
         }
-        .create-post-card textarea {
+        #postContent {
             width: 100%;
             border: none;
             resize: none;
-            font-size: 1.1rem;
+            font-size: 1rem;
             padding: 0.5rem;
-            box-sizing: border-box;
-            min-height: 80px;
+            min-height: 60px;
         }
-        .create-post-card textarea:focus {
-            outline: none;
-        }
+        #postContent:focus { outline: none; }
         .post-actions {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid var(--border-color);
-            padding-top: 0.5rem;
-            margin-top: 0.5rem;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+            margin-top: 10px;
         }
         #postImageUpload { display: none; }
-        .post-actions label {
-            cursor: pointer;
-            color: green;
-            font-weight: bold;
-        }
+        .upload-label { cursor: pointer; color: var(--secondary-color); font-weight: 500; }
+        .upload-label i { margin-right: 5px; }
 
-        /* --- Post Card --- */
-        .post-card {
-            background: var(--card-background);
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        .post-header {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            gap: 0.75rem;
-        }
-        .post-author-img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--border-color);
-            object-fit: cover;
-        }
-        .post-author-info strong {
-            display: block;
-        }
-        .post-author-info small {
-            color: var(--text-secondary-color);
-        }
-        .post-content {
-            padding: 0 1rem 1rem 1rem;
-            white-space: pre-wrap;
-        }
-        .post-image {
-            width: 100%;
-            max-height: 500px;
-            object-fit: cover;
-        }
-        .post-footer {
-            padding: 0.5rem 1rem;
-            display: flex;
-            justify-content: space-around;
-            border-top: 1px solid var(--border-color);
-        }
-        .post-footer-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            color: var(--text-secondary-color);
-        }
-        .post-footer-btn.liked {
-            color: var(--primary-color);
-        }
-        .post-footer-btn:hover {
-            background: var(--background-color);
-        }
-        .post-stats {
-            padding: 0 1rem 0.5rem;
-            color: var(--text-secondary-color);
-            font-size: 0.9rem;
-        }
-
-        /* --- Comments --- */
-        .comments-section {
-            padding: 0 1rem 1rem;
-            border-top: 1px solid var(--border-color);
-            display: none;
-        }
-        .comment {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-        .comment-body {
-            background: var(--background-color);
-            padding: 0.5rem;
-            border-radius: 12px;
-        }
-        .comment-form {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-        .comment-form input {
-            flex-grow: 1;
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 0.5rem 1rem;
-        }
+        .post-card { padding: 0; }
+        .post-header { display: flex; align-items: center; padding: 12px 16px; gap: 10px; }
+        .post-author-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .post-author-info strong { font-weight: 600; }
+        .post-author-info small { color: var(--text-secondary-color); font-size: 0.8rem; }
+        .post-content { padding: 4px 16px 12px; white-space: pre-wrap; }
+        .post-image { width: 100%; max-height: 500px; object-fit: cover; }
+        .post-stats { padding: 8px 16px; color: var(--text-secondary-color); font-size: 0.9rem; border-top: 1px solid #eee; }
+        .post-footer { display: flex; justify-content: space-around; border-top: 1px solid #eee; }
+        .post-footer-btn { flex: 1; background: none; border: none; cursor: pointer; padding: 10px; border-radius: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; color: var(--text-secondary-color); }
+        .post-footer-btn:hover { background: var(--background-color); }
+        .post-footer-btn.liked { color: var(--primary-color); }
+        .comments-section { padding: 0 16px 12px; display: none; }
+        .comment-form { display: flex; gap: 10px; margin-top: 10px; }
+        .comment-input { flex-grow: 1; border: 1px solid var(--border-color); border-radius: 20px; padding: 8px 12px; }
+        .comment { display: flex; gap: 10px; margin-top: 10px; }
+        .comment-body { background: var(--background-color); padding: 8px 12px; border-radius: 18px; }
 
         /* --- Admin Panel --- */
-        #adminView {
-            padding: 2rem;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        #adminView h1, #adminView h2 {
-            color: var(--primary-color);
-        }
+        #adminView main { max-width: 960px; }
         .user-approval-card {
-            background: var(--card-background);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
         }
-        .user-info p { margin: 0.2rem 0; }
+        .user-info p { margin: 2px 0; font-size: 0.9rem; }
         .user-actions button {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            padding: 8px 12px;
+            margin-left: 10px;
             color: white;
-            margin-left: 0.5rem;
-        }
-        .btn-approve { background-color: #28a745; }
-        .btn-reject { background-color: #dc3545; }
-        
-        /* --- Modal (For Messaging) --- */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1001;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            padding: 20px;
-            border: 1px solid #888;
-            border-radius: 8px;
-            width: 80%;
-            max-width: 500px;
-        }
-        .close-btn {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
+            border: none;
             cursor: pointer;
+            border-radius: 5px;
         }
+        .btn-approve { background-color: var(--secondary-color); }
+        .btn-reject { background-color: var(--error-color); }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
-            main {
-                grid-template-columns: 1fr;
-                padding: 1rem;
-            }
-            .left-sidebar, .right-sidebar { display: none; }
-            .main-content { grid-column: 1; }
             header { padding: 0 1rem; }
+            main { padding: 1rem; }
+            .auth-card { box-shadow: none; border-radius: 0; }
         }
-
     </style>
 </head>
 <body>
 
-    <!-- Loading View -->
     <div id="loadingView" class="view active">
         <div class="spinner"></div>
     </div>
 
     <!-- Login View -->
     <div id="loginView" class="view">
-        <div class="auth-container">
+        <div class="auth-wrapper">
             <div class="auth-card">
-                <h1>Welcome to CampusConnect</h1>
-                <p id="loginError" class="error-message" style="display: none;"></p>
+                <h1>CampusConnect</h1>
+                <p>Connect with your college friends.</p>
+                <div id="loginMessage" class="message-box"></div>
                 <form id="loginForm">
-                    <div class="form-group">
-                        <label for="loginEmail">Email Address</label>
-                        <input type="email" id="loginEmail" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="loginPassword">Password</label>
-                        <input type="password" id="loginPassword" required>
-                    </div>
-                    <button type="submit" class="btn">Log In</button>
+                    <div class="form-group"><input type="email" id="loginEmail" placeholder="Email Address" required></div>
+                    <div class="form-group"><input type="password" id="loginPassword" placeholder="Password" required></div>
+                    <button type="submit" class="btn btn-primary">Log In</button>
                 </form>
-                <div class="auth-switch">
-                    <p>Don't have an account? <a href="#" id="showSignup">Sign Up</a></p>
-                </div>
+                <div class="divider"></div>
+                <button id="showSignupBtn" class="btn btn-secondary">Create New Account</button>
             </div>
         </div>
     </div>
 
     <!-- Signup View -->
     <div id="signupView" class="view">
-        <div class="auth-container">
+        <div class="auth-wrapper">
             <div class="auth-card">
-                <h1>Create Your Account</h1>
-                <p id="signupError" class="error-message" style="display: none;"></p>
+                <h1>Sign Up</h1>
+                <p>It's quick and easy.</p>
+                <div id="signupMessage" class="message-box"></div>
                 <form id="signupForm">
-                    <div class="form-group"><label for="signupName">Full Name</label><input type="text" id="signupName" required></div>
-                    <div class="form-group"><label for="signupEmail">Email Address</label><input type="email" id="signupEmail" required></div>
-                    <div class="form-group"><label for="signupPassword">Password (min. 6 characters)</label><input type="password" id="signupPassword" required></div>
-                    <div class="form-group"><label for="signupRoll">Roll Number</label><input type="text" id="signupRoll" required></div>
-                    <div class="form-group"><label for="signupDept">Department</label><input type="text" id="signupDept" required></div>
-                    <div class="form-group"><label for="signupClass">Class/Year</label><input type="text" id="signupClass" required></div>
+                    <div class="form-group"><input type="text" id="signupName" placeholder="Full Name" required></div>
+                    <div class="form-group"><input type="email" id="signupEmail" placeholder="Email Address" required></div>
+                    <div class="form-group"><input type="password" id="signupPassword" placeholder="New Password (min. 6 characters)" required></div>
+                    <div class="form-group"><input type="text" id="signupRoll" placeholder="College Roll Number" required></div>
+                    <div class="form-group"><input type="text" id="signupDept" placeholder="Department" required></div>
+                    <div class="form-group"><input type="text" id="signupClass" placeholder="Class / Year" required></div>
                     <div class="form-group">
-                        <label for="signupGender">Gender</label>
                         <select id="signupGender" required>
-                            <option value="">Select Gender</option>
+                            <option value="" disabled selected>Select Gender</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                             <option value="Other">Other</option>
                         </select>
                     </div>
-                    <div class="form-group"><label for="signupReligion">Religion</label><input type="text" id="signupReligion" required></div>
-                    <button type="submit" class="btn">Sign Up</button>
+                    <div class="form-group"><input type="text" id="signupReligion" placeholder="Religion" required></div>
+                    <button type="submit" class="btn btn-secondary">Sign Up</button>
                 </form>
-                <div class="auth-switch">
-                    <p>Already have an account? <a href="#" id="showLogin">Log In</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Pending Approval View -->
-    <div id="pendingView" class="view">
-        <div class="auth-container">
-            <div class="auth-card" style="text-align: center;">
-                <h1>Application Submitted</h1>
-                <p>Thank you for registering! Your account is pending approval from an administrator.</p>
-                <p>You will be able to log in once your account is approved.</p>
-                <button id="pendingLogoutBtn" class="btn btn-secondary">Logout</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Rejected Account View -->
-    <div id="rejectedView" class="view">
-        <div class="auth-container">
-            <div class="auth-card" style="text-align: center;">
-                <h1>Account Application Rejected</h1>
-                <p>Unfortunately, your application to join CampusConnect has been rejected. If you believe this is an error, please contact the college administration.</p>
-                <button id="rejectedLogoutBtn" class="btn btn-secondary">Logout</button>
+                <p style="margin-top: 15px; margin-bottom: 0;">Already have an account? <a href="#" id="showLoginBtn" class="auth-switch-link">Log In</a></p>
             </div>
         </div>
     </div>
 
-    <!-- Main Application View -->
+    <!-- Status Views (Pending/Rejected) -->
+    <div id="pendingView" class="view">
+        <div class="auth-wrapper">
+            <div class="auth-card status-card">
+                <i class="fas fa-paper-plane"></i>
+                <h1>Application Submitted!</h1>
+                <p>Your account is waiting for approval from an administrator. You will be notified once it's active.</p>
+                <button id="pendingLogoutBtn" class="btn btn-primary">Logout</button>
+            </div>
+        </div>
+    </div>
+    <div id="rejectedView" class="view">
+        <div class="auth-wrapper">
+            <div class="auth-card status-card">
+                <i class="fas fa-times-circle"></i>
+                <h1>Application Rejected</h1>
+                <p>Sorry, your application to join was not approved. Please contact the administration if you think this is a mistake.</p>
+                <button id="rejectedLogoutBtn" class="btn btn-primary">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App View -->
     <div id="mainView" class="view">
         <header>
             <div class="logo">CampusConnect</div>
             <nav class="nav-actions">
-                <span id="welcomeUser"></span>
-                <button id="adminPanelBtn" style="display: none; color: var(--secondary-color); font-weight: bold;">Admin Panel</button>
-                <button id="homeBtn"><i class="fas fa-home"></i> Home</button>
-                <button id="messagesBtn"><i class="fas fa-comments"></i> Messages</button>
-                <button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                <button id="homeBtn" class="nav-btn" title="Home"><i class="fas fa-home"></i></button>
+                <button id="adminPanelBtn" class="nav-btn admin" title="Admin Panel" style="display: none;"><i class="fas fa-user-shield"></i></button>
+                <button id="logoutBtn" class="nav-btn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
             </nav>
         </header>
         <main>
-            <aside class="left-sidebar">
-                <!-- Left sidebar content can go here -->
-            </aside>
-            <div class="main-content">
-                <div class="create-post-card">
-                    <textarea id="postContent" placeholder="What's on your mind?"></textarea>
-                    <div class="post-actions">
-                        <div>
-                            <input type="file" id="postImageUpload" accept="image/*">
-                            <label for="postImageUpload"><i class="fas fa-image"></i> Add Photo</label>
-                        </div>
-                        <button id="submitPostBtn" class="btn" style="width: auto; padding: 0.5rem 1.5rem;">Post</button>
-                    </div>
-                </div>
-                <div id="postsContainer">
-                    <!-- Posts will be dynamically inserted here -->
+            <div class="card">
+                <textarea id="postContent" placeholder="What's on your mind?"></textarea>
+                <div class="post-actions">
+                    <label for="postImageUpload" class="upload-label"><i class="fas fa-image"></i> Add Photo</label>
+                    <input type="file" id="postImageUpload" accept="image/*">
+                    <button id="submitPostBtn" class="btn btn-primary" style="width: auto; padding: 8px 20px;">Post</button>
                 </div>
             </div>
-            <aside class="right-sidebar">
-                <!-- Right sidebar content can go here -->
-            </aside>
+            <div id="postsContainer"></div>
         </main>
     </div>
 
@@ -523,313 +395,234 @@
         <header>
             <div class="logo">Admin Panel</div>
             <nav class="nav-actions">
-                <button id="backToHomeBtn"><i class="fas fa-arrow-left"></i> Back to Home</button>
+                <button id="backToHomeBtn" class="nav-btn" title="Back to Home"><i class="fas fa-arrow-left"></i></button>
             </nav>
         </header>
-        <div style="padding: 2rem; max-width: 900px; margin: 0 auto;">
+        <main>
             <h2>Pending User Approvals</h2>
-            <div id="pendingUsersContainer">
-                <p>Loading pending users...</p>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Messaging Modal -->
-    <div id="messagingModal" class="modal">
-        <div class="modal-content">
-            <span id="closeMsgModal" class="close-btn">×</span>
-            <h2>Messages</h2>
-            <p>This is a simplified messaging feature. In a full app, you would see a list of conversations here.</p>
-            <!-- A more complex implementation would list users to chat with -->
-        </div>
+            <div id="pendingUsersContainer"></div>
+        </main>
     </div>
 
-
+    <!-- JavaScript with Firebase -->
     <script type="module">
         // Import Firebase functions
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { 
-            getAuth, 
-            createUserWithEmailAndPassword, 
-            signInWithEmailAndPassword, 
-            signOut, 
-            onAuthStateChanged 
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            setDoc, 
-            getDoc, 
-            collection, 
-            query, 
-            where, 
-            getDocs,
-            addDoc,
-            serverTimestamp,
-            orderBy,
-            onSnapshot,
-            updateDoc,
-            deleteDoc,
-            runTransaction
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        import { 
-            getStorage, 
-            ref, 
-            uploadBytes, 
-            getDownloadURL 
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, addDoc, serverTimestamp, orderBy, onSnapshot, updateDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-        // ***************************************************************
-        // ******** PASTE YOUR FIREBASE CONFIG OBJECT HERE ***************
-        // ***************************************************************
- // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
-  authDomain: "campusconnect-a8447.firebaseapp.com",
-  projectId: "campusconnect-a8447",
-  storageBucket: "campusconnect-a8447.firebasestorage.app",
-  messagingSenderId: "512467118728",
-  appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
-  measurementId: "G-62XR5TLSN7"
-};
-        // ***************************************************************
-
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
+            authDomain: "campusconnect-a8447.firebaseapp.com",
+            projectId: "campusconnect-a8447",
+            storageBucket: "campusconnect-a8447.appspot.com", // Make sure this is correct
+            messagingSenderId: "512467118728",
+            appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
+            measurementId: "G-62XR5TLSN7"
+        };
+        
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const storage = getStorage(app);
-
-        // --- DOM Elements ---
-        const views = document.querySelectorAll('.view');
-        const loginForm = document.getElementById('loginForm');
-        const signupForm = document.getElementById('signupForm');
-        const showSignupBtn = document.getElementById('showSignup');
-        const showLoginBtn = document.getElementById('showLogin');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const pendingLogoutBtn = document.getElementById('pendingLogoutBtn');
-        const rejectedLogoutBtn = document.getElementById('rejectedLogoutBtn');
-        const adminPanelBtn = document.getElementById('adminPanelBtn');
-        const homeBtn = document.getElementById('homeBtn');
-        const backToHomeBtn = document.getElementById('backToHomeBtn');
-        const submitPostBtn = document.getElementById('submitPostBtn');
-        const postsContainer = document.getElementById('postsContainer');
         
-        const ADMIN_UID = "UDVvMFBeg9aTAnO8yw"; // Your Admin UID
+        // --- ADMIN UID ---
+        // দ্বিতীয় ধাপ থেকে পাওয়া আপনার অ্যাডমিন অ্যাকাউন্টের UID এখানে পেস্ট করুন।
+        const ADMIN_UID = "আপনার কপি করা অ্যাডমিন UID এখানে পেস্ট করুন";
+
+        // --- DOM Elements & Global State ---
+        const views = document.querySelectorAll('.view');
+        let currentUnsubscribe = null; // To hold the posts listener
 
         // --- Helper Functions ---
         function showView(viewId) {
-            views.forEach(view => {
-                view.classList.remove('active');
-            });
+            views.forEach(v => v.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
         }
 
-        function formatTimestamp(timestamp) {
-            if (!timestamp) return 'Just now';
-            const date = timestamp.toDate();
-            return date.toLocaleString('en-US', {
-                year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-            });
+        function showMessage(elementId, text, type = 'error') {
+            const el = document.getElementById(elementId);
+            el.textContent = text;
+            el.className = `message-box ${type}`;
+            el.style.display = 'block';
         }
-        
-        function displayError(elementId, message) {
-            const errorEl = document.getElementById(elementId);
-            errorEl.textContent = message;
-            errorEl.style.display = 'block';
-        }
-        
-        function clearError(elementId) {
+
+        function hideMessage(elementId) {
             document.getElementById(elementId).style.display = 'none';
         }
 
-        // --- Authentication Logic ---
+        function formatTimestamp(timestamp) {
+            if (!timestamp) return 'a moment ago';
+            return timestamp.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
+        }
+        
+        // --- Authentication State Management ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // User is signed in. Check their status.
                 const userDocRef = doc(db, "users", user.uid);
                 const userDoc = await getDoc(userDocRef);
-
                 if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    if (userData.status === 'approved') {
+                    const { status, name } = userDoc.data();
+                    if (status === 'approved') {
                         showView('mainView');
-                        document.getElementById('welcomeUser').textContent = `Welcome, ${userData.name.split(' ')[0]}`;
-                        if(user.uid === ADMIN_UID) {
-                            adminPanelBtn.style.display = 'block';
+                        document.getElementById('welcomeUser').textContent = `Welcome, ${name}`;
+                        if (user.uid === ADMIN_UID) {
+                            document.getElementById('adminPanelBtn').style.display = 'flex';
                         }
-                        fetchAndDisplayPosts();
-                    } else if (userData.status === 'pending') {
+                        attachPostsListener();
+                    } else if (status === 'pending') {
                         showView('pendingView');
-                    } else if (userData.status === 'rejected') {
+                    } else if (status === 'rejected') {
                         showView('rejectedView');
+                    } else {
+                        handleLogout(); // Unknown status
                     }
                 } else {
-                    // This case might happen if user is authenticated but Firestore doc fails to create
-                    // Or if admin deleted the user doc. Log them out.
-                    signOut(auth);
+                    handleLogout(); // Firestore document not found
                 }
             } else {
-                // User is signed out
                 showView('loginView');
+                if (currentUnsubscribe) currentUnsubscribe(); // Detach listener on logout
             }
         });
 
-        signupForm.addEventListener('submit', async (e) => {
+        // --- UI Event Listeners ---
+        document.getElementById('showSignupBtn').addEventListener('click', (e) => { e.preventDefault(); showView('signupView'); });
+        document.getElementById('showLoginBtn').addEventListener('click', (e) => { e.preventDefault(); showView('loginView'); });
+        document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+        document.getElementById('pendingLogoutBtn').addEventListener('click', handleLogout);
+        document.getElementById('rejectedLogoutBtn').addEventListener('click', handleLogout);
+        document.getElementById('homeBtn').addEventListener('click', () => showView('mainView'));
+        document.getElementById('adminPanelBtn').addEventListener('click', handleAdminPanel);
+        document.getElementById('backToHomeBtn').addEventListener('click', () => showView('mainView'));
+        
+        // --- Auth Forms ---
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            clearError('signupError');
-            const name = document.getElementById('signupName').value;
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            const roll = document.getElementById('signupRoll').value;
-            const department = document.getElementById('signupDept').value;
-            const userClass = document.getElementById('signupClass').value;
-            const gender = document.getElementById('signupGender').value;
-            const religion = document.getElementById('signupReligion').value;
-
-            try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-
-                // Create a document for the user in Firestore
-                await setDoc(doc(db, "users", user.uid), {
-                    uid: user.uid,
-                    name: name,
-                    email: email,
-                    roll: roll,
-                    department: department,
-                    userClass: userClass,
-                    gender: gender,
-                    religion: religion,
-                    status: 'pending', // Initial status is pending
-                    createdAt: serverTimestamp()
-                });
-
-                // User will be redirected to pending page by onAuthStateChanged listener
-            } catch (error) {
-                displayError('signupError', error.message);
-            }
-        });
-
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            clearError('loginError');
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-
+            hideMessage('loginMessage');
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                // onAuthStateChanged will handle the redirect.
+                // onAuthStateChanged will handle the view change
             } catch (error) {
-                displayError('loginError', "Invalid email or password. Please try again.");
+                showMessage('loginMessage', 'Incorrect email or password. Please try again.');
             }
         });
 
-        function handleLogout() {
-            signOut(auth).catch(error => console.error("Logout Error: ", error));
-        }
-
-        logoutBtn.addEventListener('click', handleLogout);
-        pendingLogoutBtn.addEventListener('click', handleLogout);
-        rejectedLogoutBtn.addEventListener('click', handleLogout);
-
-        showSignupBtn.addEventListener('click', (e) => {
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            showView('signupView');
-        });
-
-        showLoginBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            showView('loginView');
-        });
-
-        // --- Main App Logic ---
-
-        // Post Creation
-        submitPostBtn.addEventListener('click', async () => {
-            const content = document.getElementById('postContent').value.trim();
-            const imageFile = document.getElementById('postImageUpload').files[0];
-            const user = auth.currentUser;
-
-            if (!content && !imageFile) {
-                alert("Please write something or select an image to post.");
+            hideMessage('signupMessage');
+            const password = document.getElementById('signupPassword').value;
+            if (password.length < 6) {
+                showMessage('signupMessage', 'Password must be at least 6 characters long.');
                 return;
             }
 
-            submitPostBtn.disabled = true;
-            submitPostBtn.textContent = "Posting...";
+            try {
+                const email = document.getElementById('signupEmail').value;
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                
+                await setDoc(doc(db, "users", userCredential.user.uid), {
+                    uid: userCredential.user.uid,
+                    name: document.getElementById('signupName').value,
+                    email: email,
+                    roll: document.getElementById('signupRoll').value,
+                    department: document.getElementById('signupDept').value,
+                    userClass: document.getElementById('signupClass').value,
+                    gender: document.getElementById('signupGender').value,
+                    religion: document.getElementById('signupReligion').value,
+                    status: 'pending',
+                    createdAt: serverTimestamp()
+                });
+                // onAuthStateChanged will redirect to pending view
+            } catch (error) {
+                const msg = error.code === 'auth/email-already-in-use' ? 'This email is already registered.' : 'Failed to create account. Please try again.';
+                showMessage('signupMessage', msg);
+            }
+        });
+        
+        function handleLogout() {
+            signOut(auth).catch(err => console.error("Logout failed:", err));
+        }
+        
+        // --- Main App Functionality (Posts) ---
+        function attachPostsListener() {
+            const postsQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+            currentUnsubscribe = onSnapshot(postsQuery, (snapshot) => {
+                const container = document.getElementById('postsContainer');
+                container.innerHTML = '';
+                if (snapshot.empty) {
+                    container.innerHTML = '<p style="text-align:center;">No posts yet. Be the first to share!</p>';
+                    return;
+                }
+                snapshot.docs.forEach(postDoc => {
+                    const postCard = createPostElement(postDoc.id, postDoc.data());
+                    container.appendChild(postCard);
+                });
+            });
+        }
+        
+        document.getElementById('submitPostBtn').addEventListener('click', async () => {
+            const content = document.getElementById('postContent').value.trim();
+            const imageFile = document.getElementById('postImageUpload').files[0];
+            const user = auth.currentUser;
+            if (!content && !imageFile) return alert("Post cannot be empty.");
+
+            const btn = document.getElementById('submitPostBtn');
+            btn.disabled = true;
+            btn.textContent = 'Posting...';
 
             try {
                 let imageUrl = '';
                 if (imageFile) {
-                    const storageRef = ref(storage, `posts/${user.uid}/${Date.now()}_${imageFile.name}`);
+                    const storageRef = ref(storage, `posts/${user.uid}/${Date.now()}`);
                     const snapshot = await uploadBytes(storageRef, imageFile);
                     imageUrl = await getDownloadURL(snapshot.ref);
                 }
 
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                const authorName = userDoc.data().name;
+
                 await addDoc(collection(db, "posts"), {
                     uid: user.uid,
-                    content: content,
-                    imageUrl: imageUrl,
+                    authorName: authorName,
+                    content,
+                    imageUrl,
                     createdAt: serverTimestamp(),
                     likes: 0,
                     comments: 0
                 });
-                
+
                 document.getElementById('postContent').value = '';
                 document.getElementById('postImageUpload').value = '';
-
             } catch (error) {
-                console.error("Error creating post: ", error);
-                alert("Could not create post. Please try again.");
+                console.error("Error creating post:", error);
+                alert("Failed to create post.");
             } finally {
-                submitPostBtn.disabled = false;
-                submitPostBtn.textContent = "Post";
+                btn.disabled = false;
+                btn.textContent = 'Post';
             }
         });
         
-        // Fetch and Display Posts
-        async function fetchAndDisplayPosts() {
-            const postsQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-
-            onSnapshot(postsQuery, async (snapshot) => {
-                postsContainer.innerHTML = ''; // Clear existing posts
-                if (snapshot.empty) {
-                    postsContainer.innerHTML = '<p>No posts yet. Be the first to share something!</p>';
-                    return;
-                }
-                
-                for (const postDoc of snapshot.docs) {
-                    const postData = postDoc.data();
-                    const userDoc = await getDoc(doc(db, "users", postData.uid));
-                    const authorData = userDoc.data() || { name: 'Unknown User' };
-
-                    const postElement = createPostElement(postDoc.id, postData, authorData);
-                    postsContainer.appendChild(postElement);
-                }
-            });
-        }
-
-        function createPostElement(postId, postData, authorData) {
-            const postCard = document.createElement('div');
-            postCard.className = 'post-card';
-            postCard.dataset.postId = postId;
+        function createPostElement(postId, postData) {
+            const postEl = document.createElement('div');
+            postEl.className = 'card post-card';
+            postEl.dataset.postId = postId;
 
             const currentUser = auth.currentUser;
-            const isLikedQuery = query(collection(db, 'posts', postId, 'likes'), where('uid', '==', currentUser.uid));
-            
-            getDocs(isLikedQuery).then(snapshot => {
-                const likeBtn = postCard.querySelector('.like-btn');
-                if (!snapshot.empty) {
-                    likeBtn.classList.add('liked');
-                }
-            });
+            const likeRef = doc(db, 'posts', postId, 'likes', currentUser.uid);
+            let isLiked = false;
+            getDoc(likeRef).then(doc => isLiked = doc.exists());
 
-            postCard.innerHTML = `
+            postEl.innerHTML = `
                 <div class="post-header">
-                    <img src="${authorData.profilePic || 'https://via.placeholder.com/40'}" alt="Author" class="post-author-img">
+                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(postData.authorName)}&background=random" alt="Author" class="post-author-img">
                     <div class="post-author-info">
-                        <strong>${authorData.name}</strong>
+                        <strong>${postData.authorName}</strong>
                         <small>${formatTimestamp(postData.createdAt)}</small>
                     </div>
                 </div>
@@ -840,214 +633,133 @@ const firebaseConfig = {
                     <span class="comments-count">${postData.comments || 0} Comments</span>
                 </div>
                 <div class="post-footer">
-                    <button class="post-footer-btn like-btn"><i class="fas fa-thumbs-up"></i> Like</button>
+                    <button class="post-footer-btn like-btn ${isLiked ? 'liked' : ''}"><i class="fas fa-thumbs-up"></i> Like</button>
                     <button class="post-footer-btn comment-btn"><i class="fas fa-comment"></i> Comment</button>
                 </div>
                 <div class="comments-section">
                     <div class="comment-form">
                         <input type="text" class="comment-input" placeholder="Write a comment...">
-                        <button class="btn-send-comment">Send</button>
                     </div>
                     <div class="comments-list"></div>
                 </div>
             `;
             
-            // Add event listeners
-            postCard.querySelector('.like-btn').addEventListener('click', () => toggleLike(postId));
-            postCard.querySelector('.comment-btn').addEventListener('click', (e) => {
-                const commentsSection = e.currentTarget.closest('.post-card').querySelector('.comments-section');
-                commentsSection.style.display = commentsSection.style.display === 'block' ? 'none' : 'block';
-                if(commentsSection.style.display === 'block') {
-                    fetchComments(postId);
-                }
+            // Event Listeners for post actions
+            postEl.querySelector('.like-btn').addEventListener('click', () => handleLike(postId, postEl));
+            postEl.querySelector('.comment-btn').addEventListener('click', () => toggleComments(postId, postEl));
+            postEl.querySelector('.comment-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleComment(postId, e.target);
             });
-            postCard.querySelector('.btn-send-comment').addEventListener('click', (e) => {
-                 const input = e.currentTarget.previousElementSibling;
-                 addComment(postId, input.value);
-                 input.value = '';
-            });
-
-
-            return postCard;
+            
+            return postEl;
         }
 
-        // Like/Unlike functionality
-        async function toggleLike(postId) {
+        async function handleLike(postId, postEl) {
             const user = auth.currentUser;
             const postRef = doc(db, "posts", postId);
-            const likeRef = doc(db, "posts", postId, "likes", user.uid);
-        
-            try {
-                await runTransaction(db, async (transaction) => {
-                    const likeDoc = await transaction.get(likeRef);
-                    const postDoc = await transaction.get(postRef);
-        
-                    if (!postDoc.exists()) {
-                        throw "Document does not exist!";
-                    }
-        
-                    let newLikeCount = postDoc.data().likes || 0;
-                    if (likeDoc.exists()) {
-                        // User has liked, so unlike
-                        transaction.delete(likeRef);
-                        newLikeCount--;
-                    } else {
-                        // User has not liked, so like
-                        transaction.set(likeRef, { uid: user.uid });
-                        newLikeCount++;
-                    }
-        
-                    transaction.update(postRef, { likes: newLikeCount < 0 ? 0 : newLikeCount });
-                });
+            const likeRef = doc(db, 'posts', postId, 'likes', user.uid);
+            
+            await runTransaction(db, async (transaction) => {
+                const likeDoc = await transaction.get(likeRef);
+                const postDoc = await transaction.get(postRef);
+                if (!postDoc.exists()) throw "Post not found!";
 
-                // Update UI immediately (optimistic update)
-                const postCard = document.querySelector(`.post-card[data-post-id="${postId}"]`);
-                if (postCard) {
-                    const likeBtn = postCard.querySelector('.like-btn');
-                    const likesCountEl = postCard.querySelector('.likes-count');
-                    const currentLikes = parseInt(likesCountEl.textContent);
-
-                    if (likeBtn.classList.contains('liked')) {
-                        likeBtn.classList.remove('liked');
-                        likesCountEl.textContent = `${currentLikes - 1} Likes`;
-                    } else {
-                        likeBtn.classList.add('liked');
-                        likesCountEl.textContent = `${currentLikes + 1} Likes`;
-                    }
+                let newLikeCount = postDoc.data().likes || 0;
+                if (likeDoc.exists()) {
+                    transaction.delete(likeRef);
+                    newLikeCount--;
+                } else {
+                    transaction.set(likeRef, { uid: user.uid });
+                    newLikeCount++;
                 }
-
-            } catch (error) {
-                console.error("Transaction failed: ", error);
+                transaction.update(postRef, { likes: Math.max(0, newLikeCount) });
+            });
+        }
+        
+        function toggleComments(postId, postEl) {
+            const section = postEl.querySelector('.comments-section');
+            const isVisible = section.style.display === 'block';
+            section.style.display = isVisible ? 'none' : 'block';
+            if (!isVisible) {
+                fetchComments(postId, postEl);
             }
         }
-
-        // Comment functionality
-        async function addComment(postId, text) {
-            if (!text.trim()) return;
-            const user = auth.currentUser;
-
-            await addDoc(collection(db, "posts", postId, "comments"), {
-                text: text,
-                uid: user.uid,
-                createdAt: serverTimestamp()
-            });
-
-            // Update comment count on the post
-            const postRef = doc(db, 'posts', postId);
-            await runTransaction(db, async (transaction) => {
-                const postDoc = await transaction.get(postRef);
-                const newCount = (postDoc.data().comments || 0) + 1;
-                transaction.update(postRef, { comments: newCount });
-            });
-        }
         
-        function fetchComments(postId) {
-            const commentsList = document.querySelector(`.post-card[data-post-id="${postId}"] .comments-list`);
-            const q = query(collection(db, "posts", postId, "comments"), orderBy("createdAt", "asc"));
-            
-            onSnapshot(q, async (snapshot) => {
-                commentsList.innerHTML = '';
-                for(const commentDoc of snapshot.docs){
-                    const commentData = commentDoc.data();
-                    const userDoc = await getDoc(doc(db, "users", commentData.uid));
-                    const authorData = userDoc.data();
-                    
+        function fetchComments(postId, postEl) {
+            const listEl = postEl.querySelector('.comments-list');
+            const q = query(collection(db, "posts", postId, "comments"), orderBy("createdAt", "desc"));
+            onSnapshot(q, (snapshot) => {
+                listEl.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const cData = doc.data();
                     const commentEl = document.createElement('div');
                     commentEl.className = 'comment';
                     commentEl.innerHTML = `
-                       <img src="${authorData.profilePic || 'https://via.placeholder.com/30'}" alt="Author" class="post-author-img" style="width:30px; height:30px;">
-                       <div class="comment-body">
-                           <strong>${authorData.name}</strong>
-                           <p>${commentData.text}</p>
-                       </div>
-                    `;
-                    commentsList.appendChild(commentEl);
-                }
+                        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(cData.authorName)}&background=random" class="post-author-img" style="width:32px; height:32px;">
+                        <div class="comment-body"><strong>${cData.authorName}</strong><p>${cData.text}</p></div>`;
+                    listEl.appendChild(commentEl);
+                });
             });
         }
 
+        async function handleComment(postId, inputEl) {
+            const text = inputEl.value.trim();
+            if (!text) return;
+            const user = auth.currentUser;
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            const authorName = userDoc.data().name;
 
-        // --- Admin Panel Logic ---
-        adminPanelBtn.addEventListener('click', () => {
+            await addDoc(collection(db, "posts", postId, "comments"), { text, uid: user.uid, authorName, createdAt: serverTimestamp() });
+            
+            const postRef = doc(db, "posts", postId);
+            await runTransaction(db, async (t) => {
+                const postDoc = await t.get(postRef);
+                const newCount = (postDoc.data().comments || 0) + 1;
+                t.update(postRef, { comments: newCount });
+            });
+            inputEl.value = '';
+        }
+
+        // --- Admin Panel ---
+        async function handleAdminPanel() {
             showView('adminView');
-            loadPendingUsers();
-        });
-
-        backToHomeBtn.addEventListener('click', () => showView('mainView'));
-        homeBtn.addEventListener('click', () => showView('mainView'));
-
-
-        async function loadPendingUsers() {
             const container = document.getElementById('pendingUsersContainer');
-            container.innerHTML = '<p>Loading pending users...</p>';
-            
+            container.innerHTML = '<div class="spinner" style="margin: 2rem auto;"></div>';
+
             const q = query(collection(db, "users"), where("status", "==", "pending"));
-            const querySnapshot = await getDocs(q);
+            const snapshot = await getDocs(q);
             
-            if (querySnapshot.empty) {
-                container.innerHTML = '<p>No pending approvals at this time.</p>';
+            if (snapshot.empty) {
+                container.innerHTML = '<p>No pending user approvals.</p>';
                 return;
             }
 
-            container.innerHTML = ''; // Clear loading message
-            querySnapshot.forEach((userDoc) => {
-                const userData = userDoc.data();
+            container.innerHTML = '';
+            snapshot.forEach(doc => {
+                const data = doc.data();
                 const card = document.createElement('div');
-                card.className = 'user-approval-card';
+                card.className = 'card user-approval-card';
                 card.innerHTML = `
                     <div class="user-info">
-                        <p><strong>Name:</strong> ${userData.name}</p>
-                        <p><strong>Email:</strong> ${userData.email}</p>
-                        <p><strong>Roll:</strong> ${userData.roll} | <strong>Dept:</strong> ${userData.department}</p>
+                        <p><strong>Name:</strong> ${data.name}</p>
+                        <p><strong>Email:</strong> ${data.email}</p>
+                        <p><strong>Roll:</strong> ${data.roll} | <strong>Dept:</strong> ${data.department}</p>
                     </div>
                     <div class="user-actions">
-                        <button class="btn-approve" data-uid="${userData.uid}">Approve</button>
-                        <button class="btn-reject" data-uid="${userData.uid}">Reject</button>
-                    </div>
-                `;
+                        <button class="btn-approve" data-uid="${data.uid}">Approve</button>
+                        <button class="btn-reject" data-uid="${data.uid}">Reject</button>
+                    </div>`;
+                card.querySelector('.btn-approve').addEventListener('click', (e) => updateUserStatus(e.target.dataset.uid, 'approved', card));
+                card.querySelector('.btn-reject').addEventListener('click', (e) => updateUserStatus(e.target.dataset.uid, 'rejected', card));
                 container.appendChild(card);
             });
-            
-            // Add event listeners to new buttons
-            container.querySelectorAll('.btn-approve').forEach(btn => {
-                btn.addEventListener('click', () => updateUserStatus(btn.dataset.uid, 'approved'));
-            });
-            container.querySelectorAll('.btn-reject').forEach(btn => {
-                btn.addEventListener('click', () => updateUserStatus(btn.dataset.uid, 'rejected'));
-            });
-        }
-
-        async function updateUserStatus(uid, status) {
-            const userDocRef = doc(db, "users", uid);
-            try {
-                await updateDoc(userDocRef, { status: status });
-                alert(`User has been ${status}.`);
-                loadPendingUsers(); // Refresh the list
-            } catch (error) {
-                console.error("Error updating user status: ", error);
-                alert("Failed to update status. Please try again.");
-            }
         }
         
-        // --- Messaging Modal Logic ---
-        const msgModal = document.getElementById('messagingModal');
-        const messagesBtn = document.getElementById('messagesBtn');
-        const closeMsgBtn = document.getElementById('closeMsgModal');
-
-        messagesBtn.addEventListener('click', () => {
-            msgModal.style.display = 'flex';
-        });
-
-        closeMsgBtn.addEventListener('click', () => {
-            msgModal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target == msgModal) {
-                msgModal.style.display = 'none';
-            }
-        });
-
+        async function updateUserStatus(uid, newStatus, cardElement) {
+            await updateDoc(doc(db, "users", uid), { status: newStatus });
+            cardElement.remove();
+            alert(`User has been ${newStatus}.`);
+        }
 
     </script>
 </body>
