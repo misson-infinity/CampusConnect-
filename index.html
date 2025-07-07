@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusConnect - by Infinity Group</title>
+    <title>CampusConnect by Infinity Group</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Inter -->
@@ -16,226 +16,214 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 4px solid #3b82f6;
-            width: 40px;
-            height: 40px;
-            animation: spin 2s linear infinite;
+        /* Custom scrollbar for a better look */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        ::-webkit-scrollbar-track {
+            background: #2d3748;
         }
-        /* Custom scrollbar for chat */
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
+        ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+            border-radius: 10px;
         }
-        .chat-messages::-webkit-scrollbar-track {
-            background: #f1f1f1;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #718096;
         }
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 3px;
-        }
-        .chat-messages::-webkit-scrollbar-thumb:hover {
-            background: #555;
+        .hidden {
+            display: none;
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-200 transition-colors duration-300">
 
-    <!-- Main Container -->
-    <div id="app-container" class="container mx-auto p-4 max-w-7xl">
-
-        <!-- Header -->
-        <header class="bg-white rounded-lg shadow-md p-4 mb-6 flex justify-between items-center sticky top-0 z-50">
-            <h1 class="text-3xl font-bold text-blue-600">CampusConnect</h1>
-            <div id="user-info-header" class="hidden items-center space-x-4">
-                <div class="text-right">
-                    <p class="font-semibold" id="header-user-name"></p>
-                    <p class="text-xs text-gray-500" id="header-user-id"></p>
-                </div>
-                <button id="logout-btn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300">Logout</button>
-            </div>
-        </header>
+    <!-- Main Application Container -->
+    <div id="app-container">
 
         <!-- Loading Spinner -->
-        <div id="loading" class="flex justify-center items-center h-64">
-            <div class="loader"></div>
+        <div id="loading-spinner" class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center z-50">
+            <div class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-blue-500"></div>
         </div>
 
-        <!-- Auth Pages Wrapper -->
-        <div id="auth-wrapper" class="max-w-md mx-auto">
-            <!-- Login Page -->
-            <div id="login-page" class="hidden bg-white p-8 rounded-xl shadow-lg">
-                <h2 class="text-3xl font-bold mb-6 text-center">Login to your Account</h2>
-                <form id="login-form">
-                    <div class="mb-4">
-                        <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input type="email" id="login-email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <!-- Login and Signup Page -->
+        <div id="auth-page" class="hidden">
+            <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+                <div class="max-w-md w-full p-8 bg-white dark:bg-gray-900 rounded-2xl shadow-lg space-y-6">
+                    <!-- Login Form -->
+                    <div id="login-form-container">
+                        <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white">Welcome to CampusConnect</h2>
+                        <p class="text-center text-gray-500 dark:text-gray-400">Sign in to continue</p>
+                        <form id="login-form" class="mt-8 space-y-6">
+                            <input type="email" id="login-email" placeholder="Email Address" required class="w-full px-4 py-3 bg-gray-100 dark:bg-gray-800 border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="password" id="login-password" placeholder="Password" required class="w-full px-4 py-3 bg-gray-100 dark:bg-gray-800 border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <button type="submit" class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform transform hover:scale-105">Login</button>
+                        </form>
+                        <p class="mt-4 text-center">Don't have an account? <a href="#" id="show-signup" class="font-medium text-blue-500 hover:text-blue-400">Sign up</a></p>
                     </div>
-                    <div class="mb-6">
-                        <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <input type="password" id="login-password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <!-- Signup Form -->
+                    <div id="signup-form-container" class="hidden">
+                        <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white">Create Account</h2>
+                        <p class="text-center text-gray-500 dark:text-gray-400">Join the community</p>
+                        <form id="signup-form" class="mt-8 space-y-4">
+                            <input type="text" id="signup-name" placeholder="Full Name" required class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="email" id="signup-email" placeholder="Email Address" required class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="password" id="signup-password" placeholder="Password (min. 6 characters)" required class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" id="signup-roll" placeholder="Roll Number / Student ID" required class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" id="signup-department" placeholder="Department" required class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" id="signup-class" placeholder="Class / Year" required class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select id="signup-gender" required class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="" disabled selected>Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <input type="text" id="signup-religion" placeholder="Religion" required class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <button type="submit" class="w-full py-3 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-transform transform hover:scale-105">Sign Up</button>
+                        </form>
+                        <p class="mt-4 text-center">Already have an account? <a href="#" id="show-login" class="font-medium text-blue-500 hover:text-blue-400">Login</a></p>
                     </div>
-                    <button type="submit" class="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 transition font-semibold text-lg">Login</button>
-                </form>
-                <p class="text-center mt-4 text-sm">
-                    No account? <a href="#" id="show-register" class="text-blue-600 hover:underline font-semibold">Register here</a>
-                </p>
-            </div>
-
-            <!-- Registration Page -->
-            <div id="register-page" class="hidden bg-white p-8 rounded-xl shadow-lg">
-                <h2 class="text-3xl font-bold mb-6 text-center">Create a New Account</h2>
-                <form id="register-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="md:col-span-2">
-                        <label for="register-name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                        <input type="text" id="register-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label for="register-email" class="block text-sm font-medium text-gray-700 mb-1">College Email</label>
-                        <input type="email" id="register-email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                     <div class="md:col-span-2">
-                        <label for="register-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <input type="password" id="register-password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label for="register-roll" class="block text-sm font-medium text-gray-700 mb-1">Roll Number</label>
-                        <input type="text" id="register-roll" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                     <div>
-                        <label for="register-class" class="block text-sm font-medium text-gray-700 mb-1">Class</label>
-                        <input type="text" id="register-class" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label for="register-department" class="block text-sm font-medium text-gray-700 mb-1">Department</label>
-                        <input type="text" id="register-department" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label for="register-gender" class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
-                        <select id="register-gender" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                     <div class="md:col-span-2">
-                        <label for="register-religion" class="block text-sm font-medium text-gray-700 mb-1">Religion</label>
-                        <input type="text" id="register-religion" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div class="md:col-span-2 mt-2">
-                        <button type="submit" class="w-full bg-green-600 text-white py-2.5 rounded-lg hover:bg-green-700 transition font-semibold text-lg">Register</button>
-                    </div>
-                </form>
-                <p class="text-center mt-4 text-sm">
-                    Already have an account? <a href="#" id="show-login" class="text-blue-600 hover:underline font-semibold">Login here</a>
-                </p>
-            </div>
-        </div>
-
-        <!-- Status Pages -->
-        <div id="status-pages" class="text-center max-w-lg mx-auto">
-            <div id="pending-page" class="hidden bg-white p-8 rounded-lg shadow-md">
-                <h2 class="text-2xl font-bold text-yellow-500 mb-4">Thank You for Registering!</h2>
-                <p class="text-lg">Your account is pending approval from an administrator. You will be notified once it's approved.</p>
-            </div>
-            <div id="rejected-page" class="hidden bg-white p-8 rounded-lg shadow-md">
-                <h2 class="text-2xl font-bold text-red-500 mb-4">Account Rejected</h2>
-                <p class="text-lg">We are sorry, but your account application has been rejected. Please contact an administrator for more information.</p>
-            </div>
-        </div>
-        
-        <!-- Main App View (for approved users) -->
-        <div id="app-view" class="hidden">
-            <!-- Navigation Tabs -->
-            <div class="mb-6 border-b border-gray-200">
-                <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                    <a href="#" id="tab-feed" class="tab-link whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-blue-500 text-blue-600">Feed</a>
-                    <a href="#" id="tab-messages" class="tab-link whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Messages</a>
-                    <a href="#" id="tab-admin" class="tab-link hidden whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Admin Panel</a>
-                </nav>
-            </div>
-
-            <!-- Tab Content -->
-            <div id="tab-content-feed">
-                <!-- Create Post -->
-                <div class="bg-white p-4 rounded-lg shadow-md mb-6">
-                    <textarea id="post-content" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3" placeholder="What's on your mind?"></textarea>
-                    <button id="create-post-btn" class="mt-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-semibold">Post</button>
-                </div>
-                <!-- Posts Feed -->
-                <div id="posts-feed" class="space-y-6">
-                    <!-- Posts will be dynamically inserted here -->
+                     <p id="auth-error" class="text-red-500 text-center mt-2"></p>
                 </div>
             </div>
+        </div>
 
-            <div id="tab-content-messages" class="hidden">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Users List -->
-                    <div class="md:col-span-1 bg-white p-4 rounded-lg shadow-md">
-                        <h3 class="text-xl font-bold mb-4">Users</h3>
-                        <div id="chat-users-list" class="space-y-2 max-h-screen overflow-y-auto">
-                            <!-- User list will be populated here -->
+        <!-- Pending Approval Page -->
+        <div id="pending-approval-page" class="hidden">
+            <div class="min-h-screen flex flex-col items-center justify-center text-center p-4">
+                <i class="fas fa-hourglass-half text-6xl text-yellow-500 mb-4"></i>
+                <h1 class="text-4xl font-bold">Application Submitted!</h1>
+                <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">Your account is pending approval from an administrator.</p>
+                <p class="mt-1 text-gray-500">You will be notified once your account is approved. Please check back later.</p>
+                <button id="logout-btn-pending" class="mt-8 px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg">Logout</button>
+            </div>
+        </div>
+
+        <!-- Main Application (Feed, etc.) -->
+        <div id="main-app" class="hidden">
+            <!-- Header -->
+            <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-40">
+                <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                    <h1 class="text-2xl font-bold text-blue-600 dark:text-blue-400">CampusConnect</h1>
+                    <div class="flex items-center space-x-4">
+                        <span id="user-greeting" class="font-semibold"></span>
+                        <button id="admin-panel-btn" class="hidden px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"><i class="fas fa-user-shield mr-2"></i>Admin Panel</button>
+                        <button id="logout-btn-main" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg"><i class="fas fa-sign-out-alt mr-2"></i>Logout</button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="container mx-auto p-4 grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- Left Sidebar (Profile, Nav) -->
+                <aside class="md:col-span-1">
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+                        <h3 class="font-bold text-lg mb-2">My Profile</h3>
+                        <div id="profile-summary">
+                            <!-- Profile info will be injected here -->
                         </div>
                     </div>
-                    <!-- Chat Window -->
-                    <div class="md:col-span-2 bg-white rounded-lg shadow-md flex flex-col" style="height: 70vh;">
-                        <div id="chat-window" class="flex-grow flex flex-col">
-                            <div id="chat-placeholder" class="flex-grow flex items-center justify-center text-gray-500">
-                                <p>Select a user to start chatting</p>
+                     <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mt-4">
+                        <h3 class="font-bold text-lg mb-2">Navigation</h3>
+                        <nav>
+                            <ul>
+                                <li><a href="#" class="block py-2 px-4 rounded hover:bg-gray-200 dark:hover:bg-gray-700"><i class="fas fa-home mr-2"></i>Home Feed</a></li>
+                                <li><a href="#" class="block py-2 px-4 rounded hover:bg-gray-200 dark:hover:bg-gray-700"><i class="fas fa-envelope mr-2"></i>Messages</a></li>
+                                <li><a href="#" class="block py-2 px-4 rounded hover:bg-gray-200 dark:hover:bg-gray-700"><i class="fas fa-bell mr-2"></i>Notice Board</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </aside>
+
+                <!-- Center (Feed) -->
+                <div class="md:col-span-2">
+                    <!-- Create Post -->
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mb-6">
+                        <h3 class="font-bold text-lg mb-3">Create a Post</h3>
+                        <form id="create-post-form">
+                            <textarea id="post-content" class="w-full p-3 bg-gray-100 dark:bg-gray-700 rounded-lg border-transparent focus:ring-2 focus:ring-blue-500" rows="3" placeholder="What's on your mind?"></textarea>
+                            <div class="flex justify-between items-center mt-3">
+                                <input type="file" id="post-image-input" class="text-sm">
+                                <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg">Post</button>
                             </div>
-                            <div id="chat-active" class="hidden flex-grow flex flex-col">
-                                <div class="p-4 border-b border-gray-200">
-                                    <h3 id="chat-with-name" class="font-bold text-lg"></h3>
-                                </div>
-                                <div id="chat-messages" class="flex-grow p-4 space-y-4 overflow-y-auto chat-messages">
-                                    <!-- Messages will appear here -->
-                                </div>
-                                <div class="p-4 border-t border-gray-200">
-                                    <form id="message-form" class="flex space-x-2">
-                                        <input type="text" id="message-input" class="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Type a message...">
-                                        <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition"><i class="fa-solid fa-paper-plane"></i></button>
-                                    </form>
-                                </div>
-                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Posts Feed -->
+                    <div id="posts-feed" class="space-y-6">
+                        <!-- Posts will be injected here -->
+                    </div>
+                </div>
+
+                <!-- Right Sidebar (Users/Chat) -->
+                <aside class="md:col-span-1">
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+                        <h3 class="font-bold text-lg mb-2">Online Users</h3>
+                        <div id="online-users-list">
+                            <!-- User list for chat will be injected here -->
+                            <p class="text-sm text-gray-500">Messaging coming soon...</p>
                         </div>
                     </div>
-                </div>
-            </div>
+                </aside>
+            </main>
+        </div>
 
-            <div id="tab-content-admin" class="hidden">
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-2xl font-bold border-b pb-2 mb-4">Admin Panel - Account Approval</h3>
-                    <div id="pending-users-list">
-                        <!-- Pending users will be dynamically inserted here -->
+        <!-- Admin Panel Modal -->
+        <div id="admin-panel-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-11/12 max-w-4xl max-h-[90vh] flex flex-col">
+                <div class="p-4 border-b dark:border-gray-700 flex justify-between items-center">
+                    <h2 class="text-2xl font-bold">Admin Panel - Pending Approvals</h2>
+                    <button id="close-admin-panel" class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200">&times;</button>
+                </div>
+                <div class="p-4 overflow-y-auto">
+                    <div id="pending-users-container" class="space-y-4">
+                        <!-- Pending user cards will be injected here -->
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Message/Notification Box -->
-        <div id="message-box" class="hidden fixed bottom-5 right-5 bg-gray-900 text-white px-6 py-3 rounded-lg shadow-xl transition-opacity duration-300 z-50">
-            <p id="message-text"></p>
-        </div>
+
     </div>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDK -->
     <script type="module">
+        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, updateDoc, addDoc, serverTimestamp, orderBy, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc, 
+            getDoc, 
+            collection, 
+            query, 
+            where, 
+            getDocs, 
+            updateDoc,
+            addDoc,
+            serverTimestamp,
+            onSnapshot,
+            orderBy
+        } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+        import { 
+            getStorage, 
+            ref, 
+            uploadBytes, 
+            getDownloadURL 
+        } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-storage.js";
 
         // Your web app's Firebase configuration
+        // IMPORTANT: Replace this with your own Firebase project's configuration!
         const firebaseConfig = {
             apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
             authDomain: "campusconnect-a8447.firebaseapp.com",
             projectId: "campusconnect-a8447",
-            storageBucket: "campusconnect-a8447.appspot.com",
+            storageBucket: "campusconnect-a8447.firebasestorage.app",
             messagingSenderId: "512467118728",
             appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
             measurementId: "G-62XR5TLSN7"
@@ -245,384 +233,128 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
-        // --- IMPORTANT: ADMIN CONFIGURATION ---
-        const ADMIN_UID = "UDVvMFBeg9aTAnO8yw";
-
-        // Global State
+        // DOM Elements
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const authPage = document.getElementById('auth-page');
+        const mainApp = document.getElementById('main-app');
+        const pendingPage = document.getElementById('pending-approval-page');
+        const adminPanelBtn = document.getElementById('admin-panel-btn');
+        const adminPanelModal = document.getElementById('admin-panel-modal');
+        
         let currentUserData = null;
-        let currentChatPartner = null;
-        let unsubscribePosts = null;
-        let unsubscribeMessages = null;
-        
-        // UI Elements
-        const loading = document.getElementById('loading');
-        const authWrapper = document.getElementById('auth-wrapper');
-        const statusPages = document.getElementById('status-pages');
-        const appView = document.getElementById('app-view');
-        const userInfoHeader = document.getElementById('user-info-header');
 
-        // --- UTILITY FUNCTIONS ---
-        function showMessage(text, isError = false, duration = 3000) {
-            const box = document.getElementById('message-box');
-            document.getElementById('message-text').textContent = text;
-            box.classList.remove('hidden');
-            box.classList.toggle('bg-red-600', isError);
-            box.classList.toggle('bg-gray-900', !isError);
-            setTimeout(() => box.classList.add('hidden'), duration);
-        }
-
-        function showView(view) {
-            loading.classList.add('hidden');
-            [authWrapper, statusPages, appView].forEach(v => v.classList.add('hidden'));
-            if (view) view.classList.remove('hidden');
-        }
-
-        function showPageWithin(wrapper, pageId) {
-            Array.from(wrapper.children).forEach(child => child.classList.add('hidden'));
-            document.getElementById(pageId)?.classList.remove('hidden');
-        }
-
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-link').forEach(link => {
-                link.classList.remove('border-blue-500', 'text-blue-600');
-                link.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
-            });
-            document.getElementById(`tab-${tabId}`).classList.add('border-blue-500', 'text-blue-600');
-            document.getElementById(`tab-${tabId}`).classList.remove('border-transparent', 'text-gray-500');
-
-            ['feed', 'messages', 'admin'].forEach(contentId => {
-                document.getElementById(`tab-content-${contentId}`).classList.add('hidden');
-            });
-            document.getElementById(`tab-content-${tabId}`).classList.remove('hidden');
-        }
-        
-        // --- AUTHENTICATION ---
-        onAuthStateChanged(auth, user => {
-            if (unsubscribePosts) unsubscribePosts();
-            if (unsubscribeMessages) unsubscribeMessages();
-            
+        // --- AUTHENTICATION & STATE MANAGEMENT ---
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                checkUserStatus(user);
-            } else {
-                currentUserData = null;
-                showView(authWrapper);
-                showPageWithin(authWrapper, 'login-page');
-                userInfoHeader.classList.add('hidden');
-            }
-        });
+                // User is signed in
+                const userDocRef = doc(db, "users", user.uid);
+                const userDocSnap = await getDoc(userDocRef);
 
-        async function checkUserStatus(user) {
-            loading.classList.remove('hidden');
-            const userDocRef = doc(db, "users", user.uid);
-            const userDoc = await getDoc(userDocRef);
+                if (userDocSnap.exists()) {
+                    currentUserData = { uid: user.uid, ...userDocSnap.data() };
+                    
+                    // Update UI based on user status and role
+                    updateUIForUser(currentUserData);
 
-            if (userDoc.exists()) {
-                currentUserData = { uid: user.uid, ...userDoc.data() };
-                document.getElementById('header-user-name').textContent = currentUserData.name;
-                document.getElementById('header-user-id').textContent = `ID: ${currentUserData.uid}`;
-                userInfoHeader.classList.remove('hidden');
-
-                if (currentUserData.status === 'approved') {
-                    showView(appView);
-                    switchTab('feed');
-                    loadPosts();
-                    loadChatUsers();
-                    if (currentUserData.uid === ADMIN_UID) {
-                        document.getElementById('tab-admin').classList.remove('hidden');
-                        loadPendingUsers();
-                    }
-                } else if (currentUserData.status === 'pending') {
-                    showView(statusPages);
-                    showPageWithin(statusPages, 'pending-page');
-                } else if (currentUserData.status === 'rejected') {
-                    showView(statusPages);
-                    showPageWithin(statusPages, 'rejected-page');
+                } else {
+                    // This case might happen if user doc creation failed after signup
+                    console.error("User document not found in Firestore!");
+                    showPage('auth');
                 }
             } else {
-                showView(statusPages);
-                showPageWithin(statusPages, 'pending-page');
-                console.error("User document not found in Firestore!");
-            }
-        }
-
-        // --- EVENT LISTENERS ---
-        document.getElementById('show-register').addEventListener('click', e => { e.preventDefault(); showPageWithin(authWrapper, 'register-page'); });
-        document.getElementById('show-login').addEventListener('click', e => { e.preventDefault(); showPageWithin(authWrapper, 'login-page'); });
-
-        document.getElementById('register-form').addEventListener('submit', async e => {
-            e.preventDefault();
-            const formData = {
-                name: document.getElementById('register-name').value,
-                email: document.getElementById('register-email').value,
-                roll: document.getElementById('register-roll').value,
-                class: document.getElementById('register-class').value,
-                department: document.getElementById('register-department').value,
-                gender: document.getElementById('register-gender').value,
-                religion: document.getElementById('register-religion').value,
-            };
-            const password = document.getElementById('register-password').value;
-
-            try {
-                const userCredential = await createUserWithEmailAndPassword(auth, formData.email, password);
-                await setDoc(doc(db, "users", userCredential.user.uid), {
-                    ...formData,
-                    status: "pending",
-                    createdAt: serverTimestamp()
-                });
-                showMessage("Registration successful! Awaiting admin approval.");
-            } catch (error) {
-                showMessage(error.message, true);
+                // User is signed out
+                currentUserData = null;
+                showPage('auth');
             }
         });
 
-        document.getElementById('login-form').addEventListener('submit', async e => {
+        function showPage(page) {
+            loadingSpinner.classList.add('hidden');
+            authPage.classList.add('hidden');
+            mainApp.classList.add('hidden');
+            pendingPage.classList.add('hidden');
+            adminPanelModal.classList.add('hidden');
+
+            if (page === 'auth') authPage.classList.remove('hidden');
+            else if (page === 'main') mainApp.classList.remove('hidden');
+            else if (page === 'pending') pendingPage.classList.remove('hidden');
+        }
+
+        async function updateUIForUser(userData) {
+            if (userData.status === 'pending') {
+                showPage('pending');
+            } else if (userData.status === 'approved') {
+                showPage('main');
+                document.getElementById('user-greeting').textContent = `Hello, ${userData.name.split(' ')[0]}`;
+                await loadProfileSummary(userData);
+                await fetchAndDisplayPosts();
+                if (userData.role === 'admin') {
+                    adminPanelBtn.classList.remove('hidden');
+                }
+            } else if (userData.status === 'rejected') {
+                // Handle rejected case (e.g., show a message and log out)
+                alert('Your account application has been rejected.');
+                signOut(auth);
+            }
+        }
+        
+        // --- AUTH FORM TOGGLING ---
+        document.getElementById('show-signup').addEventListener('click', (e) => {
             e.preventDefault();
+            document.getElementById('login-form-container').classList.add('hidden');
+            document.getElementById('signup-form-container').classList.remove('hidden');
+        });
+
+        document.getElementById('show-login').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('signup-form-container').classList.add('hidden');
+            document.getElementById('login-form-container').classList.remove('hidden');
+        });
+
+        // --- AUTH EVENT HANDLERS ---
+        const authError = document.getElementById('auth-error');
+
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            authError.textContent = '';
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const roll = document.getElementById('signup-roll').value;
+            const department = document.getElementById('signup-department').value;
+            const userClass = document.getElementById('signup-class').value;
+            const gender = document.getElementById('signup-gender').value;
+            const religion = document.getElementById('signup-religion').value;
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Create user document in Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    name,
+                    email,
+                    roll,
+                    department,
+                    class: userClass,
+                    gender,
+                    religion,
+                    status: 'pending', // <<< KEY: New users are pending
+                    role: 'user', // Default role
+                    createdAt: serverTimestamp()
+                });
+                // The onAuthStateChanged listener will handle the UI redirect
+            } catch (error) {
+                console.error("Signup Error:", error);
+                authError.textContent = error.message;
+            }
+        });
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            authError.textContent = '';
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                showMessage(error.message, true);
-            }
-        });
-
-        document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
-
-        // Tab switching
-        document.getElementById('tab-feed').addEventListener('click', e => { e.preventDefault(); switchTab('feed'); });
-        document.getElementById('tab-messages').addEventListener('click', e => { e.preventDefault(); switchTab('messages'); });
-        document.getElementById('tab-admin').addEventListener('click', e => { e.preventDefault(); switchTab('admin'); });
-
-        // --- POSTS (FEED) LOGIC ---
-        document.getElementById('create-post-btn').addEventListener('click', async () => {
-            const content = document.getElementById('post-content').value.trim();
-            if (!content) return;
-            try {
-                await addDoc(collection(db, "posts"), {
-                    authorId: currentUserData.uid,
-                    authorName: currentUserData.name,
-                    content: content,
-                    likes: [],
-                    comments: [],
-                    createdAt: serverTimestamp()
-                });
-                document.getElementById('post-content').value = '';
-            } catch (error) {
-                showMessage("Error creating post: " + error.message, true);
-            }
-        });
-
-        function loadPosts() {
-            const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-            unsubscribePosts = onSnapshot(q, (snapshot) => {
-                const feed = document.getElementById('posts-feed');
-                feed.innerHTML = '';
-                if (snapshot.empty) {
-                    feed.innerHTML = `<p class="text-center text-gray-500">No posts yet. Be the first to share something!</p>`;
-                    return;
-                }
-                snapshot.forEach(doc => {
-                    const post = { id: doc.id, ...doc.data() };
-                    feed.appendChild(createPostElement(post));
-                });
-            });
-        }
-
-        function createPostElement(post) {
-            const postDiv = document.createElement('div');
-            postDiv.className = 'bg-white p-5 rounded-lg shadow-md';
-            const isLiked = post.likes.includes(currentUserData.uid);
-            
-            postDiv.innerHTML = `
-                <div class="flex items-center mb-3">
-                    <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-3">${post.authorName.charAt(0)}</div>
-                    <div>
-                        <p class="font-semibold">${post.authorName}</p>
-                        <p class="text-xs text-gray-500">${post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleString() : 'Just now'}</p>
-                    </div>
-                </div>
-                <p class="mb-4 whitespace-pre-wrap">${post.content}</p>
-                <div class="flex items-center space-x-6 border-t pt-3">
-                    <button class="like-btn text-gray-600 hover:text-blue-600 transition flex items-center space-x-1" data-id="${post.id}">
-                        <i class="fa-solid fa-thumbs-up ${isLiked ? 'text-blue-600' : ''}"></i>
-                        <span>${post.likes.length} Like</span>
-                    </button>
-                    <button class="comment-btn text-gray-600 hover:text-blue-600 transition flex items-center space-x-1" data-id="${post.id}">
-                        <i class="fa-solid fa-comment"></i>
-                        <span>${post.comments.length} Comment</span>
-                    </button>
-                </div>
-                <div class="comments-section mt-4 pt-4 border-t border-gray-100 hidden">
-                    <div class="space-y-3 mb-3">
-                        ${post.comments.map(c => `<div class="bg-gray-100 p-2 rounded-lg"><p class="font-semibold text-sm">${c.authorName}</p><p>${c.text}</p></div>`).join('')}
-                    </div>
-                    <form class="comment-form flex space-x-2">
-                        <input type="text" class="w-full px-3 py-1.5 border border-gray-300 rounded-full focus:outline-none focus:ring-1 focus:ring-blue-500" placeholder="Write a comment...">
-                        <input type="hidden" value="${post.id}">
-                        <button type="submit" class="bg-blue-500 text-white px-4 py-1.5 rounded-full hover:bg-blue-600">Post</button>
-                    </form>
-                </div>
-            `;
-
-            postDiv.querySelector('.like-btn').addEventListener('click', handleLike);
-            postDiv.querySelector('.comment-btn').addEventListener('click', e => {
-                e.currentTarget.closest('.bg-white').querySelector('.comments-section').classList.toggle('hidden');
-            });
-            postDiv.querySelector('.comment-form').addEventListener('submit', handleComment);
-            return postDiv;
-        }
-
-        async function handleLike(e) {
-            const postId = e.currentTarget.dataset.id;
-            const postRef = doc(db, "posts", postId);
-            const postDoc = await getDoc(postRef);
-            if (!postDoc.exists()) return;
-            const isLiked = postDoc.data().likes.includes(currentUserData.uid);
-
-            await updateDoc(postRef, {
-                likes: isLiked ? arrayRemove(currentUserData.uid) : arrayUnion(currentUserData.uid)
-            });
-        }
-
-        async function handleComment(e) {
-            e.preventDefault();
-            const input = e.target.querySelector('input[type="text"]');
-            const postId = e.target.querySelector('input[type="hidden"]').value;
-            const text = input.value.trim();
-            if (!text) return;
-
-            const newComment = {
-                authorId: currentUserData.uid,
-                authorName: currentUserData.name,
-                text: text,
-                createdAt: new Date()
-            };
-            
-            await updateDoc(doc(db, "posts", postId), {
-                comments: arrayUnion(newComment)
-            });
-            input.value = '';
-        }
-
-        // --- MESSAGING LOGIC ---
-        function loadChatUsers() {
-            const q = query(collection(db, "users"), where("status", "==", "approved"));
-            onSnapshot(q, (snapshot) => {
-                const list = document.getElementById('chat-users-list');
-                list.innerHTML = '';
-                snapshot.forEach(doc => {
-                    if (doc.id === currentUserData.uid) return;
-                    const user = { id: doc.id, ...doc.data() };
-                    const userDiv = document.createElement('div');
-                    userDiv.className = 'p-2 rounded-lg hover:bg-gray-100 cursor-pointer flex items-center space-x-3';
-                    userDiv.innerHTML = `
-                        <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">${user.name.charAt(0)}</div>
-                        <div>
-                            <p class="font-semibold">${user.name}</p>
-                            <p class="text-xs text-gray-500">${user.department}</p>
-                        </div>
-                    `;
-                    userDiv.addEventListener('click', () => openChat(user));
-                    list.appendChild(userDiv);
-                });
-            });
-        }
-
-        function openChat(partner) {
-            currentChatPartner = partner;
-            document.getElementById('chat-placeholder').classList.add('hidden');
-            document.getElementById('chat-active').classList.remove('hidden');
-            document.getElementById('chat-with-name').textContent = partner.name;
-
-            const chatId = [currentUserData.uid, partner.id].sort().join('_');
-            
-            if (unsubscribeMessages) unsubscribeMessages();
-            const messagesRef = collection(db, "chats", chatId, "messages");
-            const q = query(messagesRef, orderBy("createdAt"));
-
-            unsubscribeMessages = onSnapshot(q, (snapshot) => {
-                const messagesDiv = document.getElementById('chat-messages');
-                messagesDiv.innerHTML = '';
-                snapshot.forEach(doc => {
-                    const msg = doc.data();
-                    const msgBubble = document.createElement('div');
-                    const isSender = msg.senderId === currentUserData.uid;
-                    msgBubble.className = `max-w-xs md:max-w-md p-3 rounded-lg ${isSender ? 'bg-blue-500 text-white self-end' : 'bg-gray-200 text-gray-800 self-start'}`;
-                    msgBubble.textContent = msg.text;
-                    messagesDiv.appendChild(msgBubble);
-                });
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            });
-        }
-
-        document.getElementById('message-form').addEventListener('submit', async e => {
-            e.preventDefault();
-            if (!currentChatPartner) return;
-            const input = document.getElementById('message-input');
-            const text = input.value.trim();
-            if (!text) return;
-
-            const chatId = [currentUserData.uid, currentChatPartner.id].sort().join('_');
-            const messagesRef = collection(db, "chats", chatId, "messages");
-            
-            try {
-                await addDoc(messagesRef, {
-                    text: text,
-                    senderId: currentUserData.uid,
-                    receiverId: currentChatPartner.id,
-                    createdAt: serverTimestamp()
-                });
-                input.value = '';
-            } catch (error) {
-                showMessage("Error sending message: " + error.message, true);
-            }
-        });
-
-        // --- ADMIN PANEL LOGIC ---
-        function loadPendingUsers() {
-            const q = query(collection(db, "users"), where("status", "==", "pending"));
-            onSnapshot(q, (snapshot) => {
-                const list = document.getElementById('pending-users-list');
-                list.innerHTML = '';
-                if (snapshot.empty) {
-                    list.innerHTML = '<p class="text-gray-500">No pending approval requests.</p>';
-                    return;
-                }
-                snapshot.forEach(doc => {
-                    const user = { id: doc.id, ...doc.data() };
-                    const userDiv = document.createElement('div');
-                    userDiv.className = 'flex justify-between items-center p-3 my-2 bg-gray-50 rounded-lg border';
-                    userDiv.innerHTML = `
-                        <div>
-                            <p class="font-semibold">${user.name} <span class="font-normal text-gray-600">(${user.email})</span></p>
-                            <p class="text-sm text-gray-500">Dept: ${user.department}, Class: ${user.class}, Roll: ${user.roll}</p>
-                        </div>
-                        <div>
-                            <button data-uid="${user.id}" class="approve-btn bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition mr-2">Approve</button>
-                            <button data-uid="${user.id}" class="reject-btn bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition">Reject</button>
-                        </div>
-                    `;
-                    list.appendChild(userDiv);
-                });
-            });
-        }
-
-        document.getElementById('tab-content-admin').addEventListener('click', async e => {
-            const uid = e.target.dataset.uid;
-            if (!uid) return;
-            const userDocRef = doc(db, "users", uid);
-            if (e.target.classList.contains('approve-btn')) {
-                await updateDoc(userDocRef, { status: 'approved' });
-                showMessage('User approved successfully!');
-            }
-            if (e.target.classList.contains('reject-btn')) {
-                await updateDoc(userDocRef, { status: 'rejected' });
-                showMessage('User rejected successfully!');
-            }
-        });
-
-    </script>
-</body>
-</html>
-
+    
