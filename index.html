@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusConnect - Infinity Group</title>
+    <title>CampusConnect</title>
     
-    <!-- Tailwind CSS for styling -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
-        /* Custom styles */
+        /* Custom styles to complement Tailwind */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f0f2f5;
@@ -25,314 +25,292 @@
         .hidden {
             display: none;
         }
-        /* Custom scrollbar for chat and user lists */
+        /* Custom scrollbar for chat and feed */
         .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
             background: #f1f1f1;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
             background: #888;
-            border-radius: 3px;
+            border-radius: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
         /* Simple animation for modals */
-        .modal-enter {
-            animation: fadeIn 0.3s ease-out;
-        }
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
         }
+        .modal-content {
+            animation: fadeIn 0.3s ease-out;
+        }
     </style>
 </head>
-<body class="text-gray-800">
+<body class="antialiased">
 
-    <!-- =========== Main Application Container =========== -->
+    <!-- Main Application Container -->
     <div id="app-container">
 
-        <!-- =========== Loading Spinner =========== -->
-        <div id="loading-spinner" class="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
-            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
-        </div>
-
-        <!-- =========== Notification Area =========== -->
-        <div id="notification-area" class="hidden fixed top-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg z-50">
-            <p id="notification-message"></p>
-        </div>
-        <div id="error-area" class="hidden fixed top-5 right-5 bg-red-500 text-white py-2 px-4 rounded-lg shadow-lg z-50">
-            <p id="error-message"></p>
-        </div>
-
-
-        <!-- =========== Login & Signup Pages =========== -->
-        <div id="auth-section">
-            <!-- Login Page -->
-            <div id="login-page" class="min-h-screen flex items-center justify-center">
-                <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-                    <h2 class="text-3xl font-bold text-center text-blue-600 mb-2">Welcome to CampusConnect</h2>
-                    <p class="text-center text-gray-500 mb-6">Login to connect with your campus.</p>
-                    <form id="login-form">
-                        <div class="mb-4">
-                            <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                            <input type="email" id="login-email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div class="mb-6">
-                            <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                            <input type="password" id="login-password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300 font-semibold">Login</button>
-                    </form>
-                    <p class="text-center mt-4 text-sm">
-                        Don't have an account? <a href="#" id="show-signup-link" class="text-blue-600 hover:underline">Sign Up</a>
-                    </p>
-                </div>
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="fixed inset-0 bg-white flex flex-col justify-center items-center z-50">
+            <div class="text-3xl font-bold text-indigo-600">CampusConnect</div>
+            <div class="mt-4">
+                <i class="fas fa-spinner fa-spin text-4xl text-indigo-500"></i>
             </div>
+            <p class="mt-2 text-gray-600">Loading...</p>
+        </div>
 
-            <!-- Signup Page -->
-            <div id="signup-page" class="hidden min-h-screen flex items-center justify-center py-12">
-                <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-2xl">
-                    <h2 class="text-3xl font-bold text-center text-blue-600 mb-2">Create Your Account</h2>
-                    <p class="text-center text-gray-500 mb-6">Join CampusConnect today! Your account will be pending approval.</p>
-                    <form id="signup-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Column 1 -->
-                        <div>
-                            <div class="mb-4">
-                                <label for="signup-name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                                <input type="text" id="signup-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            </div>
-                            <div class="mb-4">
-                                <label for="signup-email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                                <input type="email" id="signup-email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            </div>
-                            <div class="mb-4">
-                                <label for="signup-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                                <input type="password" id="signup-password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            </div>
-                             <div class="mb-4">
-                                <label for="signup-roll" class="block text-sm font-medium text-gray-700 mb-1">Roll Number / Student ID</label>
-                                <input type="text" id="signup-roll" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            </div>
-                        </div>
-                        <!-- Column 2 -->
-                        <div>
-                            <div class="mb-4">
-                                <label for="signup-department" class="block text-sm font-medium text-gray-700 mb-1">Department</label>
-                                <input type="text" id="signup-department" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            </div>
-                            <div class="mb-4">
-                                <label for="signup-class" class="block text-sm font-medium text-gray-700 mb-1">Class / Year</label>
-                                <input type="text" id="signup-class" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            </div>
-                            <div class="mb-4">
-                                <label for="signup-gender" class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
-                                <select id="signup-gender" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <label for="signup-religion" class="block text-sm font-medium text-gray-700 mb-1">Religion</label>
-                                <input type="text" id="signup-religion" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            </div>
-                        </div>
-                        <div class="md:col-span-2">
-                            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300 font-semibold">Sign Up</button>
-                        </div>
-                    </form>
-                    <p class="text-center mt-4 text-sm">
-                        Already have an account? <a href="#" id="show-login-link" class="text-blue-600 hover:underline">Login</a>
-                    </p>
-                </div>
+        <!-- Login Screen -->
+        <div id="login-screen" class="hidden min-h-screen flex items-center justify-center bg-gray-100">
+            <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg">
+                <h1 class="text-3xl font-bold text-center text-indigo-600">Welcome to CampusConnect</h1>
+                <p class="text-center text-gray-500">Connect with your campus community.</p>
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label for="login-email" class="text-sm font-medium text-gray-700">Email address</label>
+                        <input id="login-email" type="email" required class="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="login-password" class="text-sm font-medium text-gray-700">Password</label>
+                        <input id="login-password" type="password" required class="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <button type="submit" class="w-full py-3 px-4 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-semibold">Log In</button>
+                </form>
+                <div id="login-error" class="text-red-500 text-sm text-center"></div>
+                <p class="text-sm text-center text-gray-600">
+                    Don't have an account? <a href="#" id="show-signup" class="font-medium text-indigo-600 hover:underline">Sign up</a>
+                </p>
             </div>
         </div>
 
-        <!-- =========== Main Application (after login) =========== -->
+        <!-- Signup Screen -->
+        <div id="signup-screen" class="hidden min-h-screen flex items-center justify-center bg-gray-100 py-12">
+            <div class="w-full max-w-lg p-8 space-y-6 bg-white rounded-xl shadow-lg">
+                <h1 class="text-3xl font-bold text-center text-indigo-600">Create Your Account</h1>
+                <form id="signup-form" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-sm font-medium text-gray-700">Full Name</label>
+                            <input id="signup-name" type="text" required class="w-full px-4 py-2 mt-1 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-700">College Roll Number / ID</label>
+                            <input id="signup-roll" type="text" required class="w-full px-4 py-2 mt-1 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-700">Department</label>
+                            <input id="signup-department" type="text" required class="w-full px-4 py-2 mt-1 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-700">Class / Year</label>
+                            <input id="signup-class" type="text" required class="w-full px-4 py-2 mt-1 border rounded-lg">
+                        </div>
+                         <div>
+                            <label class="text-sm font-medium text-gray-700">Gender</label>
+                            <select id="signup-gender" required class="w-full px-4 py-2 mt-1 border rounded-lg bg-white">
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-700">Religion</label>
+                            <input id="signup-religion" type="text" class="w-full px-4 py-2 mt-1 border rounded-lg">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Email Address</label>
+                        <input id="signup-email" type="email" required class="w-full px-4 py-2 mt-1 border rounded-lg">
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Password (min. 6 characters)</label>
+                        <input id="signup-password" type="password" required class="w-full px-4 py-2 mt-1 border rounded-lg">
+                    </div>
+                    <button type="submit" class="w-full py-3 px-4 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 font-semibold">Sign Up</button>
+                </form>
+                <div id="signup-error" class="text-red-500 text-sm text-center"></div>
+                <p class="text-sm text-center text-gray-600">
+                    Already have an account? <a href="#" id="show-login" class="font-medium text-indigo-600 hover:underline">Log in</a>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Pending Approval Screen -->
+        <div id="pending-approval-screen" class="hidden min-h-screen flex items-center justify-center bg-gray-100">
+            <div class="w-full max-w-md p-8 text-center bg-white rounded-xl shadow-lg">
+                <i class="fas fa-hourglass-half text-5xl text-amber-500 mx-auto"></i>
+                <h1 class="text-2xl font-bold text-gray-800 mt-4">Application Submitted!</h1>
+                <p class="text-gray-600 mt-2">Your account is pending approval from an administrator. You will be notified once your account is approved. Please check back later.</p>
+                <button id="logout-pending" class="mt-6 w-full py-2 px-4 text-white bg-red-500 rounded-lg hover:bg-red-600 font-semibold">Log Out</button>
+            </div>
+        </div>
+
+        <!-- Main Application UI -->
         <div id="main-app" class="hidden">
             <!-- Header -->
             <header class="bg-white shadow-md sticky top-0 z-40">
-                <div class="container mx-auto px-4 py-2 flex justify-between items-center">
-                    <h1 class="text-2xl font-bold text-blue-600">CampusConnect</h1>
-                    <div class="flex items-center space-x-4">
-                        <button id="admin-panel-btn" class="hidden bg-yellow-500 text-white px-3 py-1 rounded-lg hover:bg-yellow-600 text-sm font-semibold">
-                            <i class="fas fa-user-shield mr-1"></i> Admin Panel
-                        </button>
-                        <div id="user-profile-menu" class="relative">
-                             <button id="user-avatar-btn" class="flex items-center space-x-2">
-                                <span id="header-username" class="font-semibold">User</span>
-                                <img id="header-avatar" src="https://placehold.co/40x40/E2E8F0/4A5568?text=U" alt="User Avatar" class="w-8 h-8 rounded-full bg-gray-300">
-                             </button>
+                <div class="container mx-auto px-4">
+                    <div class="flex justify-between items-center py-3">
+                        <div class="text-2xl font-bold text-indigo-600">
+                            <a href="#" class="nav-link" data-page="feed">CampusConnect</a>
                         </div>
-                         <button id="logout-btn" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 text-sm font-semibold">
-                            <i class="fas fa-sign-out-alt mr-1"></i> Logout
-                        </button>
+                        <div class="flex items-center space-x-6">
+                            <a href="#" class="nav-link text-gray-600 hover:text-indigo-600" data-page="feed"><i class="fas fa-home text-xl"></i></a>
+                            <a href="#" class="nav-link text-gray-600 hover:text-indigo-600" data-page="messenger"><i class="fas fa-comments text-xl"></i></a>
+                            <a href="#" class="nav-link text-gray-600 hover:text-indigo-600" data-page="notice-board"><i class="fas fa-bullhorn text-xl"></i></a>
+                            <a href="#" id="admin-panel-button" class="hidden nav-link text-gray-600 hover:text-indigo-600" data-page="admin-panel"><i class="fas fa-user-shield text-xl"></i></a>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div id="current-user-profile" class="flex items-center space-x-2 cursor-pointer">
+                                <img id="header-user-img" src="https://placehold.co/40x40/E2E8F0/4A5568?text=U" class="w-8 h-8 rounded-full object-cover">
+                                <span id="header-user-name" class="font-semibold text-gray-700 text-sm">User</span>
+                            </div>
+                            <button id="logout-main" class="text-gray-500 hover:text-red-600"><i class="fas fa-sign-out-alt text-xl"></i></button>
+                        </div>
                     </div>
                 </div>
             </header>
 
-            <!-- Main Content -->
+            <!-- Main Content Area -->
             <main class="container mx-auto p-4 grid grid-cols-12 gap-6">
-                <!-- Left Sidebar (Navigation & Profile) -->
+                
+                <!-- Left Sidebar (Profile Info) -->
                 <aside class="col-span-12 md:col-span-3">
-                    <div class="bg-white p-4 rounded-xl shadow">
-                        <h3 class="font-bold text-lg mb-4">Navigation</h3>
-                        <nav>
-                            <ul>
-                                <li><a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100" id="feed-link"><i class="fas fa-home w-5 text-center text-blue-500"></i><span>Home Feed</span></a></li>
-                                <li><a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100" id="notices-link"><i class="fas fa-bullhorn w-5 text-center text-green-500"></i><span>Notice Board</span></a></li>
-                                <li><a href="#" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100" id="messages-link"><i class="fas fa-comments w-5 text-center text-purple-500"></i><span>Messages</span></a></li>
+                    <div class="bg-white p-4 rounded-lg shadow">
+                         <div class="text-center">
+                            <img id="sidebar-user-img" src="https://placehold.co/100x100/E2E8F0/4A5568?text=U" class="w-24 h-24 rounded-full object-cover mx-auto border-4 border-indigo-200">
+                            <h2 id="sidebar-user-name" class="text-xl font-bold mt-2">User Name</h2>
+                            <p id="sidebar-user-dept" class="text-sm text-gray-500">Department</p>
+                        </div>
+                        <hr class="my-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-700">Profile Details</h3>
+                            <ul class="mt-2 space-y-2 text-sm text-gray-600">
+                                <li><i class="fas fa-id-card w-5"></i> Roll: <span id="sidebar-user-roll"></span></li>
+                                <li><i class="fas fa-chalkboard-teacher w-5"></i> Class: <span id="sidebar-user-class"></span></li>
+                                <li><i class="fas fa-venus-mars w-5"></i> Gender: <span id="sidebar-user-gender"></span></li>
+                                <li><i class="fas fa-praying-hands w-5"></i> Religion: <span id="sidebar-user-religion"></span></li>
                             </ul>
-                        </nav>
+                        </div>
                     </div>
                 </aside>
 
-                <!-- Center Content (Feed, Notices, etc.) -->
-                <div id="center-content" class="col-span-12 md:col-span-6">
-                    <!-- Home Feed Section -->
-                    <div id="feed-section">
-                        <!-- Create Post Box -->
-                        <div class="bg-white p-4 rounded-xl shadow mb-6">
-                            <textarea id="post-content" class="w-full p-2 border border-gray-200 rounded-lg" rows="3" placeholder="What's on your mind?"></textarea>
-                            <div class="flex justify-between items-center mt-2">
-                                <div>
-                                    <label for="post-image" class="cursor-pointer text-blue-500 hover:text-blue-700">
-                                        <i class="fas fa-image"></i> Add Image
-                                    </label>
-                                    <input type="file" id="post-image" class="hidden" accept="image/*">
-                                    <span id="image-name" class="text-sm text-gray-500 ml-2"></span>
+                <!-- Center Content (Dynamic) -->
+                <div id="page-content" class="col-span-12 md:col-span-6">
+                    
+                    <!-- Feed Page -->
+                    <div id="feed-page" class="page">
+                        <!-- Create Post -->
+                        <div class="bg-white p-4 rounded-lg shadow mb-6">
+                            <form id="create-post-form">
+                                <textarea id="post-content" class="w-full p-2 border rounded-lg" placeholder="What's on your mind?"></textarea>
+                                <div class="flex justify-between items-center mt-2">
+                                    <div>
+                                        <label for="post-image" class="cursor-pointer text-indigo-600 hover:text-indigo-800">
+                                            <i class="fas fa-image"></i> Add Image
+                                        </label>
+                                        <input type="file" id="post-image" class="hidden" accept="image/*">
+                                        <span id="image-name" class="text-sm text-gray-500 ml-2"></span>
+                                    </div>
+                                    <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700">Post</button>
                                 </div>
-                                <button id="create-post-btn" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-semibold">Post</button>
-                            </div>
+                            </form>
                         </div>
-                        <!-- Posts Container -->
-                        <div id="posts-container" class="space-y-6">
+                        <!-- Posts Feed -->
+                        <div id="posts-feed-container" class="space-y-6">
                             <!-- Posts will be dynamically inserted here -->
                         </div>
                     </div>
 
-                    <!-- Notice Board Section -->
-                    <div id="notices-section" class="hidden">
-                         <!-- Create Notice Box (Admin only) -->
-                        <div id="create-notice-box" class="hidden bg-white p-4 rounded-xl shadow mb-6">
-                            <h3 class="text-xl font-bold mb-2">Create New Notice</h3>
-                            <input id="notice-title" class="w-full p-2 border border-gray-200 rounded-lg mb-2" placeholder="Notice Title">
-                            <textarea id="notice-content" class="w-full p-2 border border-gray-200 rounded-lg" rows="4" placeholder="Notice details..."></textarea>
-                            <div class="text-right mt-2">
-                                <button id="create-notice-btn" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 font-semibold">Post Notice</button>
+                    <!-- Messenger Page -->
+                    <div id="messenger-page" class="page hidden">
+                        <div class="bg-white rounded-lg shadow h-[75vh] flex">
+                            <!-- User List -->
+                            <div class="w-1/3 border-r custom-scrollbar overflow-y-auto">
+                                <div class="p-4 border-b">
+                                    <h2 class="text-xl font-bold">Chats</h2>
+                                    <input id="user-search-input" type="text" placeholder="Search for users..." class="w-full mt-2 p-2 border rounded-lg text-sm">
+                                </div>
+                                <div id="user-search-results" class="hidden"></div>
+                                <div id="chat-list-container">
+                                    <!-- Chat list items will be here -->
+                                </div>
+                            </div>
+                            <!-- Chat Window -->
+                            <div id="chat-window" class="w-2/3 flex flex-col">
+                                <div id="chat-placeholder" class="flex-grow flex items-center justify-center text-gray-500">
+                                    Select a chat to start messaging
+                                </div>
+                                <div id="chat-area" class="hidden flex-grow flex flex-col">
+                                    <div class="p-4 border-b flex items-center space-x-3">
+                                        <img id="chat-with-img" src="https://placehold.co/40x40" class="w-10 h-10 rounded-full">
+                                        <h3 id="chat-with-name" class="font-bold"></h3>
+                                    </div>
+                                    <div id="messages-container" class="flex-grow p-4 overflow-y-auto custom-scrollbar space-y-4">
+                                        <!-- Messages will be here -->
+                                    </div>
+                                    <div class="p-4 border-t">
+                                        <form id="send-message-form" class="flex space-x-3">
+                                            <input id="message-input" type="text" placeholder="Type a message..." class="flex-grow p-2 border rounded-lg">
+                                            <button type="submit" class="bg-indigo-600 text-white px-5 py-2 rounded-lg"><i class="fas fa-paper-plane"></i></button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <!-- Notices Container -->
-                        <div id="notices-container" class="space-y-6">
-                            <!-- Notices will be dynamically inserted here -->
+                    </div>
+
+                    <!-- Notice Board Page -->
+                    <div id="notice-board-page" class="page hidden">
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <h2 class="text-2xl font-bold text-indigo-700 border-b pb-2 mb-4">College Notice Board</h2>
+                            <div id="notice-board-container" class="space-y-4">
+                                <!-- Notices will be dynamically inserted here -->
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Messages Section -->
-                    <div id="messages-section" class="hidden">
-                        <div class="bg-white rounded-xl shadow">
-                           <div id="chat-container" class="flex h-[70vh]">
-                               <!-- User List -->
-                               <div class="w-1/3 border-r border-gray-200">
-                                   <div class="p-4 border-b border-gray-200">
-                                       <h3 class="font-bold text-lg">Conversations</h3>
-                                   </div>
-                                   <div id="users-list" class="overflow-y-auto h-full custom-scrollbar">
-                                       <!-- User list for chat will be inserted here -->
-                                   </div>
-                               </div>
-                               <!-- Chat Window -->
-                               <div id="chat-window" class="w-2/3 flex flex-col">
-                                   <!-- Default view when no chat is selected -->
-                                   <div id="select-chat-view" class="flex-grow flex flex-col items-center justify-center text-gray-400">
-                                       <i class="fas fa-comments text-6xl mb-4"></i>
-                                       <p class="text-lg">Select a conversation to start chatting</p>
-                                   </div>
-                                   <!-- Active chat view -->
-                                   <div id="active-chat-view" class="hidden flex-grow flex flex-col">
-                                       <div class="p-4 border-b border-gray-200 flex items-center space-x-3">
-                                           <img id="chat-partner-avatar" src="https://placehold.co/40x40/E2E8F0/4A5568?text=U" class="w-10 h-10 rounded-full">
-                                           <h4 id="chat-partner-name" class="font-bold"></h4>
-                                       </div>
-                                       <div id="messages-display" class="flex-grow p-4 overflow-y-auto custom-scrollbar bg-gray-50 space-y-4">
-                                           <!-- Messages will be inserted here -->
-                                       </div>
-                                       <div class="p-4 border-t border-gray-200">
-                                           <form id="message-form" class="flex space-x-3">
-                                               <input id="message-input" type="text" placeholder="Type a message..." class="flex-grow px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                               <button type="submit" class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-blue-700">
-                                                   <i class="fas fa-paper-plane"></i>
-                                               </button>
-                                           </form>
-                                       </div>
-                                   </div>
-                               </div>
-                           </div>
+                    <!-- Admin Panel Page -->
+                    <div id="admin-panel-page" class="page hidden">
+                         <div class="bg-white p-4 rounded-lg shadow">
+                            <h2 class="text-2xl font-bold text-red-700 border-b pb-2 mb-4">Admin Panel</h2>
+                            <h3 class="text-lg font-semibold mb-2">Pending User Approvals</h3>
+                            <div id="pending-users-container" class="space-y-4">
+                                <!-- Pending users will be here -->
+                            </div>
                         </div>
                     </div>
+
                 </div>
 
-                <!-- Right Sidebar (Maybe for friends/suggestions later) -->
+                <!-- Right Sidebar (Could be used for friends list, ads, etc. - Placeholder for now) -->
                 <aside class="hidden md:block md:col-span-3">
-                    <div class="bg-white p-4 rounded-xl shadow">
-                        <h3 class="font-bold text-lg mb-4">Campus Members</h3>
-                        <div id="campus-members-list" class="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
-                            <!-- Approved user list will be here -->
-                        </div>
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h3 class="font-semibold text-gray-700">Suggestions</h3>
+                        <p class="text-sm text-gray-500 mt-2">Feature coming soon!</p>
                     </div>
                 </aside>
+
             </main>
         </div>
-
-        <!-- =========== Admin Panel Modal =========== -->
-        <div id="admin-panel-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl h-[90vh] flex flex-col modal-enter">
-                <div class="p-4 border-b flex justify-between items-center">
-                    <h2 class="text-2xl font-bold">Admin Panel - Account Approvals</h2>
-                    <button id="close-admin-panel-btn" class="text-gray-500 hover:text-gray-800">
-                        <i class="fas fa-times text-2xl"></i>
-                    </button>
-                </div>
-                <div class="p-4 overflow-y-auto flex-grow">
-                    <p class="text-gray-600 mb-4">Review new user registrations and approve or reject them.</p>
-                    <div id="pending-users-container" class="space-y-4">
-                        <!-- Pending user cards will be inserted here -->
-                    </div>
-                </div>
-            </div>
-        </div>
         
-        <!-- =========== Comments Modal =========== -->
-        <div id="comments-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl h-[80vh] flex flex-col modal-enter">
-                 <div class="p-4 border-b flex justify-between items-center">
-                    <h2 class="text-xl font-bold">Comments</h2>
-                    <button id="close-comments-modal-btn" class="text-gray-500 hover:text-gray-800">
-                        <i class="fas fa-times text-2xl"></i>
-                    </button>
-                </div>
-                <div id="comments-list" class="flex-grow p-4 overflow-y-auto custom-scrollbar space-y-4">
-                    <!-- Comments will be loaded here -->
-                </div>
-                <div class="p-4 border-t">
-                    <form id="comment-form" class="flex space-x-3">
-                       <input id="comment-input" type="text" placeholder="Write a comment..." class="flex-grow px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-                       <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 font-semibold">Post</button>
-                    </form>
-                </div>
+        <!-- Generic Modal -->
+        <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="modal-content bg-white p-6 rounded-lg shadow-xl max-w-sm text-center">
+                <p id="modal-message"></p>
+                <button id="modal-close" class="mt-4 bg-indigo-600 text-white px-4 py-2 rounded-lg">Close</button>
             </div>
         </div>
 
     </div>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDK -->
     <script type="module">
-        // --------------------------------------------------------------------
-        // --- Firebase Initialization ---
-        // --------------------------------------------------------------------
+        // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
         import { 
             getAuth, 
@@ -346,17 +324,17 @@
             doc, 
             setDoc, 
             getDoc, 
+            addDoc, 
             collection, 
-            addDoc,
             query, 
             where, 
-            getDocs,
             onSnapshot,
-            updateDoc,
-            arrayUnion,
-            arrayRemove,
             orderBy,
-            serverTimestamp
+            updateDoc,
+            deleteDoc,
+            serverTimestamp,
+            arrayUnion,
+            getDocs
         } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
         import { 
             getStorage, 
@@ -365,6 +343,7 @@
             getDownloadURL 
         } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-storage.js";
 
+        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
             authDomain: "campusconnect-a8447.firebaseapp.com",
@@ -381,698 +360,578 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
-        // Global state
+        // --- GLOBAL STATE & CONSTANTS ---
         let currentUser = null;
-        let currentUserData = null;
-        let currentChatPartnerId = null;
-        let unsubscribePosts = null;
-        let unsubscribeNotices = null;
-        let unsubscribeMessages = null;
-        let unsubscribeUsers = null;
+        let currentUserProfile = null;
+        const ADMIN_UID = "RP4zuS7heVaxRJXUfWQalPn9TBD3";
+        let currentChatId = null;
+        let postListeners = [];
+        let chatListeners = [];
 
-        // --------------------------------------------------------------------
-        // --- UI Element References ---
-        // --------------------------------------------------------------------
-        const loadingSpinner = document.getElementById('loading-spinner');
-        const authSection = document.getElementById('auth-section');
+        // --- UI ELEMENT REFERENCES ---
+        const loadingScreen = document.getElementById('loading-screen');
+        const loginScreen = document.getElementById('login-screen');
+        const signupScreen = document.getElementById('signup-screen');
+        const pendingScreen = document.getElementById('pending-approval-screen');
         const mainApp = document.getElementById('main-app');
-        const loginPage = document.getElementById('login-page');
-        const signupPage = document.getElementById('signup-page');
-        
-        const feedSection = document.getElementById('feed-section');
-        const noticesSection = document.getElementById('notices-section');
-        const messagesSection = document.getElementById('messages-section');
+        const pages = document.querySelectorAll('.page');
+        const pageContent = document.getElementById('page-content');
+        const navLinks = document.querySelectorAll('.nav-link');
 
-        const adminPanelBtn = document.getElementById('admin-panel-btn');
-        const adminPanelModal = document.getElementById('admin-panel-modal');
-        const commentsModal = document.getElementById('comments-modal');
-        
-        // --------------------------------------------------------------------
-        // --- Utility & UI Functions ---
-        // --------------------------------------------------------------------
-        
-        const showLoading = (show) => {
-            loadingSpinner.style.display = show ? 'flex' : 'none';
+        // --- UTILITY & HELPER FUNCTIONS ---
+
+        /**
+         * Shows a specific screen and hides others.
+         * @param {string} screenId The ID of the screen to show.
+         */
+        const showScreen = (screenId) => {
+            [loadingScreen, loginScreen, signupScreen, pendingScreen, mainApp].forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
         };
 
-        const showNotification = (message, isError = false) => {
-            const area = isError ? document.getElementById('error-area') : document.getElementById('notification-area');
-            const msgElement = isError ? document.getElementById('error-message') : document.getElementById('notification-message');
-            
-            msgElement.textContent = message;
-            area.classList.remove('hidden');
-            setTimeout(() => {
-                area.classList.add('hidden');
-            }, 3000);
+        /**
+         * Shows a specific page within the main app.
+         * @param {string} pageId The ID of the page to show.
+         */
+        const showPage = (pageId) => {
+            pages.forEach(page => page.classList.add('hidden'));
+            document.getElementById(`${pageId}-page`).classList.remove('hidden');
         };
-
-        const switchView = (view) => {
-            // Hide all main sections first
-            feedSection.classList.add('hidden');
-            noticesSection.classList.add('hidden');
-            messagesSection.classList.add('hidden');
-
-            // Show the selected view
-            if (view === 'feed') feedSection.classList.remove('hidden');
-            else if (view === 'notices') noticesSection.classList.remove('hidden');
-            else if (view === 'messages') messagesSection.classList.remove('hidden');
+        
+        /**
+         * Displays a message in a modal dialog.
+         * @param {string} message The message to display.
+         */
+        const showModal = (message) => {
+            document.getElementById('modal-message').textContent = message;
+            document.getElementById('modal').classList.remove('hidden');
         };
-
-        // --------------------------------------------------------------------
-        // --- Authentication Logic ---
-        // --------------------------------------------------------------------
+        
+        /**
+         * Formats a Firestore Timestamp into a readable string.
+         * @param {object} timestamp Firestore Timestamp object.
+         * @returns {string} Formatted date string.
+         */
+        const formatTimestamp = (timestamp) => {
+            if (!timestamp) return 'Just now';
+            const date = timestamp.toDate();
+            return date.toLocaleString('en-US', {
+                year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+        };
+        
+        // --- AUTHENTICATION LOGIC ---
 
         onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // User is signed in.
-                const userDocRef = doc(db, "users", user.uid);
-                const userDocSnap = await getDoc(userDocRef);
+            // Detach all previous listeners to prevent memory leaks
+            postListeners.forEach(unsubscribe => unsubscribe());
+            chatListeners.forEach(unsubscribe => unsubscribe());
+            postListeners = [];
+            chatListeners = [];
 
-                if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
-                    if (userData.status === 'approved') {
-                        currentUser = user;
-                        currentUserData = { id: user.uid, ...userData };
-                        
-                        authSection.classList.add('hidden');
-                        mainApp.classList.remove('hidden');
-                        
-                        setupUIForLoggedInUser();
-                        fetchAllData();
-                        
-                    } else if (userData.status === 'pending') {
-                        showNotification("Your account is pending approval from an administrator.", true);
+            if (user) {
+                currentUser = user;
+                const userDocRef = doc(db, "users", user.uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (userDoc.exists()) {
+                    currentUserProfile = { id: userDoc.id, ...userDoc.data() };
+                    
+                    if (currentUserProfile.status === 'approved') {
+                        showScreen('main-app');
+                        await initializeMainApp();
+                    } else if (currentUserProfile.status === 'pending') {
+                        showScreen('pending-approval-screen');
+                    } else if (currentUserProfile.status === 'rejected') {
+                        showModal("Your account application has been rejected. Please contact an administrator for more information.");
                         await signOut(auth);
-                    } else if (userData.status === 'rejected') {
-                        showNotification("Your account registration was rejected.", true);
-                        await signOut(auth);
+                        showScreen('login-screen');
                     }
                 } else {
-                    // This case might happen if the user doc was deleted but auth record remains.
-                    showNotification("User data not found. Please contact support.", true);
+                    // This case might happen if user doc creation failed after signup
+                    showModal("Your user profile was not found. Please sign up again.");
                     await signOut(auth);
+                    showScreen('login-screen');
                 }
             } else {
-                // User is signed out.
                 currentUser = null;
-                currentUserData = null;
-                authSection.classList.remove('hidden');
-                mainApp.classList.add('hidden');
-                
-                // Cleanup listeners
-                if (unsubscribePosts) unsubscribePosts();
-                if (unsubscribeNotices) unsubscribeNotices();
-                if (unsubscribeMessages) unsubscribeMessages();
-                if (unsubscribeUsers) unsubscribeUsers();
+                currentUserProfile = null;
+                showScreen('login-screen');
             }
-            showLoading(false);
+            loadingScreen.classList.add('hidden');
         });
 
-        // Signup Handler
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const errorDiv = document.getElementById('login-error');
+            errorDiv.textContent = '';
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                errorDiv.textContent = error.message;
+            }
+        });
+
         document.getElementById('signup-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            showLoading(true);
-            const name = document.getElementById('signup-name').value;
             const email = document.getElementById('signup-email').value;
             const password = document.getElementById('signup-password').value;
-            const roll = document.getElementById('signup-roll').value;
-            const department = document.getElementById('signup-department').value;
-            const userClass = document.getElementById('signup-class').value;
-            const gender = document.getElementById('signup-gender').value;
-            const religion = document.getElementById('signup-religion').value;
+            const errorDiv = document.getElementById('signup-error');
+            errorDiv.textContent = '';
+
+            const userData = {
+                name: document.getElementById('signup-name').value,
+                roll: document.getElementById('signup-roll').value,
+                department: document.getElementById('signup-department').value,
+                class: document.getElementById('signup-class').value,
+                gender: document.getElementById('signup-gender').value,
+                religion: document.getElementById('signup-religion').value,
+                email: email,
+                profilePicUrl: '',
+                status: 'pending', // All new users are pending
+                createdAt: serverTimestamp()
+            };
 
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-
-                // Create user document in Firestore
-                await setDoc(doc(db, "users", user.uid), {
-                    name: name,
-                    email: email,
-                    roll: roll,
-                    department: department,
-                    class: userClass,
-                    gender: gender,
-                    religion: religion,
-                    status: 'pending', // 'pending', 'approved', 'rejected'
-                    role: 'student', // 'student', 'admin'
-                    createdAt: serverTimestamp(),
-                    profilePicUrl: `https://placehold.co/100x100/E2E8F0/4A5568?text=${name.charAt(0).toUpperCase()}`
-                });
-
-                showNotification("Registration successful! Your account is now pending approval.");
-                document.getElementById('signup-form').reset();
-                loginPage.classList.remove('hidden');
-                signupPage.classList.add('hidden');
-
+                await setDoc(doc(db, "users", userCredential.user.uid), userData);
+                // Auth state change will handle showing the pending screen
             } catch (error) {
-                console.error("Signup Error:", error);
-                showNotification(error.message, true);
-            } finally {
-                showLoading(false);
+                errorDiv.textContent = error.message;
             }
         });
 
-        // Login Handler
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            showLoading(true);
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-
+        const handleLogout = async () => {
             try {
-                await signInWithEmailAndPassword(auth, email, password);
-                // onAuthStateChanged will handle the rest
+                await signOut(auth);
+                // onAuthStateChanged will handle UI changes
             } catch (error) {
-                console.error("Login Error:", error);
-                showNotification("Invalid credentials or account not approved.", true);
-                showLoading(false);
+                showModal(`Logout failed: ${error.message}`);
             }
-        });
+        };
 
-        // Logout Handler
-        document.getElementById('logout-btn').addEventListener('click', async () => {
-            showLoading(true);
-            await signOut(auth);
-            // onAuthStateChanged will handle UI changes
-        });
-
-        // Auth page navigation
-        document.getElementById('show-signup-link').addEventListener('click', (e) => {
-            e.preventDefault();
-            loginPage.classList.add('hidden');
-            signupPage.classList.remove('hidden');
-        });
-        document.getElementById('show-login-link').addEventListener('click', (e) => {
-            e.preventDefault();
-            loginPage.classList.remove('hidden');
-            signupPage.classList.add('hidden');
-        });
-
-        // --------------------------------------------------------------------
-        // --- Main App Setup & Data Fetching ---
-        // --------------------------------------------------------------------
+        document.getElementById('logout-main').addEventListener('click', handleLogout);
+        document.getElementById('logout-pending').addEventListener('click', handleLogout);
         
-        function setupUIForLoggedInUser() {
-            document.getElementById('header-username').textContent = currentUserData.name;
-            document.getElementById('header-avatar').src = currentUserData.profilePicUrl;
+        // --- PAGE NAVIGATION ---
+        document.getElementById('show-signup').addEventListener('click', (e) => {
+            e.preventDefault();
+            showScreen('signup-screen');
+        });
+        document.getElementById('show-login').addEventListener('click', (e) => {
+            e.preventDefault();
+            showScreen('login-screen');
+        });
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.dataset.page;
+                showPage(pageId);
+            });
+        });
 
-            if (currentUserData.role === 'admin') {
-                adminPanelBtn.classList.remove('hidden');
-                document.getElementById('create-notice-box').classList.remove('hidden');
-            } else {
-                adminPanelBtn.classList.add('hidden');
-                document.getElementById('create-notice-box').classList.add('hidden');
-            }
-            switchView('feed'); // Default view
-        }
-
-        function fetchAllData() {
-            listenForPosts();
-            listenForNotices();
-            listenForUsersForChat();
-            listenForCampusMembers();
-        }
-
-        // --------------------------------------------------------------------
-        // --- Post & Feed Logic ---
-        // --------------------------------------------------------------------
-        
-        document.getElementById('create-post-btn').addEventListener('click', async () => {
-            const content = document.getElementById('post-content').value.trim();
-            const imageFile = document.getElementById('post-image').files[0];
-
-            if (!content && !imageFile) {
-                showNotification("Post cannot be empty.", true);
-                return;
-            }
+        // --- MAIN APP INITIALIZATION ---
+        async function initializeMainApp() {
+            // Populate user info in UI
+            document.getElementById('header-user-name').textContent = currentUserProfile.name.split(' ')[0];
+            document.getElementById('header-user-img').src = currentUserProfile.profilePicUrl || `https://placehold.co/40x40/E2E8F0/4A5568?text=${currentUserProfile.name.charAt(0)}`;
             
-            showLoading(true);
-            try {
+            document.getElementById('sidebar-user-name').textContent = currentUserProfile.name;
+            document.getElementById('sidebar-user-dept').textContent = currentUserProfile.department;
+            document.getElementById('sidebar-user-img').src = currentUserProfile.profilePicUrl || `https://placehold.co/100x100/E2E8F0/4A5568?text=${currentUserProfile.name.charAt(0)}`;
+            document.getElementById('sidebar-user-roll').textContent = currentUserProfile.roll;
+            document.getElementById('sidebar-user-class').textContent = currentUserProfile.class;
+            document.getElementById('sidebar-user-gender').textContent = currentUserProfile.gender;
+            document.getElementById('sidebar-user-religion').textContent = currentUserProfile.religion;
+
+            // Show admin panel button if user is admin
+            if (currentUser.uid === ADMIN_UID) {
+                document.getElementById('admin-panel-button').classList.remove('hidden');
+                initializeAdminPanel();
+            }
+
+            // Load initial content
+            showPage('feed');
+            initializeFeed();
+            initializeMessenger();
+            initializeNoticeBoard();
+        }
+
+        // --- FEED LOGIC ---
+        function initializeFeed() {
+            const createPostForm = document.getElementById('create-post-form');
+            const postImageInput = document.getElementById('post-image');
+            const imageNameSpan = document.getElementById('image-name');
+
+            postImageInput.addEventListener('change', () => {
+                if (postImageInput.files.length > 0) {
+                    imageNameSpan.textContent = postImageInput.files[0].name;
+                } else {
+                    imageNameSpan.textContent = '';
+                }
+            });
+
+            createPostForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const content = document.getElementById('post-content').value.trim();
+                const imageFile = postImageInput.files[0];
+
+                if (!content && !imageFile) {
+                    showModal("Please write something or add an image to post.");
+                    return;
+                }
+                
                 let imageUrl = '';
                 if (imageFile) {
                     const storageRef = ref(storage, `posts/${currentUser.uid}/${Date.now()}_${imageFile.name}`);
-                    const snapshot = await uploadBytes(storageRef, imageFile);
-                    imageUrl = await getDownloadURL(snapshot.ref);
+                    await uploadBytes(storageRef, imageFile);
+                    imageUrl = await getDownloadURL(storageRef);
                 }
 
                 await addDoc(collection(db, "posts"), {
                     authorId: currentUser.uid,
-                    authorName: currentUserData.name,
-                    authorAvatar: currentUserData.profilePicUrl,
+                    authorName: currentUserProfile.name,
+                    authorProfilePic: currentUserProfile.profilePicUrl || '',
                     content: content,
                     imageUrl: imageUrl,
                     likes: [],
-                    comments: [],
                     createdAt: serverTimestamp()
                 });
 
-                document.getElementById('post-content').value = '';
-                document.getElementById('post-image').value = '';
-                document.getElementById('image-name').textContent = '';
-                showNotification("Post created successfully!");
-
-            } catch (error) {
-                console.error("Error creating post:", error);
-                showNotification("Failed to create post.", true);
-            } finally {
-                showLoading(false);
-            }
-        });
-        
-        document.getElementById('post-image').addEventListener('change', (e) => {
-            const fileName = e.target.files[0]?.name;
-            if(fileName) {
-                document.getElementById('image-name').textContent = fileName;
-            }
-        });
-
-        function listenForPosts() {
-            const postsContainer = document.getElementById('posts-container');
-            const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-
-            if (unsubscribePosts) unsubscribePosts(); // Unsubscribe from previous listener
-            unsubscribePosts = onSnapshot(q, (querySnapshot) => {
-                postsContainer.innerHTML = '';
-                if (querySnapshot.empty) {
-                    postsContainer.innerHTML = '<p class="text-center text-gray-500">No posts yet. Be the first to share something!</p>';
-                    return;
-                }
-                querySnapshot.forEach((docSnap) => {
-                    const post = { id: docSnap.id, ...docSnap.data() };
-                    const postElement = createPostElement(post);
-                    postsContainer.appendChild(postElement);
-                });
+                createPostForm.reset();
+                imageNameSpan.textContent = '';
             });
+
+            // Real-time listener for posts
+            const postsQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+            const unsubscribePosts = onSnapshot(postsQuery, (snapshot) => {
+                const feedContainer = document.getElementById('posts-feed-container');
+                feedContainer.innerHTML = '';
+                if (snapshot.empty) {
+                    feedContainer.innerHTML = `<div class="text-center text-gray-500 p-4 bg-white rounded-lg shadow">No posts yet. Be the first to share!</div>`;
+                } else {
+                    snapshot.forEach(doc => {
+                        renderPost(doc.id, doc.data());
+                    });
+                }
+            });
+            postListeners.push(unsubscribePosts);
         }
 
-        function createPostElement(post) {
-            const div = document.createElement('div');
-            div.className = 'bg-white p-4 rounded-xl shadow';
-            div.id = `post-${post.id}`;
-            
-            const hasLiked = post.likes.includes(currentUser.uid);
-            const likeButtonClass = hasLiked ? 'text-blue-600' : 'text-gray-500';
-            const likeButtonText = hasLiked ? 'Liked' : 'Like';
+        function renderPost(postId, postData) {
+            const feedContainer = document.getElementById('posts-feed-container');
+            const postElement = document.createElement('div');
+            postElement.className = 'bg-white p-4 rounded-lg shadow';
+            postElement.dataset.postId = postId;
 
-            const timeAgo = post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleString() : 'Just now';
+            const hasLiked = postData.likes.includes(currentUser.uid);
 
-            div.innerHTML = `
+            postElement.innerHTML = `
                 <div class="flex items-center mb-3">
-                    <img src="${post.authorAvatar}" alt="${post.authorName}" class="w-10 h-10 rounded-full mr-3">
+                    <img src="${postData.authorProfilePic || `https://placehold.co/40x40/E2E8F0/4A5568?text=${postData.authorName.charAt(0)}`}" class="w-10 h-10 rounded-full mr-3">
                     <div>
-                        <p class="font-bold">${post.authorName}</p>
-                        <p class="text-xs text-gray-500">${timeAgo}</p>
+                        <p class="font-bold">${postData.authorName}</p>
+                        <p class="text-xs text-gray-500">${formatTimestamp(postData.createdAt)}</p>
                     </div>
+                    ${(postData.authorId === currentUser.uid || currentUser.uid === ADMIN_UID) ? 
+                        `<button class="delete-post-btn ml-auto text-gray-400 hover:text-red-500" data-post-id="${postId}"><i class="fas fa-trash"></i></button>` : ''}
                 </div>
-                <p class="mb-3 whitespace-pre-wrap">${post.content}</p>
-                ${post.imageUrl ? `<img src="${post.imageUrl}" alt="Post image" class="rounded-lg max-h-96 w-full object-cover mb-3">` : ''}
-                <div class="flex justify-between items-center text-gray-500 text-sm mb-2">
-                    <span id="like-count-${post.id}">${post.likes.length} Likes</span>
-                    <span id="comment-count-${post.id}">${post.comments.length} Comments</span>
+                <p class="mb-3 text-gray-800">${postData.content}</p>
+                ${postData.imageUrl ? `<img src="${postData.imageUrl}" class="rounded-lg w-full max-h-96 object-cover mb-3">` : ''}
+                <div class="flex items-center justify-between text-gray-500 border-t pt-2">
+                    <button class="like-btn flex items-center space-x-2 hover:text-indigo-600 ${hasLiked ? 'text-indigo-600' : ''}" data-post-id="${postId}">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span>${postData.likes.length} Likes</span>
+                    </button>
+                    <button class="comment-btn flex items-center space-x-2 hover:text-indigo-600" data-post-id="${postId}">
+                        <i class="fas fa-comment"></i>
+                        <span id="comment-count-${postId}">Comments</span>
+                    </button>
                 </div>
-                <div class="border-t border-b border-gray-200 py-1 flex justify-around">
-                    <button class="post-like-btn w-full py-1 rounded-md hover:bg-gray-100 ${likeButtonClass}" data-id="${post.id}">
-                        <i class="fas fa-thumbs-up"></i> ${likeButtonText}
-                    </button>
-                    <button class="post-comment-btn w-full py-1 rounded-md hover:bg-gray-100 text-gray-500" data-id="${post.id}">
-                        <i class="fas fa-comment"></i> Comment
-                    </button>
+                <div id="comments-section-${postId}" class="mt-4 border-t pt-4 hidden">
+                    <form class="comment-form flex space-x-2 mb-4" data-post-id="${postId}">
+                        <input type="text" class="comment-input w-full p-2 border rounded-lg" placeholder="Write a comment...">
+                        <button type="submit" class="bg-indigo-500 text-white px-4 rounded-lg">Post</button>
+                    </form>
+                    <div id="comments-list-${postId}" class="space-y-3"></div>
                 </div>
             `;
-            
-            div.querySelector('.post-like-btn').addEventListener('click', () => toggleLike(post.id, hasLiked));
-            div.querySelector('.post-comment-btn').addEventListener('click', () => openCommentsModal(post.id));
+            feedContainer.appendChild(postElement);
 
-            return div;
-        }
-        
-        async function toggleLike(postId, hasLiked) {
-            const postRef = doc(db, "posts", postId);
-            try {
-                if (hasLiked) {
-                    await updateDoc(postRef, {
-                        likes: arrayRemove(currentUser.uid)
-                    });
-                } else {
-                    await updateDoc(postRef, {
-                        likes: arrayUnion(currentUser.uid)
-                    });
-                }
-            } catch (error) {
-                console.error("Error toggling like:", error);
-                showNotification("Could not update like.", true);
-            }
-        }
-
-        // --------------------------------------------------------------------
-        // --- Comments Logic ---
-        // --------------------------------------------------------------------
-        
-        let currentPostIdForComment = null;
-
-        function openCommentsModal(postId) {
-            currentPostIdForComment = postId;
-            commentsModal.classList.remove('hidden');
-            loadComments(postId);
-        }
-
-        document.getElementById('close-comments-modal-btn').addEventListener('click', () => {
-            commentsModal.classList.add('hidden');
-            currentPostIdForComment = null;
-        });
-        
-        async function loadComments(postId) {
-            const commentsList = document.getElementById('comments-list');
-            commentsList.innerHTML = '<p>Loading comments...</p>';
-            const postRef = doc(db, "posts", postId);
-            const postSnap = await getDoc(postRef);
-            if (postSnap.exists()) {
-                const postData = postSnap.data();
+            // Real-time listener for comments
+            const commentsQuery = query(collection(db, `posts/${postId}/comments`), orderBy("createdAt", "asc"));
+            const unsubscribeComments = onSnapshot(commentsQuery, (snapshot) => {
+                const commentsList = document.getElementById(`comments-list-${postId}`);
+                const commentCount = document.getElementById(`comment-count-${postId}`);
                 commentsList.innerHTML = '';
-                if(postData.comments.length === 0) {
-                    commentsList.innerHTML = '<p class="text-center text-gray-500">No comments yet.</p>';
-                } else {
-                    postData.comments.forEach(comment => {
-                        const commentEl = document.createElement('div');
-                        commentEl.className = 'flex items-start space-x-3';
-                        const commentTime = comment.createdAt ? new Date(comment.createdAt.seconds * 1000).toLocaleString() : '';
-                        commentEl.innerHTML = `
-                            <img src="${comment.authorAvatar}" class="w-9 h-9 rounded-full">
-                            <div class="bg-gray-100 p-3 rounded-xl flex-1">
-                                <p class="font-semibold">${comment.authorName}</p>
-                                <p class="text-sm">${comment.text}</p>
-                                <p class="text-xs text-gray-400 mt-1">${commentTime}</p>
-                            </div>
-                        `;
-                        commentsList.appendChild(commentEl);
-                    });
-                }
-            }
-        }
-
-        document.getElementById('comment-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const commentInput = document.getElementById('comment-input');
-            const commentText = commentInput.value.trim();
-            if(!commentText || !currentPostIdForComment) return;
-
-            const newComment = {
-                authorId: currentUser.uid,
-                authorName: currentUserData.name,
-                authorAvatar: currentUserData.profilePicUrl,
-                text: commentText,
-                createdAt: new Date() // Using client-side date for simplicity here
-            };
-
-            const postRef = doc(db, "posts", currentPostIdForComment);
-            try {
-                await updateDoc(postRef, {
-                    comments: arrayUnion(newComment)
-                });
-                commentInput.value = '';
-                loadComments(currentPostIdForComment); // Reload comments
-            } catch (error) {
-                console.error("Error adding comment:", error);
-                showNotification("Failed to add comment.", true);
-            }
-        });
-
-
-        // --------------------------------------------------------------------
-        // --- Notice Board Logic ---
-        // --------------------------------------------------------------------
-        
-        document.getElementById('create-notice-btn').addEventListener('click', async () => {
-            const title = document.getElementById('notice-title').value.trim();
-            const content = document.getElementById('notice-content').value.trim();
-            if(!title || !content) {
-                showNotification("Notice title and content cannot be empty.", true);
-                return;
-            }
-
-            showLoading(true);
-            try {
-                await addDoc(collection(db, "notices"), {
-                    title: title,
-                    content: content,
-                    authorId: currentUser.uid,
-                    authorName: currentUserData.name,
-                    createdAt: serverTimestamp()
-                });
-                document.getElementById('notice-title').value = '';
-                document.getElementById('notice-content').value = '';
-                showNotification("Notice posted successfully!");
-            } catch (error) {
-                console.error("Error posting notice:", error);
-                showNotification("Failed to post notice.", true);
-            } finally {
-                showLoading(false);
-            }
-        });
-
-        function listenForNotices() {
-            const noticesContainer = document.getElementById('notices-container');
-            const q = query(collection(db, "notices"), orderBy("createdAt", "desc"));
-            
-            if (unsubscribeNotices) unsubscribeNotices();
-            unsubscribeNotices = onSnapshot(q, (querySnapshot) => {
-                noticesContainer.innerHTML = '';
-                if (querySnapshot.empty) {
-                    noticesContainer.innerHTML = '<p class="text-center text-gray-500">No notices available at the moment.</p>';
-                    return;
-                }
-                querySnapshot.forEach((docSnap) => {
-                    const notice = { id: docSnap.id, ...docSnap.data() };
-                    const noticeElement = createNoticeElement(notice);
-                    noticesContainer.appendChild(noticeElement);
-                });
-            });
-        }
-
-        function createNoticeElement(notice) {
-            const div = document.createElement('div');
-            div.className = 'bg-white p-5 rounded-xl shadow border-l-4 border-green-500';
-            const timeAgo = notice.createdAt ? new Date(notice.createdAt.seconds * 1000).toLocaleString() : 'Just now';
-            div.innerHTML = `
-                <h3 class="text-xl font-bold text-gray-800 mb-1">${notice.title}</h3>
-                <p class="text-xs text-gray-500 mb-3">Posted by ${notice.authorName} on ${timeAgo}</p>
-                <p class="text-gray-700 whitespace-pre-wrap">${notice.content}</p>
-            `;
-            return div;
-        }
-        
-        // --------------------------------------------------------------------
-        // --- Messaging Logic ---
-        // --------------------------------------------------------------------
-        
-        function listenForUsersForChat() {
-            const usersListContainer = document.getElementById('users-list');
-            const q = query(collection(db, "users"), where("status", "==", "approved"));
-            
-            if(unsubscribeUsers) unsubscribeUsers();
-            unsubscribeUsers = onSnapshot(q, (querySnapshot) => {
-                usersListContainer.innerHTML = '';
-                querySnapshot.forEach((docSnap) => {
-                    const user = { id: docSnap.id, ...docSnap.data() };
-                    if (user.id === currentUser.uid) return; // Don't list self
-                    
-                    const userElement = document.createElement('div');
-                    userElement.className = 'flex items-center space-x-3 p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-100';
-                    userElement.dataset.id = user.id;
-                    userElement.dataset.name = user.name;
-                    userElement.dataset.avatar = user.profilePicUrl;
-
-                    userElement.innerHTML = `
-                        <img src="${user.profilePicUrl}" class="w-10 h-10 rounded-full">
-                        <span class="font-semibold">${user.name}</span>
-                    `;
-                    userElement.addEventListener('click', () => startChat(user));
-                    usersListContainer.appendChild(userElement);
-                });
-            });
-        }
-        
-        function startChat(partner) {
-            currentChatPartnerId = partner.id;
-            document.getElementById('select-chat-view').classList.add('hidden');
-            document.getElementById('active-chat-view').classList.add('hidden'); // Hide first to reset
-            document.getElementById('active-chat-view').classList.remove('hidden');
-
-            document.getElementById('chat-partner-name').textContent = partner.name;
-            document.getElementById('chat-partner-avatar').src = partner.avatar;
-
-            const messagesDisplay = document.getElementById('messages-display');
-            messagesDisplay.innerHTML = ''; // Clear previous messages
-
-            const chatId = [currentUser.uid, partner.id].sort().join('_');
-            const chatRef = collection(db, "chats", chatId, "messages");
-            const q = query(chatRef, orderBy("createdAt"));
-
-            if(unsubscribeMessages) unsubscribeMessages();
-            unsubscribeMessages = onSnapshot(q, (querySnapshot) => {
-                messagesDisplay.innerHTML = '';
-                querySnapshot.forEach(docSnap => {
-                    const message = docSnap.data();
-                    displayMessage(message);
-                });
-                messagesDisplay.scrollTop = messagesDisplay.scrollHeight; // Scroll to bottom
-            });
-        }
-
-        function displayMessage(message) {
-            const messagesDisplay = document.getElementById('messages-display');
-            const div = document.createElement('div');
-            const isSender = message.senderId === currentUser.uid;
-            
-            div.className = `flex items-end gap-2 ${isSender ? 'justify-end' : 'justify-start'}`;
-            const time = message.createdAt ? new Date(message.createdAt.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
-
-            div.innerHTML = `
-                <div class="max-w-xs md:max-w-md">
-                    <div class="px-4 py-2 rounded-2xl ${isSender ? 'bg-blue-500 text-white rounded-br-none' : 'bg-gray-200 text-gray-800 rounded-bl-none'}">
-                        <p>${message.text}</p>
-                    </div>
-                    <p class="text-xs text-gray-400 mt-1 px-1 ${isSender ? 'text-right' : 'text-left'}">${time}</p>
-                </div>
-            `;
-            messagesDisplay.appendChild(div);
-        }
-
-        document.getElementById('message-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const messageInput = document.getElementById('message-input');
-            const text = messageInput.value.trim();
-
-            if (!text || !currentChatPartnerId) return;
-
-            const chatId = [currentUser.uid, currentChatPartnerId].sort().join('_');
-            const chatRef = collection(db, "chats", chatId, "messages");
-
-            try {
-                await addDoc(chatRef, {
-                    text: text,
-                    senderId: currentUser.uid,
-                    receiverId: currentChatPartnerId,
-                    createdAt: serverTimestamp()
-                });
-                messageInput.value = '';
-            } catch (error) {
-                console.error("Error sending message:", error);
-                showNotification("Failed to send message.", true);
-            }
-        });
-
-        // --------------------------------------------------------------------
-        // --- Campus Members List (Right Sidebar) ---
-        // --------------------------------------------------------------------
-
-        function listenForCampusMembers() {
-            const membersListContainer = document.getElementById('campus-members-list');
-            const q = query(collection(db, "users"), where("status", "==", "approved"));
-            
-            onSnapshot(q, (querySnapshot) => {
-                membersListContainer.innerHTML = '';
-                if(querySnapshot.empty) {
-                    membersListContainer.innerHTML = '<p class="text-sm text-gray-500">No members found.</p>';
-                    return;
-                }
-                querySnapshot.forEach((docSnap) => {
-                    const user = { id: docSnap.id, ...docSnap.data() };
-                     const userElement = document.createElement('div');
-                    userElement.className = 'flex items-center space-x-3';
-                    userElement.innerHTML = `
-                        <img src="${user.profilePicUrl}" class="w-9 h-9 rounded-full">
-                        <div>
-                            <p class="font-semibold text-sm">${user.name}</p>
-                            <p class="text-xs text-gray-500">${user.department}</p>
+                snapshot.forEach(doc => {
+                    const commentData = doc.data();
+                    const commentDiv = document.createElement('div');
+                    commentDiv.className = 'flex items-start space-x-2 text-sm';
+                    commentDiv.innerHTML = `
+                        <img src="${commentData.authorProfilePic || `https://placehold.co/32x32/E2E8F0/4A5568?text=${commentData.authorName.charAt(0)}`}" class="w-8 h-8 rounded-full">
+                        <div class="bg-gray-100 p-2 rounded-lg">
+                            <p class="font-bold">${commentData.authorName}</p>
+                            <p>${commentData.content}</p>
                         </div>
                     `;
-                    membersListContainer.appendChild(userElement);
+                    commentsList.appendChild(commentDiv);
+                });
+                commentCount.textContent = `${snapshot.size} Comments`;
+            });
+            postListeners.push(unsubscribeComments);
+        }
+
+        // Event delegation for post actions
+        pageContent.addEventListener('click', async (e) => {
+            const likeBtn = e.target.closest('.like-btn');
+            const commentBtn = e.target.closest('.comment-btn');
+            const deleteBtn = e.target.closest('.delete-post-btn');
+
+            if (likeBtn) {
+                const postId = likeBtn.dataset.postId;
+                const postRef = doc(db, "posts", postId);
+                const postDoc = await getDoc(postRef);
+                const postLikes = postDoc.data().likes || [];
+                
+                if (postLikes.includes(currentUser.uid)) {
+                    // Unlike
+                    const updatedLikes = postLikes.filter(uid => uid !== currentUser.uid);
+                    await updateDoc(postRef, { likes: updatedLikes });
+                } else {
+                    // Like
+                    await updateDoc(postRef, { likes: arrayUnion(currentUser.uid) });
+                }
+            }
+
+            if (commentBtn) {
+                const postId = commentBtn.dataset.postId;
+                document.getElementById(`comments-section-${postId}`).classList.toggle('hidden');
+            }
+            
+            if (deleteBtn) {
+                const postId = deleteBtn.dataset.postId;
+                if (confirm("Are you sure you want to delete this post?")) {
+                    await deleteDoc(doc(db, "posts", postId));
+                    // The real-time listener will remove it from the UI
+                    showModal("Post deleted successfully.");
+                }
+            }
+        });
+        
+        pageContent.addEventListener('submit', async (e) => {
+            const commentForm = e.target.closest('.comment-form');
+            if (commentForm) {
+                e.preventDefault();
+                const postId = commentForm.dataset.postId;
+                const input = commentForm.querySelector('.comment-input');
+                const content = input.value.trim();
+                if (content) {
+                    await addDoc(collection(db, `posts/${postId}/comments`), {
+                        authorId: currentUser.uid,
+                        authorName: currentUserProfile.name,
+                        authorProfilePic: currentUserProfile.profilePicUrl,
+                        content: content,
+                        createdAt: serverTimestamp()
+                    });
+                    input.value = '';
+                }
+            }
+        });
+
+        // --- MESSENGER LOGIC ---
+        function initializeMessenger() {
+            const searchInput = document.getElementById('user-search-input');
+            const searchResultsContainer = document.getElementById('user-search-results');
+            
+            let searchTimeout;
+            searchInput.addEventListener('keyup', () => {
+                clearTimeout(searchTimeout);
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                if (searchTerm.length < 2) {
+                    searchResultsContainer.classList.add('hidden');
+                    return;
+                }
+                searchTimeout = setTimeout(async () => {
+                    const usersRef = collection(db, "users");
+                    const q = query(usersRef, where("status", "==", "approved"));
+                    const querySnapshot = await getDocs(q);
+                    
+                    searchResultsContainer.innerHTML = '';
+                    let found = false;
+                    querySnapshot.forEach(doc => {
+                        const user = { id: doc.id, ...doc.data() };
+                        if (user.id !== currentUser.uid && user.name.toLowerCase().includes(searchTerm)) {
+                            found = true;
+                            const userDiv = document.createElement('div');
+                            userDiv.className = 'p-3 hover:bg-gray-100 cursor-pointer flex items-center space-x-3';
+                            userDiv.dataset.userId = user.id;
+                            userDiv.innerHTML = `
+                                <img src="${user.profilePicUrl || `https://placehold.co/40x40/E2E8F0/4A5568?text=${user.name.charAt(0)}`}" class="w-10 h-10 rounded-full">
+                                <span>${user.name}</span>
+                            `;
+                            userDiv.addEventListener('click', () => startChatWith(user));
+                            searchResultsContainer.appendChild(userDiv);
+                        }
+                    });
+                    searchResultsContainer.classList.toggle('hidden', !found);
+                }, 300);
+            });
+        }
+
+        async function startChatWith(otherUser) {
+            document.getElementById('user-search-input').value = '';
+            document.getElementById('user-search-results').classList.add('hidden');
+            
+            const chatId = currentUser.uid < otherUser.id ? `${currentUser.uid}_${otherUser.id}` : `${otherUser.id}_${currentUser.uid}`;
+            const chatRef = doc(db, "chats", chatId);
+            const chatDoc = await getDoc(chatRef);
+
+            if (!chatDoc.exists()) {
+                await setDoc(chatRef, {
+                    participants: [currentUser.uid, otherUser.id],
+                    lastMessage: '',
+                    lastMessageTimestamp: serverTimestamp(),
+                    participantDetails: {
+                        [currentUser.uid]: { name: currentUserProfile.name, profilePicUrl: currentUserProfile.profilePicUrl },
+                        [otherUser.id]: { name: otherUser.name, profilePicUrl: otherUser.profilePicUrl }
+                    }
+                });
+            }
+            
+            openChatWindow(chatId, otherUser);
+        }
+        
+        function openChatWindow(chatId, otherUser) {
+            currentChatId = chatId;
+            document.getElementById('chat-placeholder').classList.add('hidden');
+            document.getElementById('chat-area').classList.remove('hidden');
+            
+            document.getElementById('chat-with-name').textContent = otherUser.name;
+            document.getElementById('chat-with-img').src = otherUser.profilePicUrl || `https://placehold.co/40x40/E2E8F0/4A5568?text=${otherUser.name.charAt(0)}`;
+            
+            const messagesContainer = document.getElementById('messages-container');
+            
+            // Listen for new messages
+            const messagesQuery = query(collection(db, `chats/${chatId}/messages`), orderBy("createdAt", "asc"));
+            const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
+                messagesContainer.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const msg = doc.data();
+                    const msgDiv = document.createElement('div');
+                    const isSender = msg.senderId === currentUser.uid;
+                    msgDiv.className = `flex items-end gap-2 ${isSender ? 'justify-end' : 'justify-start'}`;
+                    msgDiv.innerHTML = `
+                        <div class="max-w-xs md:max-w-md p-3 rounded-2xl ${isSender ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-800'}">
+                            <p>${msg.text}</p>
+                        </div>
+                    `;
+                    messagesContainer.appendChild(msgDiv);
+                });
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            });
+            chatListeners.push(unsubscribe);
+        }
+
+        document.getElementById('send-message-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
+            if (text && currentChatId) {
+                await addDoc(collection(db, `chats/${currentChatId}/messages`), {
+                    text: text,
+                    senderId: currentUser.uid,
+                    createdAt: serverTimestamp()
+                });
+                await updateDoc(doc(db, "chats", currentChatId), {
+                    lastMessage: text,
+                    lastMessageTimestamp: serverTimestamp()
+                });
+                input.value = '';
+            }
+        });
+
+        // --- NOTICE BOARD LOGIC ---
+        function initializeNoticeBoard() {
+            const noticesQuery = query(collection(db, "notices"), orderBy("createdAt", "desc"));
+            const unsubscribe = onSnapshot(noticesQuery, (snapshot) => {
+                const container = document.getElementById('notice-board-container');
+                container.innerHTML = '';
+                if(snapshot.empty) {
+                    container.innerHTML = `<p class="text-gray-500">No notices at the moment.</p>`;
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    const notice = doc.data();
+                    const noticeDiv = document.createElement('div');
+                    noticeDiv.className = 'border-l-4 border-indigo-500 p-4 bg-indigo-50 rounded-r-lg';
+                    noticeDiv.innerHTML = `
+                        <h4 class="font-bold text-lg text-indigo-800">${notice.title}</h4>
+                        <p class="text-gray-700 mt-1">${notice.content}</p>
+                        <p class="text-xs text-gray-500 mt-2">Posted on: ${formatTimestamp(notice.createdAt)}</p>
+                    `;
+                    container.appendChild(noticeDiv);
                 });
             });
+            postListeners.push(unsubscribe);
         }
 
-
-        // --------------------------------------------------------------------
-        // --- Admin Panel Logic ---
-        // --------------------------------------------------------------------
-
-        adminPanelBtn.addEventListener('click', () => {
-            adminPanelModal.classList.remove('hidden');
-            loadPendingUsers();
-        });
-
-        document.getElementById('close-admin-panel-btn').addEventListener('click', () => {
-            adminPanelModal.classList.add('hidden');
-        });
-
-        async function loadPendingUsers() {
-            const container = document.getElementById('pending-users-container');
-            container.innerHTML = '<p>Loading pending registrations...</p>';
-            const q = query(collection(db, "users"), where("status", "==", "pending"));
-            const querySnapshot = await getDocs(q);
-            
-            container.innerHTML = '';
-            if (querySnapshot.empty) {
-                container.innerHTML = '<p class="text-center text-gray-500 p-4">No pending approvals.</p>';
-                return;
-            }
-
-            querySnapshot.forEach((docSnap) => {
-                const user = { id: docSnap.id, ...docSnap.data() };
-                const userCard = createPendingUserCard(user);
-                container.appendChild(userCard);
+        // --- ADMIN PANEL LOGIC ---
+        function initializeAdminPanel() {
+            const pendingUsersQuery = query(collection(db, "users"), where("status", "==", "pending"));
+            const unsubscribe = onSnapshot(pendingUsersQuery, (snapshot) => {
+                const container = document.getElementById('pending-users-container');
+                container.innerHTML = '';
+                if (snapshot.empty) {
+                    container.innerHTML = '<p class="text-gray-500">No pending approvals.</p>';
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    const user = { id: doc.id, ...doc.data() };
+                    const userDiv = document.createElement('div');
+                    userDiv.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg border';
+                    userDiv.innerHTML = `
+                        <div>
+                            <p class="font-bold">${user.name} <span class="font-normal text-gray-600">(${user.email})</span></p>
+                            <p class="text-sm text-gray-500">Roll: ${user.roll} | Dept: ${user.department}</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="approve-btn bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600" data-uid="${user.id}">Approve</button>
+                            <button class="reject-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" data-uid="${user.id}">Reject</button>
+                        </div>
+                    `;
+                    container.appendChild(userDiv);
+                });
             });
+            postListeners.push(unsubscribe);
         }
 
-        function createPendingUserCard(user) {
-            const card = document.createElement('div');
-            card.className = 'bg-gray-50 border border-gray-200 p-4 rounded-lg grid grid-cols-1 md:grid-cols-3 gap-4 items-center';
-            card.innerHTML = `
-                <div class="md:col-span-2">
-                    <p class="font-bold text-lg">${user.name}</p>
-                    <p class="text-sm text-gray-600">${user.email}</p>
-                    <div class="text-xs text-gray-500 mt-2 grid grid-cols-2 gap-1">
-                        <span><strong>Roll:</strong> ${user.roll}</span>
-                        <span><strong>Department:</strong> ${user.department}</span>
-                        <span><strong>Class:</strong> ${user.class}</span>
-                        <span><strong>Gender:</strong> ${user.gender}</span>
-                    </div>
-                </div>
-                <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 justify-end">
-                    <button class="approve-btn bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 w-full md:w-auto" data-id="${user.id}">Approve</button>
-                    <button class="reject-btn bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 w-full md:w-auto" data-id="${user.id}">Reject</button>
-                </div>
-            `;
-            
-            card.querySelector('.approve-btn').addEventListener('click', () => handleApproval(user.id, 'approved'));
-            card.querySelector('.reject-btn').addEventListener('click', () => handleApproval(user.id, 'rejected'));
+        document.getElementById('admin-panel-page').addEventListener('click', async (e) => {
+            const approveBtn = e.target.closest('.approve-btn');
+            const rejectBtn = e.target.closest('.reject-btn');
 
-            return card;
-        }
-
-        async function handleApproval(userId, status) {
-            showLoading(true);
-            const userRef = doc(db, "users", userId);
-            try {
-                await updateDoc(userRef, { status: status });
-                showNotification(`User has been ${status}.`);
-                loadPendingUsers(); // Refresh the list
-            } catch (error) {
-                console.error(`Error ${status} user:`, error);
-                showNotification(`Failed to ${status} user.`, true);
-            } finally {
-                showLoading(false);
+            if (approveBtn) {
+                const uid = approveBtn.dataset.uid;
+                await updateDoc(doc(db, "users", uid), { status: 'approved' });
+                showModal('User approved successfully.');
             }
-        }
 
-        // --------------------------------------------------------------------
-        // --- Main App Navigation ---
-        // --------------------------------------------------------------------
-        document.getElementById('feed-link').addEventListener('click', (e) => { e.preventDefault(); switchView('feed'); });
-        document.getElementById('notices-link').addEventListener('click', (e) => { e.preventDefault(); switchView('notices'); });
-        document.getElementById('messages-link').addEventListener('click', (e) => { e.preventDefault(); switchView('messages'); });
+            if (rejectBtn) {
+                const uid = rejectBtn.dataset.uid;
+                await updateDoc(doc(db, "users", uid), { status: 'rejected' });
+                showModal('User rejected successfully.');
+            }
+        });
+        
+        // --- MODAL CLOSE ---
+        document.getElementById('modal-close').addEventListener('click', () => {
+             document.getElementById('modal').classList.add('hidden');
+        });
 
     </script>
 </body>
