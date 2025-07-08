@@ -17,39 +17,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
-        /* Custom styles to complement Tailwind */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5;
-        }
-        .hidden {
-            display: none;
-        }
-        /* Custom scrollbar for chat and feed */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-        /* Simple animation for modals */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .modal-content {
-            animation: fadeIn 0.3s ease-out;
-        }
-        .whitespace-pre-wrap {
-            white-space: pre-wrap;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f0f2f5; }
+        .hidden { display: none; }
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #555; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .modal-content { animation: fadeIn 0.3s ease-out; }
+        .whitespace-pre-wrap { white-space: pre-wrap; }
     </style>
 </head>
 <body class="antialiased">
@@ -60,9 +36,7 @@
         <!-- Loading Screen -->
         <div id="loading-screen" class="fixed inset-0 bg-white flex flex-col justify-center items-center z-50">
             <div class="text-3xl font-bold text-indigo-600">CampusConnect</div>
-            <div class="mt-4">
-                <i class="fas fa-spinner fa-spin text-4xl text-indigo-500"></i>
-            </div>
+            <div class="mt-4"><i class="fas fa-spinner fa-spin text-4xl text-indigo-500"></i></div>
             <p class="mt-2 text-gray-600">Loading...</p>
         </div>
 
@@ -136,7 +110,10 @@
                         <label class="text-sm font-medium text-gray-700">Password (min. 6 characters)</label>
                         <input id="signup-password" type="password" required class="w-full px-4 py-2 mt-1 border rounded-lg">
                     </div>
-                    <button type="submit" class="w-full py-3 px-4 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 font-semibold">Sign Up</button>
+                    <button id="signup-button" type="submit" class="w-full flex justify-center items-center py-3 px-4 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 font-semibold disabled:bg-indigo-400">
+                        <span class="btn-text">Sign Up</span>
+                        <i class="fas fa-spinner fa-spin btn-loader hidden ml-2"></i>
+                    </button>
                 </form>
                 <div id="signup-error" class="text-red-500 text-sm text-center"></div>
                 <p class="text-sm text-center text-gray-600">
@@ -222,7 +199,10 @@
                                         <input type="file" id="post-image" class="hidden" accept="image/*">
                                         <span id="image-name" class="text-sm text-gray-500 ml-2"></span>
                                     </div>
-                                    <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700">Post</button>
+                                    <button id="post-submit-button" type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 disabled:bg-indigo-400 flex items-center">
+                                        <span class="btn-text">Post</span>
+                                        <i class="fas fa-spinner fa-spin btn-loader hidden ml-2"></i>
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -282,12 +262,23 @@
 
                     <!-- Admin Panel Page -->
                     <div id="admin-panel-page" class="page hidden">
-                         <div class="bg-white p-4 rounded-lg shadow">
+                         <div class="bg-white p-4 rounded-lg shadow mb-6">
                             <h2 class="text-2xl font-bold text-red-700 border-b pb-2 mb-4">Admin Panel</h2>
                             <h3 class="text-lg font-semibold mb-2">Pending User Approvals</h3>
                             <div id="pending-users-container" class="space-y-4">
                                 <!-- Pending users will be here -->
                             </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <h3 class="text-lg font-semibold mb-2">Create a New Notice</h3>
+                            <form id="create-notice-form">
+                                <input id="notice-title" type="text" placeholder="Notice Title" required class="w-full p-2 border rounded-lg mb-2">
+                                <textarea id="notice-content" placeholder="Notice Details..." required class="w-full p-2 border rounded-lg mb-2" rows="4"></textarea>
+                                <button id="notice-submit-button" type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-blue-400 flex justify-center items-center">
+                                    <span class="btn-text">Post Notice</span>
+                                    <i class="fas fa-spinner fa-spin btn-loader hidden ml-2"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
 
@@ -351,6 +342,7 @@
             deleteDoc,
             serverTimestamp,
             arrayUnion,
+            arrayRemove,
             getDocs
         } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
         import { 
@@ -395,11 +387,9 @@
         const pageContent = document.getElementById('page-content');
         const navLinks = document.querySelectorAll('.nav-link');
         const loginButton = document.getElementById('login-button');
-        const loginButtonText = loginButton.querySelector('.btn-text');
-        const loginButtonLoader = loginButton.querySelector('.btn-loader');
+        const signupButton = document.getElementById('signup-button');
 
         // --- UTILITY & HELPER FUNCTIONS ---
-
         const showScreen = (screenId) => {
             [loadingScreen, loginScreen, signupScreen, pendingScreen, mainApp].forEach(screen => {
                 screen.classList.add('hidden');
@@ -435,9 +425,16 @@
             activeListeners.forEach(unsubscribe => unsubscribe());
             activeListeners = [];
         };
+
+        const toggleButtonLoading = (button, isLoading) => {
+            const text = button.querySelector('.btn-text');
+            const loader = button.querySelector('.btn-loader');
+            button.disabled = isLoading;
+            if (text) text.classList.toggle('hidden', isLoading);
+            if (loader) loader.classList.toggle('hidden', !isLoading);
+        };
         
         // --- AUTHENTICATION LOGIC ---
-
         onAuthStateChanged(auth, async (user) => {
             detachAllListeners();
             loadingScreen.classList.remove('hidden');
@@ -451,15 +448,11 @@
                     if (userDoc.exists()) {
                         currentUserProfile = { id: userDoc.id, ...userDoc.data() };
                         
-                        // *** FIX: Self-healing for admin user ***
-                        // If the admin logs in and their status isn't approved, fix it.
                         if (currentUserProfile.id === ADMIN_UID && currentUserProfile.status !== 'approved') {
                             await updateDoc(userDocRef, { status: 'approved' });
-                            currentUserProfile.status = 'approved'; // Update local profile immediately
-                            console.log("Admin status automatically corrected to 'approved'.");
+                            currentUserProfile.status = 'approved';
                         }
                         
-                        // Route user based on their status
                         if (currentUserProfile.status === 'approved') {
                             await initializeMainApp();
                             showScreen('main-app');
@@ -467,18 +460,25 @@
                             showScreen('pending-approval-screen');
                         } else if (currentUserProfile.status === 'rejected') {
                             await signOut(auth);
-                            showModal("Your account application has been rejected. Please contact an administrator.");
+                            showModal("Your account application has been rejected.");
                         } else {
-                            // This case is now less likely for the admin, but remains as a fallback.
                             await signOut(auth);
                             showModal("Your account has an unknown status. Please contact support.");
                         }
                     } else {
-                        await signOut(auth);
-                        showModal("Your user profile was not found. Please sign up again.");
+                        if (user.uid === ADMIN_UID) {
+                            const adminData = { name: "Admin", email: user.email, status: "approved", roll: "N/A", department: "Administration", class: "N/A", gender: "N/A", religion: "N/A", createdAt: serverTimestamp() };
+                            await setDoc(userDocRef, adminData);
+                            currentUserProfile = { id: user.uid, ...adminData };
+                            await initializeMainApp();
+                            showScreen('main-app');
+                        } else {
+                             await signOut(auth);
+                             showModal("Your user profile was not found. Please sign up again.");
+                        }
                     }
                 } catch (error) {
-                    console.error("Error fetching user profile:", error);
+                    console.error("Auth state change error:", error);
                     await signOut(auth);
                     showModal("An error occurred while loading your profile. Please try again.");
                 }
@@ -489,34 +489,28 @@
             }
 
             loadingScreen.classList.add('hidden');
-            loginButton.disabled = false;
-            loginButtonText.classList.remove('hidden');
-            loginButtonLoader.classList.add('hidden');
+            toggleButtonLoading(loginButton, false);
         });
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            toggleButtonLoading(loginButton, true);
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             const errorDiv = document.getElementById('login-error');
             errorDiv.textContent = '';
-
-            loginButton.disabled = true;
-            loginButtonText.classList.add('hidden');
-            loginButtonLoader.classList.remove('hidden');
             
             try {
                 await signInWithEmailAndPassword(auth, email, password);
             } catch (error) {
                 errorDiv.textContent = "Invalid email or password.";
-                loginButton.disabled = false;
-                loginButtonText.classList.remove('hidden');
-                loginButtonLoader.classList.add('hidden');
+                toggleButtonLoading(loginButton, false);
             }
         });
 
         document.getElementById('signup-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            toggleButtonLoading(signupButton, true);
             const email = document.getElementById('signup-email').value;
             const password = document.getElementById('signup-password').value;
             const errorDiv = document.getElementById('signup-error');
@@ -540,13 +534,12 @@
                 await setDoc(doc(db, "users", userCredential.user.uid), userData);
             } catch (error) {
                 errorDiv.textContent = error.message;
+            } finally {
+                toggleButtonLoading(signupButton, false);
             }
         });
 
-        const handleLogout = async () => {
-            await signOut(auth);
-        };
-
+        const handleLogout = async () => { await signOut(auth); };
         document.getElementById('logout-main').addEventListener('click', handleLogout);
         document.getElementById('logout-pending').addEventListener('click', handleLogout);
         
@@ -562,21 +555,19 @@
 
         // --- MAIN APP INITIALIZATION ---
         async function initializeMainApp() {
-            // Populate user info in UI
-            document.getElementById('header-user-name').textContent = currentUserProfile.name.split(' ')[0];
-            document.getElementById('header-user-img').src = currentUserProfile.profilePicUrl || `https://placehold.co/40x40/E2E8F0/4A5568?text=${currentUserProfile.name.charAt(0)}`;
-            
-            document.getElementById('sidebar-user-name').textContent = currentUserProfile.name;
-            document.getElementById('sidebar-user-dept').textContent = currentUserProfile.department;
-            document.getElementById('sidebar-user-img').src = currentUserProfile.profilePicUrl || `https://placehold.co/100x100/E2E8F0/4A5568?text=${currentUserProfile.name.charAt(0)}`;
-            document.getElementById('sidebar-user-roll').textContent = currentUserProfile.roll;
-            document.getElementById('sidebar-user-class').textContent = currentUserProfile.class;
-            document.getElementById('sidebar-user-gender').textContent = currentUserProfile.gender;
-            document.getElementById('sidebar-user-religion').textContent = currentUserProfile.religion;
+            const profile = currentUserProfile;
+            document.getElementById('header-user-name').textContent = profile.name.split(' ')[0];
+            document.getElementById('header-user-img').src = profile.profilePicUrl || `https://placehold.co/40x40/E2E8F0/4A5568?text=${profile.name.charAt(0)}`;
+            document.getElementById('sidebar-user-name').textContent = profile.name;
+            document.getElementById('sidebar-user-dept').textContent = profile.department;
+            document.getElementById('sidebar-user-img').src = profile.profilePicUrl || `https://placehold.co/100x100/E2E8F0/4A5568?text=${profile.name.charAt(0)}`;
+            document.getElementById('sidebar-user-roll').textContent = profile.roll;
+            document.getElementById('sidebar-user-class').textContent = profile.class;
+            document.getElementById('sidebar-user-gender').textContent = profile.gender;
+            document.getElementById('sidebar-user-religion').textContent = profile.religion;
 
             document.getElementById('admin-panel-button').classList.toggle('hidden', currentUser.uid !== ADMIN_UID);
             
-            // Load initial content and attach listeners
             showPage('feed');
             initializeFeed();
             initializeMessenger();
@@ -591,6 +582,7 @@
             const createPostForm = document.getElementById('create-post-form');
             const postImageInput = document.getElementById('post-image');
             const imageNameSpan = document.getElementById('image-name');
+            const postSubmitButton = document.getElementById('post-submit-button');
 
             postImageInput.addEventListener('change', () => {
                 imageNameSpan.textContent = postImageInput.files.length > 0 ? postImageInput.files[0].name : '';
@@ -598,33 +590,42 @@
 
             createPostForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                toggleButtonLoading(postSubmitButton, true);
                 const content = document.getElementById('post-content').value.trim();
                 const imageFile = postImageInput.files[0];
 
                 if (!content && !imageFile) {
                     showModal("Please write something or add an image to post.");
+                    toggleButtonLoading(postSubmitButton, false);
                     return;
                 }
                 
                 let imageUrl = '';
-                if (imageFile) {
-                    const storageRef = ref(storage, `posts/${currentUser.uid}/${Date.now()}_${imageFile.name}`);
-                    await uploadBytes(storageRef, imageFile);
-                    imageUrl = await getDownloadURL(storageRef);
+                try {
+                    if (imageFile) {
+                        const storageRef = ref(storage, `posts/${currentUser.uid}/${Date.now()}_${imageFile.name}`);
+                        await uploadBytes(storageRef, imageFile);
+                        imageUrl = await getDownloadURL(storageRef);
+                    }
+
+                    await addDoc(collection(db, "posts"), {
+                        authorId: currentUser.uid,
+                        authorName: currentUserProfile.name,
+                        authorProfilePic: currentUserProfile.profilePicUrl || '',
+                        content: content,
+                        imageUrl: imageUrl,
+                        likes: [],
+                        createdAt: serverTimestamp()
+                    });
+
+                    createPostForm.reset();
+                    imageNameSpan.textContent = '';
+                } catch (error) {
+                    console.error("Error creating post:", error);
+                    showModal("Could not create post. Please try again.");
+                } finally {
+                    toggleButtonLoading(postSubmitButton, false);
                 }
-
-                await addDoc(collection(db, "posts"), {
-                    authorId: currentUser.uid,
-                    authorName: currentUserProfile.name,
-                    authorProfilePic: currentUserProfile.profilePicUrl || '',
-                    content: content,
-                    imageUrl: imageUrl,
-                    likes: [],
-                    createdAt: serverTimestamp()
-                });
-
-                createPostForm.reset();
-                imageNameSpan.textContent = '';
             });
 
             const postsQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"));
@@ -717,7 +718,7 @@
                 const postLikes = postDoc.data().likes || [];
                 
                 if (postLikes.includes(currentUser.uid)) {
-                    await updateDoc(postRef, { likes: postLikes.filter(uid => uid !== currentUser.uid) });
+                    await updateDoc(postRef, { likes: arrayRemove(currentUser.uid) });
                 } else {
                     await updateDoc(postRef, { likes: arrayUnion(currentUser.uid) });
                 }
@@ -762,7 +763,7 @@
             const searchResultsContainer = document.getElementById('user-search-results');
             
             let searchTimeout;
-            searchInput.addEventListener('keyup', () => {
+            searchInput.addEventListener('input', () => {
                 clearTimeout(searchTimeout);
                 const searchTerm = searchInput.value.trim().toLowerCase();
                 if (searchTerm.length < 2) {
@@ -794,8 +795,7 @@
                 }, 300);
             });
 
-            // Real-time listener for the user's chats
-            const chatsQuery = query(collection(db, "chats"), where("participants", "array-contains", currentUser.uid));
+            const chatsQuery = query(collection(db, "chats"), where("participants", "array-contains", currentUser.uid), orderBy("lastMessageTimestamp", "desc"));
             const unsubscribeChats = onSnapshot(chatsQuery, (snapshot) => {
                 const chatListContainer = document.getElementById('chat-list-container');
                 chatListContainer.innerHTML = '';
@@ -803,9 +803,7 @@
                     chatListContainer.innerHTML = `<p class="p-4 text-sm text-gray-500">No active chats. Search for a user to start a conversation.</p>`;
                     return;
                 }
-
-                const sortedDocs = snapshot.docs.sort((a, b) => (b.data().lastMessageTimestamp?.toMillis() || 0) - (a.data().lastMessageTimestamp?.toMillis() || 0));
-                sortedDocs.forEach(doc => renderChatListItem(doc.id, doc.data()));
+                snapshot.docs.forEach(doc => renderChatListItem(doc.id, doc.data()));
             });
             activeListeners.push(unsubscribeChats);
         }
@@ -838,11 +836,7 @@
         document.getElementById('chat-list-container').addEventListener('click', (e) => {
             const chatItem = e.target.closest('[data-chat-id]');
             if (chatItem) {
-                const otherUser = {
-                    id: chatItem.dataset.otherUserId,
-                    name: chatItem.dataset.otherUserName,
-                    profilePicUrl: chatItem.dataset.otherUserPic
-                };
+                const otherUser = { id: chatItem.dataset.otherUserId, name: chatItem.dataset.otherUserName, profilePicUrl: chatItem.dataset.otherUserPic };
                 openChatWindow(chatItem.dataset.chatId, otherUser);
             }
         });
@@ -853,19 +847,15 @@
             
             const chatId = currentUser.uid < otherUser.id ? `${currentUser.uid}_${otherUser.id}` : `${otherUser.id}_${currentUser.uid}`;
             const chatRef = doc(db, "chats", chatId);
-            const chatDoc = await getDoc(chatRef);
-
-            if (!chatDoc.exists()) {
-                await setDoc(chatRef, {
-                    participants: [currentUser.uid, otherUser.id],
-                    lastMessage: '',
-                    lastMessageTimestamp: serverTimestamp(),
-                    participantDetails: {
-                        [currentUser.uid]: { name: currentUserProfile.name, profilePicUrl: currentUserProfile.profilePicUrl },
-                        [otherUser.id]: { name: otherUser.name, profilePicUrl: otherUser.profilePicUrl }
-                    }
-                });
-            }
+            
+            await setDoc(chatRef, {
+                participants: [currentUser.uid, otherUser.id],
+                participantDetails: {
+                    [currentUser.uid]: { name: currentUserProfile.name, profilePicUrl: currentUserProfile.profilePicUrl },
+                    [otherUser.id]: { name: otherUser.name, profilePicUrl: otherUser.profilePicUrl }
+                }
+            }, { merge: true });
+            
             openChatWindow(chatId, otherUser);
         }
         
@@ -904,9 +894,7 @@
             const input = document.getElementById('message-input');
             const text = input.value.trim();
             if (text && currentChatId) {
-                const tempInputVal = input.value;
                 input.value = '';
-
                 await addDoc(collection(db, `chats/${currentChatId}/messages`), {
                     text: text,
                     senderId: currentUser.uid,
@@ -936,7 +924,7 @@
                     noticeDiv.innerHTML = `
                         <h4 class="font-bold text-lg text-indigo-800">${notice.title}</h4>
                         <p class="text-gray-700 mt-1 whitespace-pre-wrap">${notice.content}</p>
-                        <p class="text-xs text-gray-500 mt-2">Posted on: ${formatTimestamp(notice.createdAt)}</p>
+                        <p class="text-xs text-gray-500 mt-2">Posted on: ${formatTimestamp(notice.createdAt)} by ${notice.authorName}</p>
                     `;
                     container.appendChild(noticeDiv);
                 });
@@ -946,6 +934,32 @@
 
         // --- ADMIN PANEL LOGIC ---
         function initializeAdminPanel() {
+            const noticeForm = document.getElementById('create-notice-form');
+            const noticeSubmitButton = document.getElementById('notice-submit-button');
+
+            noticeForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                toggleButtonLoading(noticeSubmitButton, true);
+                const title = document.getElementById('notice-title').value.trim();
+                const content = document.getElementById('notice-content').value.trim();
+
+                try {
+                    await addDoc(collection(db, "notices"), {
+                        title,
+                        content,
+                        authorName: currentUserProfile.name,
+                        createdAt: serverTimestamp()
+                    });
+                    showModal("Notice posted successfully!");
+                    noticeForm.reset();
+                } catch (error) {
+                    console.error("Error posting notice:", error);
+                    showModal("Could not post notice. Please try again.");
+                } finally {
+                    toggleButtonLoading(noticeSubmitButton, false);
+                }
+            });
+
             const pendingUsersQuery = query(collection(db, "users"), where("status", "==", "pending"));
             const unsubscribe = onSnapshot(pendingUsersQuery, (snapshot) => {
                 const container = document.getElementById('pending-users-container');
@@ -990,15 +1004,11 @@
         });
         
         // --- MODAL & CONFIRMATION LOGIC ---
-        document.getElementById('modal-close').addEventListener('click', () => {
-             document.getElementById('modal').classList.add('hidden');
-        });
-
+        document.getElementById('modal-close').addEventListener('click', () => { document.getElementById('modal').classList.add('hidden'); });
         document.getElementById('confirm-modal-cancel').addEventListener('click', () => {
              document.getElementById('confirm-modal').classList.add('hidden');
              confirmCallback = null;
         });
-
         document.getElementById('confirm-modal-confirm').addEventListener('click', () => {
             if (typeof confirmCallback === 'function') {
                 confirmCallback();
