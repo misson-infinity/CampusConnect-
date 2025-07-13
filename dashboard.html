@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ড্যাশবোর্ড - CampusConnect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-200">
+    <header class="bg-white shadow-md sticky top-0 z-10">
+        <nav class="container mx-auto p-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-blue-600">CampusConnect</h1>
+            <div>
+                <a href="admin.html" id="admin-link" class="hidden bg-purple-500 text-white py-2 px-3 rounded-md text-sm hover:bg-purple-700 mr-2">অ্যাডমিন</a>
+                <button id="logout-btn" class="bg-red-500 text-white py-2 px-3 rounded-md text-sm hover:bg-red-700">লগআউট</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div id="loading" class="text-center p-10"><p class="text-lg">লোড হচ্ছে...</p></div>
+
+        <div id="message-view" class="hidden text-center bg-yellow-100 border-l-4 p-4 rounded-md" role="alert">
+            <p class="font-bold" id="message-title"></p>
+            <p id="message-body"></p>
+        </div>
+        
+        <div id="main-view" class="hidden">
+            <h2 class="text-2xl font-semibold mb-4">স্বাগতম, <span id="user-name"></span>!</h2>
+            <p>আপনার নিউজ ফিড এবং অন্যান্য ফিচার এখানে দেখানো হবে।</p>
+        </div>
+    </main>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <script>
+        // !!! খুবই গুরুত্বপূর্ণ: আপনার নিজের Firebase কনফিগারেশন কোডটি নিচে পেস্ট করুন !!!
+        const firebaseConfig = {
+            // আপনার সেভ করে রাখা কনফিগারেশন কোডটি এখানে পেস্ট করুন
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const loadingDiv = document.getElementById('loading');
+        const messageView = document.getElementById('message-view');
+        const messageTitle = document.getElementById('message-title');
+        const messageBody = document.getElementById('message-body');
+        const mainView = document.getElementById('main-view');
+        const userNameSpan = document.getElementById('user-name');
+        const adminLink = document.getElementById('admin-link');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                db.collection('users').doc(user.uid).onSnapshot(doc => {
+                    loadingDiv.classList.add('hidden');
+                    if (doc.exists) {
+                        const data = doc.data();
+                        userNameSpan.textContent = data.name;
+                        
+                        if (data.role === 'admin') { adminLink.classList.remove('hidden'); }
+
+                        if (data.status === 'approved') {
+                            mainView.classList.remove('hidden');
+                            messageView.classList.add('hidden');
+                        } else if (data.status === 'pending') {
+                            messageTitle.textContent = "আপনার অ্যাকাউন্টটি অনুমোদনের অপেক্ষায় আছে";
+                            messageBody.textContent = "অ্যাডমিন অনুমোদন করার পরেই আপনি সব ফিচার ব্যবহার করতে পারবেন।";
+                            messageView.className = "text-center bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md";
+                            messageView.classList.remove('hidden');
+                            mainView.classList.add('hidden');
+                        } else { // 'rejected' or 'suspended'
+                            messageTitle.textContent = "অ্যাকাউন্ট অ্যাক্সেস বাতিল করা হয়েছে";
+                            messageBody.textContent = `আপনার অ্যাকাউন্টের স্ট্যাটাস: ${data.status}. অনুগ্রহ করে অ্যাডমিনের সাথে যোগাযোগ করুন।`;
+                            messageView.className = "text-center bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md";
+                            messageView.classList.remove('hidden');
+                            mainView.classList.add('hidden');
+                        }
+                    }
+                });
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        logoutBtn.addEventListener('click', () => { auth.signOut(); });
+    </script>
+</body>
+</html>
