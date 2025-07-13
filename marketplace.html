@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
-    <header class="bg-white shadow-md">
+    <header class="bg-white shadow-md sticky top-0 z-10">
         <nav class="container mx-auto p-4 flex justify-between items-center">
             <a href="dashboard.html" class="text-xl font-bold text-blue-600">CampusConnect</a>
             <a href="dashboard.html" class="bg-blue-500 text-white py-2 px-3 rounded-md text-sm hover:bg-blue-700">ড্যাশবোর্ড</a>
@@ -15,11 +15,134 @@
     </header>
 
     <main class="container mx-auto p-4">
-        <div class="bg-white p-4 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-4 text-gray-800 border-b pb-2">মার্কেটপ্লেস (কেনা-বেচা)</h2>
-            <p class="text-gray-600">এই ফিচারটি খুব শীঘ্রই আসছে...!</p>
-            <!-- Marketplace content will go here -->
+        <!-- নতুন প্রোডাক্ট যোগ করার ফর্ম -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800 border-b pb-3">আপনার পণ্য বিক্রির জন্য দিন</h2>
+            <form id="add-product-form">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label class="block text-sm font-medium">পণ্যের নাম</label><input type="text" id="product-name" class="mt-1 block w-full border rounded-md p-2" required></div>
+                    <div><label class="block text-sm font-medium">দাম (৳)</label><input type="number" id="product-price" class="mt-1 block w-full border rounded-md p-2" required></div>
+                </div>
+                <div class="mt-4"><label class="block text-sm font-medium">বিবরণ</label><textarea id="product-description" rows="3" class="mt-1 block w-full border rounded-md p-2" required></textarea></div>
+                <div class="mt-4"><label class="block text-sm font-medium">যোগাযোগের তথ্য</label><input type="text" id="product-contact" class="mt-1 block w-full border rounded-md p-2" placeholder="আপনার ফোন নম্বর বা ইমেল" required></div>
+                <div class="mt-4">
+                    <label for="product-image" class="cursor-pointer bg-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-md hover:bg-gray-300">ছবি আপলোড করুন</label>
+                    <input type="file" id="product-image" class="hidden" accept="image/*" required>
+                    <span id="image-name" class="text-sm text-gray-600 ml-2"></span>
+                </div>
+                <button type="submit" id="submit-product-btn" class="mt-4 w-full bg-green-600 text-white font-semibold py-3 rounded-md hover:bg-green-700">জমা দিন</button>
+            </form>
+        </div>
+        
+        <!-- অনুমোদিত প্রোডাক্টগুলো দেখানোর সেকশন -->
+        <div>
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">বিক্রির জন্য রয়েছে</h2>
+            <div id="loading"><p class="text-center p-5">লোড হচ্ছে...</p></div>
+            <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Products will be loaded here -->
+            </div>
         </div>
     </main>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
+          authDomain: "campusconnect-a8447.firebaseapp.com",
+          databaseURL: "https://campusconnect-a8447-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "campusconnect-a8447",
+          storageBucket: "campusconnect-a8447.firebasestorage.app",
+          messagingSenderId: "512467118728",
+          appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
+          measurementId: "G-62XR5TLSN7"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+        let currentUserData = null;
+
+        const el = (id) => document.getElementById(id);
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                db.collection('users').doc(user.uid).get().then(doc => {
+                    if (doc.exists) currentUserData = { id: doc.id, ...doc.data() };
+                });
+            } else {
+                // Optionally redirect or disable form if not logged in
+            }
+        });
+
+        el('product-image').addEventListener('change', e => { if(e.target.files.length) el('image-name').textContent = e.target.files[0].name; });
+
+        el('add-product-form').addEventListener('submit', e => {
+            e.preventDefault();
+            if (!currentUserData) { alert("পোস্ট করার জন্য লগইন করুন।"); return; }
+            
+            const submitBtn = el('submit-product-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'আপলোড হচ্ছে...';
+
+            const imageFile = el('product-image').files[0];
+            const imageName = Date.now() + '-' + imageFile.name;
+            const uploadTask = storage.ref(`marketplace/${imageName}`).put(imageFile);
+
+            uploadTask.then(snapshot => snapshot.ref.getDownloadURL()).then(downloadURL => {
+                db.collection('marketplace').add({
+                    name: el('product-name').value,
+                    price: Number(el('product-price').value),
+                    description: el('product-description').value,
+                    contact: el('product-contact').value,
+                    imageUrl: downloadURL,
+                    sellerId: currentUserData.id,
+                    sellerName: currentUserData.name,
+                    status: 'pending', // 'pending', 'approved', 'rejected', 'sold'
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            }).then(() => {
+                alert('আপনার পণ্যটি পর্যালোচনার জন্য জমা দেওয়া হয়েছে। অ্যাডমিন অনুমোদন করলে এটি এখানে দেখা যাবে।');
+                el('add-product-form').reset();
+                el('image-name').textContent = '';
+            }).catch(err => {
+                console.error("Error adding product: ", err);
+                alert("একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
+            }).finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'জমা দিন';
+            });
+        });
+
+        function loadApprovedProducts() {
+            el('loading').classList.remove('hidden');
+            const container = el('products-container');
+            db.collection('marketplace').where('status', '==', 'approved').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+                el('loading').classList.add('hidden');
+                container.innerHTML = snapshot.empty ? '<p class="text-center col-span-full">এখনো কোনো পণ্য বিক্রির জন্য নেই।</p>' : '';
+                snapshot.forEach(doc => {
+                    const product = doc.data();
+                    const card = document.createElement('div');
+                    card.className = 'border rounded-lg shadow-md bg-white overflow-hidden group';
+                    card.innerHTML = `
+                        <img src="${product.imageUrl}" alt="${product.name}" class="h-48 w-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold text-gray-900 truncate">${product.name}</h3>
+                            <p class="text-xl font-semibold text-blue-600 mt-1">৳${product.price}</p>
+                            <p class="text-sm text-gray-600 mt-2 truncate">${product.description}</p>
+                            <div class="text-xs text-gray-500 mt-3 pt-2 border-t">
+                                <p>বিক্রেতা: <a href="profile.html?id=${product.sellerId}" class="hover:underline font-semibold">${product.sellerName}</a></p>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            });
+        }
+
+        loadApprovedProducts();
+    </script>
 </body>
 </html>
