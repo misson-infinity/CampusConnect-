@@ -8,65 +8,38 @@
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
     <div class="w-full max-w-md">
-        <!-- Login Form -->
         <div id="login-view" class="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
             <h2 class="text-2xl mb-6 text-center font-bold text-gray-800">লগইন করুন</h2>
             <form id="login-form">
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="login-email">ইমেল</label>
-                    <input class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="login-email" type="email" placeholder="আপনার ইমেল" required>
-                </div>
-                <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="login-password">পাসওয়ার্ড</label>
-                    <input class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="login-password" type="password" placeholder="********" required>
-                </div>
-                <div class="flex items-center justify-between">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">সাইন ইন</button>
-                    <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#" id="forgot-password-link">পাসওয়ার্ড ভুলে গেছেন?</a>
-                </div>
-                 <div class="text-center mt-4">
-                    <a class="inline-block align-baseline font-bold text-sm text-green-500 hover:text-green-800" href="#" id="show-signup">অ্যাকাউন্ট নেই? সাইন আপ</a>
-                </div>
+                <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2" for="login-email">ইমেল</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="login-email" type="email" placeholder="আপনার ইমেল" required></div>
+                <div class="mb-6"><label class="block text-gray-700 text-sm font-bold mb-2" for="login-password">পাসওয়ার্ড</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="login-password" type="password" placeholder="********" required></div>
+                <div class="flex items-center justify-between"><button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">সাইন ইন</button><a class="inline-block font-bold text-sm text-blue-500 hover:text-blue-800" href="#" id="forgot-password-link">পাসওয়ার্ড ভুলে গেছেন?</a></div>
+                 <div class="text-center mt-4"><a class="inline-block font-bold text-sm text-green-500 hover:text-green-800" href="#" id="show-signup">অ্যাকাউন্ট নেই? সাইন আপ</a></div>
             </form>
         </div>
-
-        <!-- Signup Form (Hidden) -->
         <div id="signup-view" class="hidden bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
-            <h2 class="text-2xl mb-6 text-center font-bold text-gray-800">অ্যাকাউন্ট তৈরি করুন</h2>
+            <h2 class="text-2xl mb-6 text-center font-bold">অ্যাকাউন্ট তৈরি করুন</h2>
             <form id="signup-form">
                 <div class="mb-4"><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-name" type="text" placeholder="পুরো নাম" required></div>
                 <div class="mb-4"><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-roll" type="text" placeholder="রোল নম্বর / আইডি" required></div>
                 <div class="mb-4"><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-email" type="email" placeholder="ইমেল" required></div>
                 <div class="mb-6"><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-password" type="password" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)" required></div>
-                <div class="flex items-center justify-between">
-                    <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" type="submit">সাইন আপ</button>
-                    <a class="inline-block align-baseline font-bold text-sm text-green-500 hover:text-green-800" href="#" id="back-to-login-from-signup">ইতিমধ্যে অ্যাকাউন্ট আছে?</a>
-                </div>
+                <div class="flex items-center justify-between"><button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" type="submit">সাইন আপ</button><a class="inline-block font-bold text-sm text-green-500 hover:text-green-800" href="#" id="back-to-login-from-signup">ইতিমধ্যে অ্যাকাউন্ট আছে?</a></div>
             </form>
         </div>
-        
-        <!-- Forgot Password Form (Hidden) -->
         <div id="forgot-password-view" class="hidden bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
-            <h2 class="text-2xl mb-6 text-center font-bold text-gray-800">পাসওয়ার্ড রিসেট</h2>
+            <h2 class="text-2xl mb-6 text-center font-bold">পাসওয়ার্ড রিসেট</h2>
              <form id="forgot-password-form">
-                <p class="mb-4 text-sm text-gray-600">আপনার অ্যাকাউন্টের ইমেল দিন। আমরা আপনাকে পাসওয়ার্ড রিসেট করার জন্য একটি লিংক পাঠাব।</p>
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="reset-email">ইমেল</label>
-                    <input class="shadow appearance-none border rounded w-full py-3 px-4" id="reset-email" type="email" placeholder="আপনার ইমেল" required>
-                </div>
-                <div class="flex items-center justify-between">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">লিংক পাঠান</button>
-                    <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#" id="back-to-login-from-forgot">লগইনে ফিরে যান</a>
-                </div>
+                <p class="mb-4 text-sm text-gray-600">আপনার অ্যাকাউন্টের ইমেল দিন। আমরা পাসওয়ার্ড রিসেট করার জন্য একটি লিংক পাঠাব।</p>
+                <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2" for="reset-email">ইমেল</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="reset-email" type="email" placeholder="আপনার ইমেল" required></div>
+                <div class="flex items-center justify-between"><button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">লিংক পাঠান</button><a class="inline-block font-bold text-sm text-blue-500 hover:text-blue-800" href="#" id="back-to-login-from-forgot">লগইনে ফিরে যান</a></div>
             </form>
         </div>
         <p id="message" class="text-center mt-4"></p>
     </div>
-
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-
     <script>
         const firebaseConfig = {
           apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
@@ -78,64 +51,20 @@
           appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
           measurementId: "G-62XR5TLSN7"
         };
-        
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-
-        const loginView = document.getElementById('login-view');
-        const signupView = document.getElementById('signup-view');
-        const forgotPasswordView = document.getElementById('forgot-password-view');
-        const messageEl = document.getElementById('message');
-
-        function clearMessage() { messageEl.textContent = ''; }
-
-        document.getElementById('show-signup').addEventListener('click', () => { loginView.classList.add('hidden'); signupView.classList.remove('hidden'); clearMessage(); });
-        document.getElementById('forgot-password-link').addEventListener('click', () => { loginView.classList.add('hidden'); forgotPasswordView.classList.remove('hidden'); clearMessage(); });
-        document.getElementById('back-to-login-from-signup').addEventListener('click', () => { signupView.classList.add('hidden'); loginView.classList.remove('hidden'); clearMessage(); });
-        document.getElementById('back-to-login-from-forgot').addEventListener('click', () => { forgotPasswordView.classList.add('hidden'); loginView.classList.remove('hidden'); clearMessage(); });
-
-        document.getElementById('login-form').addEventListener('submit', e => {
-            e.preventDefault();
-            const email = e.target['login-email'].value;
-            const password = e.target['login-password'].value;
-            auth.signInWithEmailAndPassword(email, password)
-                .then(() => window.location.href = 'dashboard.html')
-                .catch(err => { messageEl.textContent = "ভুল ইমেল অথবা পাসওয়ার্ড।"; messageEl.className = 'text-center mt-4 text-red-500'; });
-        });
-        
-        document.getElementById('signup-form').addEventListener('submit', e => {
-            e.preventDefault();
-            const name = e.target['signup-name'].value;
-            const roll = e.target['signup-roll'].value;
-            const email = e.target['signup-email'].value;
-            const password = e.target['signup-password'].value;
-            
-            auth.createUserWithEmailAndPassword(email, password)
-                .then(cred => {
-                    return db.collection('users').doc(cred.user.uid).set({ name, email, roll, status: 'pending', role: 'student' });
-                })
-                .then(() => window.location.href = 'dashboard.html')
-                .catch(err => { messageEl.textContent = err.message; messageEl.className = 'text-center mt-4 text-red-500'; });
-        });
-
-        document.getElementById('forgot-password-form').addEventListener('submit', e => {
-            e.preventDefault();
-            const email = document.getElementById('reset-email').value;
-            auth.sendPasswordResetEmail(email)
-                .then(() => {
-                    messageEl.textContent = 'পাসওয়ার্ড রিসেট করার লিংক আপনার ইমেলে পাঠানো হয়েছে।';
-                    messageEl.className = 'text-center mt-4 text-green-500';
-                })
-                .catch(err => {
-                    messageEl.textContent = err.message;
-                    messageEl.className = 'text-center mt-4 text-red-500';
-                });
-        });
-
-        auth.onAuthStateChanged(user => {
-            if (user) { window.location.href = 'dashboard.html'; }
-        });
+        const views = { login: document.getElementById('login-view'), signup: document.getElementById('signup-view'), forgot: document.getElementById('forgot-password-view') };
+        const msgEl = document.getElementById('message');
+        const showView = (viewName) => { Object.keys(views).forEach(v => views[v].classList.toggle('hidden', v !== viewName)); msgEl.textContent = ''; };
+        document.getElementById('show-signup').addEventListener('click', () => showView('signup'));
+        document.getElementById('forgot-password-link').addEventListener('click', () => showView('forgot'));
+        document.getElementById('back-to-login-from-signup').addEventListener('click', () => showView('login'));
+        document.getElementById('back-to-login-from-forgot').addEventListener('click', () => showView('login'));
+        document.getElementById('login-form').addEventListener('submit', e => { e.preventDefault(); auth.signInWithEmailAndPassword(e.target['login-email'].value, e.target['login-password'].value).catch(err => { msgEl.textContent = "ভুল ইমেল অথবা পাসওয়ার্ড।"; msgEl.className = 'text-red-500'; }); });
+        document.getElementById('signup-form').addEventListener('submit', e => { e.preventDefault(); auth.createUserWithEmailAndPassword(e.target['signup-email'].value, e.target['signup-password'].value).then(c => db.collection('users').doc(c.user.uid).set({ name: e.target['signup-name'].value, email: e.target['signup-email'].value, roll: e.target['signup-roll'].value, status: 'pending', role: 'student' })).catch(err => { msgEl.textContent = err.message; msgEl.className = 'text-red-500'; }); });
+        document.getElementById('forgot-password-form').addEventListener('submit', e => { e.preventDefault(); auth.sendPasswordResetEmail(document.getElementById('reset-email').value).then(() => { msgEl.textContent = 'পাসওয়ার্ড রিসেটের লিংক আপনার ইমেলে পাঠানো হয়েছে।'; msgEl.className = 'text-green-500'; }).catch(err => { msgEl.textContent = err.message; msgEl.className = 'text-red-500'; }); });
+        auth.onAuthStateChanged(user => { if (user) window.location.href = 'dashboard.html'; });
     </script>
 </body>
 </html>
