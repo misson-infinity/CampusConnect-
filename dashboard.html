@@ -7,34 +7,45 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
+    <!-- Header Section -->
     <header class="bg-white shadow-md sticky top-0 z-20">
         <nav class="container mx-auto p-4 flex justify-between items-center">
             <h1 class="text-xl font-bold text-blue-600">CampusConnect</h1>
             <div class="flex items-center space-x-2 sm:space-x-4">
-                <a href="search.html" class="p-2 rounded-full hover:bg-gray-200" title="খুঁজুন"><svg class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg></a>
-                <a href="chat-list.html" class="p-2 rounded-full hover:bg-gray-200" title="মেসেজ"><svg class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg></a>
+                <a href="search.html" class="p-2 rounded-full hover:bg-gray-200" title="ব্যবহারকারী খুঁজুন">
+                    <svg class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </a>
+                <a href="chat-list.html" class="p-2 rounded-full hover:bg-gray-200" title="মেসেজ">
+                    <svg class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                </a>
                 <button id="logout-btn" class="bg-red-500 text-white py-2 px-3 rounded-md text-sm hover:bg-red-700">লগআউট</button>
             </div>
         </nav>
     </header>
 
+    <!-- Main Content with 3-Column Layout -->
     <main class="container mx-auto p-4 grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <aside id="left-sidebar" class="hidden lg:block lg:col-span-1 space-y-6">
-            <div class="bg-white p-4 rounded-lg shadow-md text-center">
+        
+        <!-- Left Sidebar (Personal Space) -->
+        <aside class="hidden lg:block lg:col-span-1 space-y-6">
+            <div class="bg-white p-4 rounded-lg shadow-md text-center sticky top-24">
                  <div class="w-24 h-24 bg-gray-300 rounded-full mx-auto mb-3"></div>
-                 <h3 id="sidebar-user-name" class="font-bold text-lg">...</h3>
+                 <h3 id="sidebar-user-name" class="font-bold text-lg">লোড হচ্ছে...</h3>
                  <a href="#" id="sidebar-profile-link" class="text-sm text-blue-600 hover:underline">প্রোফাইল দেখুন</a>
+                 <a href="admin.html" id="admin-link" class="hidden mt-2 text-sm text-purple-600 font-semibold" >অ্যাডমিন প্যানেল</a>
             </div>
-            <div class="bg-white p-4 rounded-lg shadow-md">
-                 <h3 class="font-bold text-md mb-3 border-b pb-2">একাডেমিক হাব</h3>
-                 <nav class="space-y-2 text-sm"><a href="#" class="block p-2 rounded-md hover:bg-gray-100">📚 ক্লাস রুটিন</a><a href="#" class="block p-2 rounded-md hover:bg-gray-100">🗓️ পরীক্ষার সময়সূচী</a><a href="#" class="block p-2 rounded-md hover:bg-gray-100">🧑‍🏫 ফ্যাকাল্টি তথ্য</a></nav>
-            </div>
-             <div class="bg-white p-4 rounded-lg shadow-md">
+            <div class="bg-white p-4 rounded-lg shadow-md sticky top-80">
                  <h3 class="font-bold text-md mb-3 border-b pb-2">ক্যাম্পাস সার্ভিস</h3>
-                 <nav class="space-y-2 text-sm"><a href="lost-and-found.html" class="block p-2 rounded-md hover:bg-gray-100">❓ হারানো ও প্রাপ্তি</a><a href="marketplace.html" class="block p-2 rounded-md hover:bg-gray-100">🛍️ মার্কেটপ্লেস</a><a href="tutor-finder.html" class="block p-2 rounded-md hover:bg-gray-100">🧑‍🏫 টিউটর খুঁজুন</a></nav>
+                 <nav class="space-y-2 text-sm">
+                    <a href="events.html" class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100"><span>🎉</span><span>ইভেন্টস</span></a>
+                    <a href="lost-and-found.html" class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100"><span>❓</span><span>হারানো ও প্রাপ্তি</span></a>
+                    <a href="marketplace.html" class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100"><span>🛍️</span><span>মার্কেটপ্লেস</span></a>
+                    <a href="tutor-finder.html" class="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100"><span>🧑‍🏫</span><span>টিউটর খুঁজুন</span></a>
+                 </nav>
             </div>
         </aside>
 
+        <!-- Main Content (News Feed) -->
         <section class="lg:col-span-2">
             <div id="loading" class="text-center p-10"><p>লোড হচ্ছে...</p></div>
             <div id="message-view" class="hidden"></div>
@@ -43,19 +54,32 @@
                     <form id="create-post-form">
                         <textarea id="post-content" class="w-full border-2 rounded-md p-2" rows="3" placeholder="আপনার মনের কথা লিখুন..."></textarea>
                         <div class="mt-2 flex justify-between items-center">
-                            <div><label for="post-image" class="cursor-pointer bg-gray-200 font-semibold px-4 py-2 rounded-md hover:bg-gray-300">ছবি</label><input type="file" id="post-image" class="hidden" accept="image/*"><span id="image-name" class="text-sm ml-2"></span></div>
-                            <button type="submit" id="post-submit-btn" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-md">পোস্ট</button>
+                            <div>
+                                <label for="post-image" class="cursor-pointer bg-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-md hover:bg-gray-300">ছবি</label>
+                                <input type="file" id="post-image" class="hidden" accept="image/*">
+                                <span id="image-name" class="text-sm text-gray-600 ml-2"></span>
+                            </div>
+                            <button type="submit" id="post-submit-btn" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-blue-600">পোস্ট করুন</button>
                         </div>
-                        <div id="upload-progress" class="hidden w-full bg-gray-200 h-2.5 mt-2"><div id="progress-bar" class="bg-blue-600 h-2.5" style="width:0%"></div></div>
+                        <div id="upload-progress" class="hidden w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                            <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
                     </form>
                 </div>
                 <div id="news-feed" class="space-y-4"></div>
             </div>
         </section>
 
+        <!-- Right Sidebar (Community Pulse) -->
         <aside class="hidden lg:block lg:col-span-1 space-y-6">
-            <div class="bg-white p-4 rounded-lg shadow-md"><h3 class="font-bold text-md mb-3 border-b pb-2">📢 অফিসিয়াল নোটিশ</h3><div id="notice-board" class="space-y-2"></div></div>
-            <div class="bg-white p-4 rounded-lg shadow-md"><h3 class="font-bold text-md mb-3 border-b pb-2">🎉 আসন্ন ইভেন্ট</h3><div id="upcoming-events" class="space-y-2"></div></div>
+            <div class="bg-white p-4 rounded-lg shadow-md sticky top-24">
+                <h3 class="font-bold text-md mb-3 border-b pb-2">📢 অফিসিয়াল নোটিশ</h3>
+                <div id="notice-board" class="space-y-2"></div>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-md sticky top-80">
+                <h3 class="font-bold text-md mb-3 border-b pb-2">🎉 আসন্ন ইভেন্ট</h3>
+                <div id="upcoming-events" class="space-y-2"></div>
+            </div>
         </aside>
     </main>
     
@@ -89,46 +113,70 @@
                     el('loading').classList.add('hidden');
                     if (!doc.exists) return;
                     currentUserData = { id: doc.id, ...doc.data() };
-                    el('sidebar-profile-link').href = `profile.html?id=${currentUserData.id}`;
-                    if (currentUserData.role === 'admin') el('admin-link').classList.remove('hidden');
+                    
                     if (currentUserData.status === 'approved') {
                         el('main-view').classList.remove('hidden');
                         el('message-view').classList.add('hidden');
-                        loadSidebarInfo(); loadAllPosts(); loadAllNotices(); loadUpcomingEvents();
-                    } else { handleUnapprovedUser(currentUserData.status); }
-                });
-            } else { window.location.href = 'index.html'; }
+                        loadSidebarInfo(); 
+                        loadAllPosts(); 
+                        loadAllNotices(); 
+                        loadUpcomingEvents();
+                    } else {
+                        handleUnapprovedUser(currentUserData.status);
+                    }
+                }, error => console.error("Error fetching user data:", error));
+            } else {
+                window.location.href = 'index.html';
+            }
         });
 
         function handleUnapprovedUser(status) {
             el('main-view').classList.add('hidden');
-            const titles = { pending: "অ্যাকাউন্ট অনুমোদনের অপেক্ষায়", rejected: "অ্যাকাউন্ট বাতিল", suspended: "অ্যাকাউন্ট সাসপেন্ডেড" };
+            const msgView = el('message-view');
+            const titles = { pending: "অ্যাকাউন্টটি অনুমোদনের অপেক্ষায়", rejected: "অ্যাকাউন্ট অ্যাক্সেস বাতিল", suspended: "অ্যাকাউন্ট সাময়িক বরখাস্ত" };
+            const bodies = { pending: "অ্যাডমিন অনুমোদন করার পরেই আপনি সব ফিচার ব্যবহার করতে পারবেন।", rejected: `আপনার অ্যাকাউন্টের স্ট্যাটাস: ${status}.`, suspended: `আপনার অ্যাকাউন্টের স্ট্যাটাস: ${status}.`};
             const colors = { pending: 'yellow', rejected: 'red', suspended: 'red' };
-            el('message-view').innerHTML = `<div class="bg-${colors[status]}-100 border-l-4 border-${colors[status]}-500 text-${colors[status]}-700 p-4"><p class="font-bold">${titles[status]}</p></div>`;
-            el('message-view').classList.remove('hidden');
+            msgView.innerHTML = `<div class="text-center bg-${colors[status]}-100 border-l-4 border-${colors[status]}-500 text-${colors[status]}-700 p-4 rounded-md" role="alert"><p class="font-bold">${titles[status]}</p><p>${bodies[status]}</p></div>`;
+            msgView.classList.remove('hidden');
         }
         
         el('create-post-form').addEventListener('submit', e => {
             e.preventDefault();
             const content = el('post-content').value.trim();
             const imageFile = el('post-image').files[0];
-            if (content === '' && !imageFile) return;
+            if (content === '' && !imageFile) { alert("কিছু লিখুন অথবা একটি ছবি দিন।"); return; }
+            
+            el('post-submit-btn').disabled = true;
 
             if (imageFile) {
                 const uploadTask = storage.ref(`posts/${Date.now()}-${imageFile.name}`).put(imageFile);
                 const progressContainer = el('upload-progress');
                 progressContainer.classList.remove('hidden');
-                uploadTask.on('state_changed', s => { el('progress-bar').style.width = (s.bytesTransferred / s.totalBytes) * 100 + '%'; }, null, 
-                () => uploadTask.snapshot.ref.getDownloadURL().then(url => { savePostToFirestore(content, url); progressContainer.classList.add('hidden'); }));
-            } else { savePostToFirestore(content, null); }
+                uploadTask.on('state_changed', s => { el('progress-bar').style.width = (s.bytesTransferred / s.totalBytes) * 100 + '%'; }, 
+                err => { console.error(err); alert("ছবি আপলোডে সমস্যা হয়েছে।"); el('post-submit-btn').disabled = false; }, 
+                () => {
+                    uploadTask.snapshot.ref.getDownloadURL().then(url => {
+                        savePostToFirestore(content, url);
+                        progressContainer.classList.add('hidden');
+                    });
+                });
+            } else {
+                savePostToFirestore(content, null);
+            }
         });
 
         function savePostToFirestore(content, imageUrl) {
-            db.collection('posts').add({ authorId: currentUserData.id, authorName: currentUserData.name, content, imageUrl, timestamp: firebase.firestore.FieldValue.serverTimestamp(), likes: [] });
-            el('create-post-form').reset(); el('image-name').textContent = '';
+            db.collection('posts').add({
+                authorId: currentUserData.id, authorName: currentUserData.name, content, imageUrl,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(), likes: []
+            }).then(() => {
+                el('create-post-form').reset();
+                el('image-name').textContent = '';
+                el('post-submit-btn').disabled = false;
+            });
         }
         
-        el('post-image').addEventListener('change', e => { if (e.target.files.length) el('image-name').textContent = e.target.files[0].name; });
+        el('post-image').addEventListener('change', e => { if (e.target.files.length > 0) el('image-name').textContent = e.target.files[0].name; });
 
         function loadAllPosts() {
             db.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
@@ -137,86 +185,121 @@
                     const post = doc.data(), postId = doc.id, postDate = post.timestamp?.toDate().toLocaleString('bn-BD') || '';
                     const canDelete = currentUserData?.id === post.authorId || currentUserData?.role === 'admin';
                     const hasLiked = post.likes?.includes(currentUserData?.id);
+                    
                     const postDiv = document.createElement('div');
                     postDiv.className = 'bg-white p-4 rounded-lg shadow-md';
                     postDiv.innerHTML = `
                         <div class="flex items-center justify-between mb-2">
-                            <a href="profile.html?id=${post.authorId}" class="font-bold hover:underline">${post.authorName}</a>
-                            ${canDelete ? `<button onclick="deletePost('${postId}')" class="text-red-500 text-sm">মুছুন</button>` : ''}
+                            <a href="profile.html?id=${post.authorId}" class="font-bold text-gray-800 hover:underline">${post.authorName}</a>
+                            ${canDelete ? `<button onclick="deletePost('${postId}')" class="text-red-500 text-sm font-semibold">মুছুন</button>` : ''}
                         </div>
-                        ${post.content ? `<p class="whitespace-pre-wrap mb-3">${post.content}</p>` : ''}
+                        ${post.content ? `<p class="text-gray-700 whitespace-pre-wrap mb-3">${post.content}</p>` : ''}
                         ${post.imageUrl ? `<img src="${post.imageUrl}" class="w-full max-h-96 object-cover rounded-md">` : ''}
                         <div class="mt-4 pt-2 border-t flex items-center justify-between text-gray-500">
-                             <button onclick="toggleLike('${postId}')" class="flex items-center space-x-1 ${hasLiked ? 'text-blue-600' : ''}"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span>${post.likes?.length || 0}</span></button>
-                             <button onclick="toggleComments('${postId}')" class="flex items-center space-x-1"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg><span>কমেন্ট</span></button>
-                             <p class="text-xs">${postDate}</p>
+                             <button onclick="toggleLike('${postId}')" class="flex items-center space-x-1 hover:text-blue-600 ${hasLiked ? 'text-blue-600' : ''}">
+                                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                <span>${post.likes?.length || 0}</span>
+                            </button>
+                            <button onclick="toggleComments('${postId}')" class="flex items-center space-x-1 hover:text-blue-600">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                                <span>কমেন্ট</span>
+                            </button>
+                            <p class="text-xs text-right">${postDate}</p>
                         </div>
                         <div id="comments-section-${postId}" class="hidden mt-4 pt-4 border-t">
-                             <form onsubmit="postComment(event, '${postId}')" class="flex mb-3"><input type="text" id="comment-input-${postId}" class="w-full border p-2" placeholder="মন্তব্য..."><button type="submit" class="bg-blue-500 text-white px-3">পাঠান</button></form>
-                             <div id="comments-list-${postId}" class="space-y-2"></div>
-                        </div>`;
+                             <form onsubmit="postComment(event, '${postId}')" class="flex mb-3">
+                                <input type="text" id="comment-input-${postId}" class="w-full border rounded-l-md p-2 text-sm" placeholder="আপনার মন্তব্য লিখুন...">
+                                <button type="submit" class="bg-blue-500 text-white px-3 rounded-r-md text-sm font-semibold">পাঠান</button>
+                            </form>
+                            <div id="comments-list-${postId}" class="space-y-2"></div>
+                        </div>
+                    `;
                     newsFeed.appendChild(postDiv);
                 });
             });
         }
         
         function deletePost(postId) {
-             if (!confirm('আপনি কি এই পোস্টটি মুছে ফেলতে চান?')) return;
+             if (!confirm('আপনি কি নিশ্চিতভাবে এই পোস্টটি মুছে ফেলতে চান?')) return;
              const postRef = db.collection('posts').doc(postId);
-             postRef.get().then(doc => { if (doc.exists && doc.data().imageUrl) storage.refFromURL(doc.data().imageUrl).delete(); postRef.delete(); });
+             postRef.get().then(doc => {
+                 if (doc.exists && doc.data().imageUrl) {
+                     storage.refFromURL(doc.data().imageUrl).delete().catch(e => console.error("Error removing image:", e));
+                 }
+                 postRef.delete();
+             });
         }
 
         function toggleLike(postId) {
+            if(!currentUserData) return;
             const postRef = db.collection('posts').doc(postId);
             db.runTransaction(t => t.get(postRef).then(doc => {
+                if (!doc.exists) throw "Document does not exist!";
                 let newLikes = doc.data().likes || [];
-                if (newLikes.includes(currentUserData.id)) newLikes = newLikes.filter(id => id !== currentUserData.id);
-                else newLikes.push(currentUserData.id);
+                if (newLikes.includes(currentUserData.id)) {
+                    newLikes = newLikes.filter(id => id !== currentUserData.id);
+                } else {
+                    newLikes.push(currentUserData.id);
+                }
                 t.update(postRef, { likes: newLikes });
             }));
         }
         
         function toggleComments(postId) {
-            const section = el(`comments-section-${postId}`);
-            if (section.classList.toggle('hidden')) return;
+            const commentsSection = el(`comments-section-${postId}`);
+            const commentsList = el(`comments-list-${postId}`);
+            if (commentsSection.classList.toggle('hidden')) return;
+
             db.collection('posts').doc(postId).collection('comments').orderBy('timestamp').onSnapshot(snapshot => {
-                const list = el(`comments-list-${postId}`); list.innerHTML = '';
+                commentsList.innerHTML = '';
                 snapshot.forEach(doc => {
-                    const c = doc.data();
-                    const div = document.createElement('div'); div.className = 'bg-gray-100 p-2 rounded-md';
-                    div.innerHTML = `<p><strong class="font-semibold">${c.authorName}</strong>: ${c.text}</p>`;
-                    list.appendChild(div);
+                    const comment = doc.data();
+                    const div = document.createElement('div');
+                    div.className = 'bg-gray-100 p-2 rounded-md';
+                    div.innerHTML = `<p><a href="profile.html?id=${comment.authorId}" class="font-semibold hover:underline">${comment.authorName}</a>: ${comment.text}</p>`;
+                    commentsList.appendChild(div);
                 });
             });
         }
         
-        function postComment(e, postId) {
-            e.preventDefault();
+        function postComment(event, postId) {
+            event.preventDefault();
             const input = el(`comment-input-${postId}`);
-            if (input.value.trim() === '') return;
-            db.collection('posts').doc(postId).collection('comments').add({ text: input.value, authorId: currentUserData.id, authorName: currentUserData.name, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+            const text = input.value.trim();
+            if (text === '' || !currentUserData) return;
+            
+            db.collection('posts').doc(postId).collection('comments').add({
+                text: text, authorId: currentUserData.id, authorName: currentUserData.name,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
             input.value = '';
         }
 
-        function loadSidebarInfo() { el('sidebar-user-name').textContent = currentUserData.name; }
+        function loadSidebarInfo() {
+            if(!currentUserData) return;
+            el('sidebar-user-name').textContent = currentUserData.name;
+            el('sidebar-profile-link').href = `profile.html?id=${currentUserData.id}`;
+            if(currentUserData.role === 'admin') el('admin-link').classList.remove('hidden');
+        }
         function loadAllNotices() {
             db.collection('notices').orderBy('timestamp', 'desc').limit(5).onSnapshot(s => {
-                const board = el('notice-board'); board.innerHTML = s.empty ? '<p>কোনো নোটিশ নেই।</p>' : '';
+                const board = el('notice-board'); board.innerHTML = s.empty ? '<p class="text-sm text-gray-500">কোনো নোটিশ নেই।</p>' : '';
                 s.forEach(d => {
                     const n = d.data(), div = document.createElement('div');
                     div.className = 'border-l-4 border-blue-500 pl-3';
-                    div.innerHTML = `<p class="font-semibold text-sm">${n.title}</p><p class="text-xs">${n.timestamp?.toDate().toLocaleDateString('bn-BD')}</p>`;
+                    div.innerHTML = `<p class="font-semibold text-sm">${n.title}</p><p class="text-xs text-gray-500">${n.timestamp?.toDate().toLocaleDateString('bn-BD')}</p>`;
                     board.appendChild(div);
                 });
             });
         }
         function loadUpcomingEvents() {
-            db.collection('events').where('date', '>=', new Date().toISOString().split('T')[0]).orderBy('date').limit(3).onSnapshot(s => {
-                const list = el('upcoming-events'); list.innerHTML = s.empty ? '<p>কোনো ইভেন্ট নেই।</p>' : '';
+            const today = new Date().toISOString().split('T')[0];
+            db.collection('events').where('date', '>=', today).orderBy('date').limit(3).onSnapshot(s => {
+                const list = el('upcoming-events'); list.innerHTML = s.empty ? '<p class="text-sm text-gray-500">কোনো ইভেন্ট নেই।</p>' : '';
                 s.forEach(d => {
                     const e = d.data(), div = document.createElement('a'); div.href = 'events.html';
-                    div.className = 'block p-2 hover:bg-gray-100';
-                    div.innerHTML = `<p class="font-semibold text-sm">${e.title}</p><p class="text-xs">${new Date(e.date).toLocaleDateString('bn-BD')}</p>`;
+                    div.className = 'block p-2 rounded-md hover:bg-gray-100';
+                    div.innerHTML = `<p class="font-semibold text-sm">${e.title}</p><p class="text-xs text-gray-500">${new Date(e.date).toLocaleDateString('bn-BD')}</p>`;
                     list.appendChild(div);
                 });
             });
