@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ইভেন্টস - CampusConnect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-white shadow-md">
+        <nav class="container mx-auto p-4 flex justify-between items-center">
+            <a href="dashboard.html" class="text-xl font-bold text-blue-600">CampusConnect</a>
+            <a href="dashboard.html" class="bg-blue-500 text-white py-2 px-3 rounded-md text-sm hover:bg-blue-700">ড্যাশবোর্ড</a>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800 border-b pb-2">ক্যাম্পাস ইভেন্টস</h2>
+            <div id="loading"><p>ইভেন্ট লোড হচ্ছে...</p></div>
+            <div id="events-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Events will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
+          authDomain: "campusconnect-a8447.firebaseapp.com",
+          databaseURL: "https://campusconnect-a8447-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "campusconnect-a8447",
+          storageBucket: "campusconnect-a8447.firebasestorage.app",
+          messagingSenderId: "512467118728",
+          appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
+          measurementId: "G-62XR5TLSN7"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const loadingDiv = document.getElementById('loading');
+        const eventsContainer = document.getElementById('events-container');
+
+        db.collection('events').orderBy('date', 'asc').onSnapshot(snapshot => {
+            loadingDiv.classList.add('hidden');
+            eventsContainer.innerHTML = snapshot.empty ? '<p>কোনো আসন্ন ইভেন্ট নেই।</p>' : '';
+            snapshot.forEach(doc => {
+                const event = doc.data();
+                const eventDate = new Date(event.date).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+                const card = document.createElement('div');
+                card.className = 'border rounded-lg shadow-md overflow-hidden bg-white';
+                card.innerHTML = `
+                    <div class="p-4">
+                        <p class="text-sm text-blue-600 font-semibold">${eventDate}</p>
+                        <h3 class="text-xl font-bold text-gray-900 mt-1">${event.title}</h3>
+                        <p class="text-gray-600 mt-2">${event.description}</p>
+                    </div>
+                `;
+                eventsContainer.appendChild(card);
+            });
+        });
+    </script>
+</body>
+</html>
