@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ব্যবহারকারী খুঁজুন - CampusConnect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-white shadow-md">
+        <nav class="container mx-auto p-4 flex justify-between items-center">
+            <a href="dashboard.html" class="text-xl font-bold text-blue-600">CampusConnect</a>
+            <a href="dashboard.html" class="bg-blue-500 text-white py-2 px-3 rounded-md text-sm hover:bg-blue-700">ড্যাশবোর্ড</a>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">ব্যবহারকারী খুঁজুন</h2>
+            <form id="search-form" class="flex mb-6">
+                <input type="text" id="search-input" class="w-full border rounded-l-md p-3" placeholder="ব্যবহারকারীর নাম লিখুন..." required>
+                <button type="submit" class="bg-blue-600 text-white px-6 rounded-r-md font-semibold hover:bg-blue-700">খুঁজুন</button>
+            </form>
+            <div id="search-results" class="space-y-3"></div>
+        </div>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
+          authDomain: "campusconnect-a8447.firebaseapp.com",
+          databaseURL: "https://campusconnect-a8447-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "campusconnect-a8447",
+          storageBucket: "campusconnect-a8447.firebasestorage.app",
+          messagingSenderId: "512467118728",
+          appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
+          measurementId: "G-62XR5TLSN7"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        document.getElementById('search-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const queryText = document.getElementById('search-input').value.trim();
+            if (queryText === '') return;
+            const results = document.getElementById('search-results');
+            results.innerHTML = '<p>অনুসন্ধান করা হচ্ছে...</p>';
+
+            const snapshot = await db.collection('users').where('name', '>=', queryText).where('name', '<=', queryText + '\uf8ff').get();
+
+            if (snapshot.empty) { results.innerHTML = '<p class="text-gray-500">এই নামে কোনো ব্যবহারকারী পাওয়া যায়নি।</p>'; return; }
+            results.innerHTML = '';
+            snapshot.forEach(doc => {
+                const user = doc.data();
+                const div = document.createElement('a');
+                div.href = `profile.html?id=${doc.id}`;
+                div.className = 'flex items-center p-3 bg-gray-50 rounded-md hover:bg-gray-100';
+                div.innerHTML = `
+                    <div class="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
+                    <div><p class="font-semibold">${user.name}</p><p class="text-sm text-gray-600">রোল: ${user.roll}</p></div>
+                `;
+                results.appendChild(div);
+            });
+        });
+    </script>
+</body>
+</html>
