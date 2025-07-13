@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>অ্যাডমিন প্যানেল</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-200 min-h-screen">
+    <header class="bg-white shadow-md">
+        <nav class="container mx-auto p-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-600">অ্যাডমিন প্যানেল</h1>
+            <a href="dashboard.html" class="bg-blue-500 text-white py-2 px-3 rounded-md text-sm hover:bg-blue-700">ড্যাশবোর্ড</a>
+        </nav>
+    </header>
+
+    <main id="admin-container" class="container mx-auto p-4">
+        <div id="message-view" class="text-center p-10"><p>লোড হচ্ছে...</p></div>
+
+        <div id="admin-view" class="hidden">
+            <h2 class="text-2xl font-bold mb-4">ব্যবহারকারী ব্যবস্থাপনা</h2>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="font-semibold text-lg border-b pb-2 mb-4">অনুমোদনের জন্য আবেদন</h3>
+                <div id="pending-users-list" class="space-y-3"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        // !!! খুবই গুরুত্বপূর্ণ: আপনার নিজের Firebase কনফিগারেশন কোডটি নিচে পেস্ট করুন !!!
+        const firebaseConfig = {
+            // আপনার সেভ করে রাখা কনফিগারেশন কোডটি এখানে পেস্ট করুন
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const msgView = document.getElementById('message-view');
+        const adminView = document.getElementById('admin-view');
+        const pendingList = document.getElementById('pending-users-list');
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                db.collection('users').doc(user.uid).get().then(doc => {
+                    if (doc.exists && doc.data().role === 'admin') {
+                        msgView.classList.add('hidden');
+                        adminView.classList.remove('hidden');
+                        loadPendingUsers();
+                    } else {
+                        msgView.innerHTML = '<p class="text-red-500 font-bold">অ্যাক্সেস ডিনাইড। শুধুমাত্র অ্যাডমিন এই পেজটি দেখতে পারবে।</p>';
+                    }
+                });
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        function loadPendingUsers() {
+            db.collection('users').where('status', '==', 'pending').onSnapshot(snapshot => {
+                if (snapshot.empty) {
+                    pendingList.innerHTML = '<p class="text-gray-500">কোনো নতুন আবেদন নেই।</p>';
+                    return;
+                }
+                pendingList.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const user = doc.data();
+                    const userDiv = document.createElement('div');
+                    userDiv.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-md flex-wrap';
+                    userDiv.innerHTML = `
+                        <div class='mb-2 sm:mb-0'>
+                            <p class="font-semibold">${user.name}</p>
+                            <p class="text-sm text-gray-600">${user.email} | ${user.roll}</p>
+                        </div>
+                        <div class='flex-shrink-0'>
+                            <button onclick="updateUserStatus('${doc.id}', 'approved')" class="bg-green-500 text-white px-3 py-1 text-sm rounded-md hover:bg-green-600 mr-2">Approve</button>
+                            <button onclick="updateUserStatus('${doc.id}', 'rejected')" class="bg-red-500 text-white px-3 py-1 text-sm rounded-md hover:bg-red-600">Reject</button>
+                        </div>
+                    `;
+                    pendingList.appendChild(userDiv);
+                });
+            });
+        }
+
+        function updateUserStatus(uid, status) {
+            db.collection('users').doc(uid).update({ status: status });
+        }
+    </script>
+</body>
+</html>
