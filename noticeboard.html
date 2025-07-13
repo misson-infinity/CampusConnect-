@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>নোটিশ বোর্ড - CampusConnect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-white shadow-md sticky top-0 z-10">
+        <nav class="container mx-auto p-4 flex justify-between items-center">
+            <a href="dashboard.html" class="text-xl font-bold text-blue-600">CampusConnect</a>
+            <a href="dashboard.html" class="bg-blue-500 text-white py-2 px-3 rounded-md text-sm hover:bg-blue-700">ড্যাশবোর্ড</a>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800 border-b pb-3">অফিসিয়াল নোটিশ বোর্ড</h2>
+            <div id="loading" class="text-center py-10"><p>নোটিশ লোড হচ্ছে...</p></div>
+            <div id="notice-container" class="space-y-4">
+                <!-- Notices will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
+          authDomain: "campusconnect-a8447.firebaseapp.com",
+          databaseURL: "https://campusconnect-a8447-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "campusconnect-a8447",
+          storageBucket: "campusconnect-a8447.firebasestorage.app",
+          messagingSenderId: "512467118728",
+          appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
+          measurementId: "G-62XR5TLSN7"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const loadingDiv = document.getElementById('loading');
+        const noticeContainer = document.getElementById('notice-container');
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                loadAllNotices();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        function loadAllNotices() {
+            db.collection('notices').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+                loadingDiv.classList.add('hidden');
+                if (snapshot.empty) {
+                    noticeContainer.innerHTML = '<p class="text-center text-gray-500">কোনো নতুন নোটিশ নেই।</p>';
+                    return;
+                }
+                noticeContainer.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const notice = doc.data();
+                    const noticeDate = notice.timestamp ? notice.timestamp.toDate().toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+                    const noticeDiv = document.createElement('div');
+                    noticeDiv.className = 'border-l-4 border-blue-500 pl-4 py-3 bg-blue-50 rounded-r-lg';
+                    noticeDiv.innerHTML = `
+                        <h3 class="font-bold text-lg text-gray-900">${notice.title}</h3>
+                        ${notice.content ? `<p class="text-gray-700 mt-1 whitespace-pre-wrap">${notice.content}</p>` : ''}
+                        <p class="text-xs text-gray-500 mt-2">${noticeDate}</p>
+                    `;
+                    noticeContainer.appendChild(noticeDiv);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
