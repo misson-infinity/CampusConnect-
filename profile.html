@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -16,44 +17,33 @@
 
     <main class="container mx-auto p-4">
         <div id="loading" class="text-center p-10"><p class="text-lg">প্রোফাইল লোড হচ্ছে...</p></div>
-
         <div id="profile-view" class="hidden">
-            <!-- Profile Header -->
             <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                <div class="flex justify-between items-start">
+                <div class="flex flex-wrap justify-between items-center gap-4">
                     <div>
                         <h2 id="profile-name" class="text-3xl font-bold text-gray-800"></h2>
                         <p id="profile-email" class="text-md text-gray-600"></p>
                         <p id="profile-roll" class="text-md text-gray-600"></p>
                     </div>
-                    <button id="edit-profile-btn" class="hidden bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">প্রোফাইল এডিট</button>
+                    <div>
+                        <a href="#" id="send-message-btn" class="hidden bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">মেসেজ পাঠান</a>
+                        <button id="edit-profile-btn" class="hidden bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">প্রোফাইল এডিট</button>
+                    </div>
                 </div>
-
-                <!-- Edit Profile Form (Hidden by default) -->
                 <div id="edit-profile-form-container" class="hidden mt-6 border-t pt-4">
                      <form id="edit-profile-form">
-                        <div class="mb-4">
-                            <label for="edit-name" class="block text-sm font-medium text-gray-700">নাম</label>
-                            <input type="text" id="edit-name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
-                        </div>
-                        <div class="mb-4">
-                            <label for="edit-roll" class="block text-sm font-medium text-gray-700">রোল নম্বর</label>
-                            <input type="text" id="edit-roll" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
-                        </div>
+                        <div class="mb-4"><label for="edit-name" class="block text-sm font-medium">নাম</label><input type="text" id="edit-name" class="mt-1 block w-full border rounded-md p-2"></div>
+                        <div class="mb-4"><label for="edit-roll" class="block text-sm font-medium">রোল</label><input type="text" id="edit-roll" class="mt-1 block w-full border rounded-md p-2"></div>
                         <div class="flex gap-4">
-                            <button type="submit" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700">সেভ করুন</button>
-                            <button type="button" id="cancel-edit-btn" class="bg-gray-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-600">বাতিল</button>
+                            <button type="submit" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-md">সেভ</button>
+                            <button type="button" id="cancel-edit-btn" class="bg-gray-500 text-white font-semibold py-2 px-4 rounded-md">বাতিল</button>
                         </div>
                     </form>
                 </div>
             </div>
-
-            <!-- User's Posts -->
             <div>
                 <h3 class="text-xl font-semibold mb-4">ব্যবহারকারীর পোস্টসমূহ</h3>
-                <div id="user-posts-list" class="space-y-4">
-                    <!-- Posts will be loaded here -->
-                </div>
+                <div id="user-posts-list" class="space-y-4"></div>
             </div>
         </div>
     </main>
@@ -63,109 +53,78 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-        // !!! আপনার Firebase কনফিগারেশন কোডটি এখানে পেস্ট করুন !!!
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
-  authDomain: "campusconnect-a8447.firebaseapp.com",
-  databaseURL: "https://campusconnect-a8447-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "campusconnect-a8447",
-  storageBucket: "campusconnect-a8447.firebasestorage.app",
-  messagingSenderId: "512467118728",
-  appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
-  measurementId: "G-62XR5TLSN7"
-};
-
+        const firebaseConfig = {
+          apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
+          authDomain: "campusconnect-a8447.firebaseapp.com",
+          databaseURL: "https://campusconnect-a8447-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "campusconnect-a8447",
+          storageBucket: "campusconnect-a8447.firebasestorage.app",
+          messagingSenderId: "512467118728",
+          appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
+          measurementId: "G-62XR5TLSN7"
+        };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // UI Elements
-        const loadingDiv = document.getElementById('loading');
-        const profileView = document.getElementById('profile-view');
-        const profileName = document.getElementById('profile-name');
-        const profileEmail = document.getElementById('profile-email');
-        const profileRoll = document.getElementById('profile-roll');
-        const userPostsList = document.getElementById('user-posts-list');
-        const editProfileBtn = document.getElementById('edit-profile-btn');
-        const editFormContainer = document.getElementById('edit-profile-form-container');
-        const editForm = document.getElementById('edit-profile-form');
-        const cancelEditBtn = document.getElementById('cancel-edit-btn');
-        
         document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const userId = urlParams.get('id');
+            const userId = new URLSearchParams(window.location.search).get('id');
+            if (!userId) { document.getElementById('loading').innerHTML = '<p class="text-red-500">ব্যবহারকারী পাওয়া যায়নি।</p>'; return; }
 
-            if (!userId) {
-                loadingDiv.innerHTML = '<p class="text-red-500">কোনো ব্যবহারকারী পাওয়া যায়নি।</p>';
-                return;
-            }
-
-            // Load user profile data
             const userDocRef = db.collection('users').doc(userId);
             userDocRef.get().then(doc => {
                 if (doc.exists) {
                     const userData = doc.data();
-                    profileName.textContent = userData.name;
-                    profileEmail.textContent = `ইমেল: ${userData.email}`;
-                    profileRoll.textContent = `রোল: ${userData.roll}`;
+                    document.getElementById('profile-name').textContent = userData.name;
+                    document.getElementById('profile-email').textContent = `ইমেল: ${userData.email}`;
+                    document.getElementById('profile-roll').textContent = `রোল: ${userData.roll}`;
                     
-                    // Show edit button if it's the logged-in user's own profile
                     auth.onAuthStateChanged(currentUser => {
-                        if (currentUser && currentUser.uid === userId) {
-                            editProfileBtn.classList.remove('hidden');
+                        if (!currentUser) return;
+                        if (currentUser.uid === userId) {
+                            document.getElementById('edit-profile-btn').classList.remove('hidden');
+                        } else {
+                            const msgBtn = document.getElementById('send-message-btn');
+                            msgBtn.href = `chat.html?with=${userId}`;
+                            msgBtn.classList.remove('hidden');
                         }
                     });
-
-                    loadingDiv.classList.add('hidden');
-                    profileView.classList.remove('hidden');
+                    document.getElementById('loading').classList.add('hidden');
+                    document.getElementById('profile-view').classList.remove('hidden');
                 } else {
-                    loadingDiv.innerHTML = '<p class="text-red-500">ব্যবহারকারীর প্রোফাইল খুঁজে পাওয়া যায়নি।</p>';
+                    document.getElementById('loading').innerHTML = '<p class="text-red-500">প্রোফাইল খুঁজে পাওয়া যায়নি।</p>';
                 }
             });
 
-            // Load user's posts
             db.collection('posts').where('authorId', '==', userId).orderBy('timestamp', 'desc').get().then(snapshot => {
-                userPostsList.innerHTML = '';
-                 if (snapshot.empty) {
-                    userPostsList.innerHTML = '<p class="text-gray-500">এই ব্যবহারকারী এখনো কোনো পোস্ট করেনি।</p>';
-                }
+                const list = document.getElementById('user-posts-list');
+                list.innerHTML = snapshot.empty ? '<p class="text-gray-500">এই ব্যবহারকারী কোনো পোস্ট করেনি।</p>' : '';
                 snapshot.forEach(doc => {
                     const post = doc.data();
-                    const postDate = post.timestamp ? post.timestamp.toDate().toLocaleString('bn-BD') : '...';
-                    const postDiv = document.createElement('div');
-                    postDiv.className = 'bg-white p-4 rounded-lg shadow-md';
-                    postDiv.innerHTML = `
-                        <p class="text-gray-700 whitespace-pre-wrap">${post.content}</p>
-                        <p class="text-xs text-gray-500 mt-3 text-right">${postDate}</p>
-                    `;
-                    userPostsList.appendChild(postDiv);
+                    const div = document.createElement('div');
+                    div.className = 'bg-white p-4 rounded-lg shadow-md';
+                    div.innerHTML = `<p class="text-gray-700">${post.content}</p><p class="text-xs text-right mt-2">${post.timestamp?.toDate().toLocaleString('bn-BD') || ''}</p>`;
+                    list.appendChild(div);
                 });
             });
 
-            // Edit profile functionality
-            editProfileBtn.addEventListener('click', () => {
-                db.collection('users').doc(userId).get().then(doc => {
+            document.getElementById('edit-profile-btn').addEventListener('click', () => {
+                userDocRef.get().then(doc => {
                     const data = doc.data();
                     document.getElementById('edit-name').value = data.name;
                     document.getElementById('edit-roll').value = data.roll;
-                    editFormContainer.classList.remove('hidden');
+                    document.getElementById('edit-profile-form-container').classList.remove('hidden');
                 });
             });
-
-            cancelEditBtn.addEventListener('click', () => {
-                editFormContainer.classList.add('hidden');
-            });
-            
-            editForm.addEventListener('submit', e => {
+            document.getElementById('cancel-edit-btn').addEventListener('click', () => document.getElementById('edit-profile-form-container').classList.add('hidden'));
+            document.getElementById('edit-profile-form').addEventListener('submit', e => {
                 e.preventDefault();
                 const newName = document.getElementById('edit-name').value;
                 const newRoll = document.getElementById('edit-roll').value;
-                
                 userDocRef.update({ name: newName, roll: newRoll }).then(() => {
-                    profileName.textContent = newName;
-                    profileRoll.textContent = `রোল: ${newRoll}`;
-                    editFormContainer.classList.add('hidden');
+                    document.getElementById('profile-name').textContent = newName;
+                    document.getElementById('profile-roll').textContent = `রোল: ${newRoll}`;
+                    document.getElementById('edit-profile-form-container').classList.add('hidden');
                     alert('প্রোফাইল সফলভাবে আপডেট হয়েছে!');
                 });
             });
