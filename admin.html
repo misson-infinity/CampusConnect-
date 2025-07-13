@@ -21,8 +21,9 @@
                 <h3 class="font-semibold text-lg border-b pb-2 mb-4">ম্যানেজমেন্ট</h3>
                 <div class="border-b border-gray-200">
                     <nav class="-mb-px flex space-x-4 sm:space-x-8" aria-label="Tabs">
-                        <button onclick="showTab('user_pending', this)" class="tab-btn border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">ব্যবহারকারী</button>
-                        <button onclick="showTab('product_pending', this)" class="tab-btn border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">মার্কেটপ্লেস</button>
+                        <button onclick="showTab('user_pending', this)" class="tab-btn border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">ব্যবহারকারী আবেদন</button>
+                        <button onclick="showTab('product_pending', this)" class="tab-btn border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">মার্কেটপ্লেস আবেদন</button>
+                        <button onclick="showTab('user_approved', this)" class="tab-btn border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">সকল ব্যবহারকারী</button>
                     </nav>
                 </div>
                 <!-- User List -->
@@ -36,38 +37,23 @@
                 <div class="bg-white p-4 rounded-lg shadow-md">
                     <h3 class="font-semibold text-lg border-b pb-2 mb-4">নতুন নোটিশ পোস্ট করুন</h3>
                     <form id="create-notice-form">
-                        <div class="mb-4">
-                            <label for="notice-title" class="block text-sm font-medium">শিরোনাম</label>
-                            <input type="text" id="notice-title" class="mt-1 block w-full border rounded-md p-2" required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="notice-content" class="block text-sm font-medium">বিস্তারিত (ঐচ্ছিক)</label>
-                            <textarea id="notice-content" rows="4" class="mt-1 block w-full border rounded-md p-2"></textarea>
-                        </div>
+                        <div class="mb-4"><label for="notice-title" class="block text-sm font-medium">শিরোনাম</label><input type="text" id="notice-title" class="mt-1 block w-full border rounded-md p-2" required></div>
+                        <div class="mb-4"><label for="notice-content" class="block text-sm font-medium">বিস্তারিত (ঐচ্ছিক)</label><textarea id="notice-content" rows="4" class="mt-1 block w-full border rounded-md p-2"></textarea></div>
                         <button type="submit" class="w-full bg-purple-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-purple-700">নোটিশ প্রকাশ করুন</button>
                     </form>
                 </div>
                  <div class="bg-white p-4 rounded-lg shadow-md">
                     <h3 class="font-semibold text-lg border-b pb-2 mb-4">নতুন ইভেন্ট তৈরি করুন</h3>
                     <form id="create-event-form">
-                        <div class="mb-4">
-                            <label for="event-title" class="block text-sm font-medium">ইভেন্টের নাম</label>
-                            <input type="text" id="event-title" class="mt-1 block w-full border rounded-md p-2" required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="event-date" class="block text-sm font-medium">তারিখ</label>
-                            <input type="date" id="event-date" class="mt-1 block w-full border rounded-md p-2" required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="event-description" class="block text-sm font-medium">বিস্তারিত</label>
-                            <textarea id="event-description" rows="3" class="mt-1 block w-full border rounded-md p-2" required></textarea>
-                        </div>
+                        <div class="mb-4"><label for="event-title" class="block text-sm font-medium">ইভেন্টের নাম</label><input type="text" id="event-title" class="mt-1 block w-full border rounded-md p-2" required></div>
+                        <div class="mb-4"><label for="event-date" class="block text-sm font-medium">তারিখ</label><input type="date" id="event-date" class="mt-1 block w-full border rounded-md p-2" required></div>
+                        <div class="mb-4"><label for="event-description" class="block text-sm font-medium">বিস্তারিত</label><textarea id="event-description" rows="3" class="mt-1 block w-full border rounded-md p-2" required></textarea></div>
                         <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700">ইভেন্ট তৈরি করুন</button>
                     </form>
                 </div>
             </div>
         </div>
-        <div id="message-view" class="text-center p-10"><p>লোড হচ্ছে...</p></div>
+        <div id="message-view" class="text-center p-10"><p>আপনার অ্যাক্সেস যাচাই করা হচ্ছে...</p></div>
     </main>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -75,34 +61,25 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script>
         const firebaseConfig = {
-          apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
-          authDomain: "campusconnect-a8447.firebaseapp.com",
-          databaseURL: "https://campusconnect-a8447-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "campusconnect-a8447",
-          storageBucket: "campusconnect-a8447.firebasestorage.app",
-          messagingSenderId: "512467118728",
-          appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
-          measurementId: "G-62XR5TLSN7"
+            apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
+            authDomain: "campusconnect-a8447.firebaseapp.com",
+            databaseURL: "https://campusconnect-a8447-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "campusconnect-a8447",
+            storageBucket: "campusconnect-a8447.firebasestorage.app",
+            messagingSenderId: "512467118728",
+            appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
+            measurementId: "G-62XR5TLSN7"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-
         const el = id => document.getElementById(id);
 
         function showTab(tabName, element) {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('border-blue-500', 'text-blue-600');
-                btn.classList.add('border-transparent', 'text-gray-500');
-            });
+            document.querySelectorAll('.tab-btn').forEach(btn => { btn.classList.remove('border-blue-500', 'text-blue-600'); btn.classList.add('border-transparent', 'text-gray-500'); });
             element.classList.add('border-blue-500', 'text-blue-600');
-            
-            const userContainer = el('users-list-container');
-            const productContainer = el('products-list-container');
-
-            userContainer.classList.toggle('hidden', !tabName.startsWith('user'));
-            productContainer.classList.toggle('hidden', !tabName.startsWith('product'));
-
+            el('users-list-container').classList.toggle('hidden', !tabName.startsWith('user'));
+            el('products-list-container').classList.toggle('hidden', !tabName.startsWith('product'));
             if(tabName.startsWith('user')) loadUsersByStatus(tabName.split('_')[1] || 'pending');
             else if (tabName === 'product_pending') loadPendingProducts();
         }
@@ -120,7 +97,6 @@
                         <div class="flex-shrink-0 space-x-2">
                             ${status === 'pending' ? `<button onclick="updateUserStatus('${user.id}', 'approved')" class="bg-green-500 text-white px-2 py-1 text-xs rounded">Approve</button>` : ''}
                             ${status === 'approved' ? `<button onclick="updateUserStatus('${user.id}', 'suspended')" class="bg-yellow-500 text-white px-2 py-1 text-xs rounded">Suspend</button>` : ''}
-                            ${status === 'suspended' ? `<button onclick="updateUserStatus('${user.id}', 'approved')" class="bg-green-500 text-white px-2 py-1 text-xs rounded">Activate</button>` : ''}
                         </div>`;
                     container.appendChild(div);
                 });
@@ -154,27 +130,26 @@
             if (user) {
                 db.collection('users').doc(user.uid).get().then(doc => {
                     if (doc.exists && doc.data().role === 'admin') {
-                        el('message-view').classList.add('hidden'); el('admin-view').classList.remove('hidden');
-                        loadUsersByStatus();
-                    } else { el('admin-container').innerHTML = '<p class="text-red-500 font-bold text-center">অ্যাক্সেস ডিনাইড।</p>'; }
-                });
+                        el('message-view').classList.add('hidden');
+                        el('admin-view').classList.remove('hidden');
+                        loadUsersByStatus('pending');
+                    } else {
+                        el('admin-container').innerHTML = '<p class="text-red-500 font-bold text-center p-10">অ্যাক্সেস ডিনাইড। শুধুমাত্র অ্যাডমিন এই পেজটি দেখতে পারবে।</p>';
+                    }
+                }).catch(err => { el('admin-container').innerHTML = '<p class="text-red-500 font-bold text-center p-10">তথ্য যাচাই করার সময় সমস্যা হয়েছে।</p>'; });
             } else { window.location.href = 'index.html'; }
         });
 
         el('create-notice-form').addEventListener('submit', e => {
             e.preventDefault();
-            db.collection('notices').add({
-                title: el('notice-title').value, content: el('notice-content').value,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => { alert('নোটিশ পোস্ট হয়েছে!'); e.target.reset(); });
+            db.collection('notices').add({ title: el('notice-title').value, content: el('notice-content').value, timestamp: firebase.firestore.FieldValue.serverTimestamp() })
+            .then(() => { alert('নোটিশ পোস্ট হয়েছে!'); e.target.reset(); });
         });
 
         el('create-event-form').addEventListener('submit', e => {
             e.preventDefault();
-            db.collection('events').add({
-                title: el('event-title').value, date: el('event-date').value, description: el('event-description').value,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => { alert('ইভেন্ট তৈরি হয়েছে!'); e.target.reset(); });
+            db.collection('events').add({ title: el('event-title').value, date: el('event-date').value, description: el('event-description').value, timestamp: firebase.firestore.FieldValue.serverTimestamp() })
+            .then(() => { alert('ইভেন্ট তৈরি হয়েছে!'); e.target.reset(); });
         });
     </script>
 </body>
