@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আপনার মেসেজসমূহ - CampusConnect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-white shadow-md">
+        <nav class="container mx-auto p-4 flex justify-between items-center">
+            <a href="dashboard.html" class="text-xl font-bold text-blue-600">CampusConnect</a>
+            <a href="dashboard.html" class="bg-blue-500 text-white py-2 px-3 rounded-md text-sm hover:bg-blue-700">ড্যাশবোর্ড</a>
+        </nav>
+    </header>
+    <main class="container mx-auto p-4">
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800 border-b pb-2">কথোপকথনের তালিকা</h2>
+            <div id="loading" class="text-center p-10"><p class="text-lg">লোড হচ্ছে...</p></div>
+            <div id="chat-list-container" class="space-y-2"></div>
+        </div>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
+          authDomain: "campusconnect-a8447.firebaseapp.com",
+          databaseURL: "https://campusconnect-a8447-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "campusconnect-a8447",
+          storageBucket: "campusconnect-a8447.firebasestorage.app",
+          messagingSenderId: "512467118728",
+          appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
+          measurementId: "G-62XR5TLSN7"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                const userChatsRef = db.collection('users').doc(user.uid).collection('userChats').orderBy('lastActivity', 'desc');
+                userChatsRef.onSnapshot(async (snapshot) => {
+                    document.getElementById('loading').classList.add('hidden');
+                    const container = document.getElementById('chat-list-container');
+                    if (snapshot.empty) { container.innerHTML = '<p class="text-center text-gray-500 p-5">আপনার কোনো কথোপকথন শুরু হয়নি।</p>'; return; }
+
+                    container.innerHTML = '';
+                    for (const doc of snapshot.docs) {
+                        const partnerDoc = await db.collection('users').doc(doc.id).get();
+                        if (partnerDoc.exists) {
+                            const partnerData = partnerDoc.data();
+                            const item = document.createElement('a');
+                            item.href = `chat.html?with=${doc.id}`;
+                            item.className = 'flex items-center p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors';
+                            item.innerHTML = `
+                                <div class="w-12 h-12 bg-blue-200 rounded-full flex-shrink-0 mr-4"></div>
+                                <div>
+                                    <p class="font-semibold text-gray-800">${partnerData.name}</p>
+                                    <p class="text-sm text-gray-600">চ্যাট শুরু করুন...</p>
+                                </div>`;
+                            container.appendChild(item);
+                        }
+                    }
+                });
+            } else { window.location.href = 'index.html'; }
+        });
+    </script>
+</body>
+</html>
