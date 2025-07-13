@@ -15,40 +15,64 @@
     </header>
 
     <main id="admin-container" class="container mx-auto p-4">
-        <div id="admin-view" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-white p-4 rounded-lg shadow-md lg:col-span-2">
-                <h3 class="font-semibold text-lg border-b pb-2 mb-4">ব্যবহারকারী ব্যবস্থাপনা</h3>
+        <div id="admin-view" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column: User & Product Management -->
+            <div class="lg:col-span-2 bg-white p-4 rounded-lg shadow-md">
+                <h3 class="font-semibold text-lg border-b pb-2 mb-4">ম্যানেজমেন্ট</h3>
                 <div class="border-b border-gray-200">
-                    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                        <button onclick="showTab('pending')" class="tab-btn border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">অনুমোদনের অপেক্ষায়</button>
-                        <button onclick="showTab('approved')" class="tab-btn border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">অনুমোদিত</button>
-                        <button onclick="showTab('suspended')" class="tab-btn border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">সাসপেন্ডেড</button>
+                    <nav class="-mb-px flex space-x-4 sm:space-x-8" aria-label="Tabs">
+                        <button onclick="showTab('user_pending', this)" class="tab-btn border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">ব্যবহারকারী</button>
+                        <button onclick="showTab('product_pending', this)" class="tab-btn border-transparent text-gray-500 hover:text-gray-700 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">মার্কেটপ্লেস</button>
                     </nav>
                 </div>
+                <!-- User List -->
                 <div id="users-list-container" class="mt-4 space-y-3"></div>
+                <!-- Product List -->
+                <div id="products-list-container" class="hidden mt-4 grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
 
-            <div class="bg-white p-4 rounded-lg shadow-md">
-                <h3 class="font-semibold text-lg border-b pb-2 mb-4">নতুন নোটিশ পোস্ট করুন</h3>
-                <form id="create-notice-form">
-                    <div class="mb-4"><label for="notice-title" class="block text-sm font-medium">শিরোনাম</label><input type="text" id="notice-title" class="mt-1 block w-full border rounded-md p-2" required></div>
-                    <div class="mb-4"><label for="notice-content" class="block text-sm font-medium">বিস্তারিত</label><textarea id="notice-content" rows="4" class="mt-1 block w-full border rounded-md p-2"></textarea></div>
-                    <button type="submit" class="w-full bg-purple-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-purple-700">প্রকাশ করুন</button>
-                </form>
-            </div>
-            
-             <div class="bg-white p-4 rounded-lg shadow-md">
-                <h3 class="font-semibold text-lg border-b pb-2 mb-4">Lost & Found মডারেশন</h3>
-                <div id="lf-admin-list" class="space-y-3 max-h-96 overflow-y-auto"></div>
+            <!-- Right Column: Notice & Event Management -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="font-semibold text-lg border-b pb-2 mb-4">নতুন নোটিশ পোস্ট করুন</h3>
+                    <form id="create-notice-form">
+                        <div class="mb-4">
+                            <label for="notice-title" class="block text-sm font-medium">শিরোনাম</label>
+                            <input type="text" id="notice-title" class="mt-1 block w-full border rounded-md p-2" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="notice-content" class="block text-sm font-medium">বিস্তারিত (ঐচ্ছিক)</label>
+                            <textarea id="notice-content" rows="4" class="mt-1 block w-full border rounded-md p-2"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-purple-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-purple-700">নোটিশ প্রকাশ করুন</button>
+                    </form>
+                </div>
+                 <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="font-semibold text-lg border-b pb-2 mb-4">নতুন ইভেন্ট তৈরি করুন</h3>
+                    <form id="create-event-form">
+                        <div class="mb-4">
+                            <label for="event-title" class="block text-sm font-medium">ইভেন্টের নাম</label>
+                            <input type="text" id="event-title" class="mt-1 block w-full border rounded-md p-2" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="event-date" class="block text-sm font-medium">তারিখ</label>
+                            <input type="date" id="event-date" class="mt-1 block w-full border rounded-md p-2" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="event-description" class="block text-sm font-medium">বিস্তারিত</label>
+                            <textarea id="event-description" rows="3" class="mt-1 block w-full border rounded-md p-2" required></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700">ইভেন্ট তৈরি করুন</button>
+                    </form>
+                </div>
             </div>
         </div>
         <div id="message-view" class="text-center p-10"><p>লোড হচ্ছে...</p></div>
     </main>
-
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-
     <script>
         const firebaseConfig = {
           apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
@@ -64,86 +88,94 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        let currentTab = 'pending';
-        const userCache = { pending: [], approved: [], suspended: [], rejected: [] };
-        
-        function showTab(tabName) {
-            currentTab = tabName;
+        const el = id => document.getElementById(id);
+
+        function showTab(tabName, element) {
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.toggle('border-blue-500', btn.textContent.includes(event.target.textContent));
-                btn.classList.toggle('text-blue-600', btn.textContent.includes(event.target.textContent));
-                btn.classList.toggle('border-transparent', !btn.textContent.includes(event.target.textContent));
-                btn.classList.toggle('text-gray-500', !btn.textContent.includes(event.target.textContent));
+                btn.classList.remove('border-blue-500', 'text-blue-600');
+                btn.classList.add('border-transparent', 'text-gray-500');
             });
-            renderUsers(currentTab);
+            element.classList.add('border-blue-500', 'text-blue-600');
+            
+            const userContainer = el('users-list-container');
+            const productContainer = el('products-list-container');
+
+            userContainer.classList.toggle('hidden', !tabName.startsWith('user'));
+            productContainer.classList.toggle('hidden', !tabName.startsWith('product'));
+
+            if(tabName.startsWith('user')) loadUsersByStatus(tabName.split('_')[1] || 'pending');
+            else if (tabName === 'product_pending') loadPendingProducts();
         }
 
-        function renderUsers(status) {
-            const container = document.getElementById('users-list-container');
-            container.innerHTML = userCache[status].length === 0 ? `<p class="text-gray-500">এই তালিকায় কোনো ব্যবহারকারী নেই।</p>` : '';
-            userCache[status].forEach(user => {
-                const div = document.createElement('div');
-                div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-md';
-                div.innerHTML = `
-                    <div><p class="font-semibold">${user.name}</p><p class="text-sm text-gray-600">${user.email}</p></div>
-                    <div class="flex-shrink-0 space-x-2">
-                        ${status === 'pending' ? `<button onclick="updateUserStatus('${user.id}', 'approved')" class="bg-green-500 text-white px-3 py-1 text-xs rounded">Approve</button><button onclick="updateUserStatus('${user.id}', 'rejected')" class="bg-red-500 text-white px-3 py-1 text-xs rounded">Reject</button>` : ''}
-                        ${status === 'approved' ? `<button onclick="updateUserStatus('${user.id}', 'suspended')" class="bg-yellow-500 text-white px-3 py-1 text-xs rounded">Suspend</button>` : ''}
-                        ${status === 'suspended' ? `<button onclick="updateUserStatus('${user.id}', 'approved')" class="bg-green-500 text-white px-3 py-1 text-xs rounded">Un-suspend</button>` : ''}
-                    </div>
-                `;
-                container.appendChild(div);
+        function loadUsersByStatus(status = 'pending') {
+            const container = el('users-list-container');
+            db.collection('users').where('status', '==', status).onSnapshot(snapshot => {
+                container.innerHTML = snapshot.empty ? `<p class="p-4 text-gray-500">এই তালিকায় কোনো আইটেম নেই।</p>` : '';
+                snapshot.forEach(doc => {
+                    const user = { id: doc.id, ...doc.data() };
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-md';
+                    div.innerHTML = `
+                        <div><p class="font-semibold">${user.name}</p><p class="text-sm text-gray-600">${user.email}</p></div>
+                        <div class="flex-shrink-0 space-x-2">
+                            ${status === 'pending' ? `<button onclick="updateUserStatus('${user.id}', 'approved')" class="bg-green-500 text-white px-2 py-1 text-xs rounded">Approve</button>` : ''}
+                            ${status === 'approved' ? `<button onclick="updateUserStatus('${user.id}', 'suspended')" class="bg-yellow-500 text-white px-2 py-1 text-xs rounded">Suspend</button>` : ''}
+                            ${status === 'suspended' ? `<button onclick="updateUserStatus('${user.id}', 'approved')" class="bg-green-500 text-white px-2 py-1 text-xs rounded">Activate</button>` : ''}
+                        </div>`;
+                    container.appendChild(div);
+                });
             });
         }
-
         function updateUserStatus(uid, newStatus) { db.collection('users').doc(uid).update({ status: newStatus }); }
+        
+        function loadPendingProducts() {
+            const container = el('products-list-container');
+            db.collection('marketplace').where('status', '==', 'pending').onSnapshot(snapshot => {
+                container.innerHTML = snapshot.empty ? `<p class="p-4 text-gray-500">কোনো নতুন আবেদন নেই।</p>` : '';
+                snapshot.forEach(doc => {
+                    const product = { id: doc.id, ...doc.data() };
+                    const card = document.createElement('div');
+                    card.className = 'border rounded-lg bg-white p-3';
+                    card.innerHTML = `
+                        <img src="${product.imageUrl}" class="w-full h-32 object-cover rounded-md mb-2">
+                        <h4 class="font-bold">${product.name}</h4><p class="text-lg text-blue-600">৳${product.price}</p>
+                        <p class="text-xs text-gray-600">বিক্রেতা: ${product.sellerName}</p>
+                        <div class="mt-3 flex justify-end space-x-2">
+                            <button onclick="updateProductStatus('${product.id}', 'rejected')" class="bg-red-500 text-white px-3 py-1 text-xs rounded">Reject</button>
+                            <button onclick="updateProductStatus('${product.id}', 'approved')" class="bg-green-500 text-white px-3 py-1 text-xs rounded">Approve</button>
+                        </div>`;
+                    container.appendChild(card);
+                });
+            });
+        }
+        function updateProductStatus(id, status) { db.collection('marketplace').doc(id).update({ status: status }); }
 
         auth.onAuthStateChanged(user => {
             if (user) {
                 db.collection('users').doc(user.uid).get().then(doc => {
                     if (doc.exists && doc.data().role === 'admin') {
-                        document.getElementById('message-view').classList.add('hidden');
-                        document.getElementById('admin-view').classList.remove('hidden');
-                        
-                        db.collection('users').onSnapshot(snapshot => {
-                            Object.keys(userCache).forEach(key => userCache[key] = []);
-                            snapshot.forEach(doc => {
-                                const userData = { id: doc.id, ...doc.data() };
-                                if (userCache[userData.status]) userCache[userData.status].push(userData);
-                            });
-                            renderUsers(currentTab);
-                        });
-                        loadAdminLfPosts();
-                    } else {
-                         document.getElementById('admin-container').innerHTML = '<p class="text-red-500 font-bold text-center">অ্যাক্সেস ডিনাইড। শুধুমাত্র অ্যাডমিন এই পেজটি দেখতে পারবে।</p>';
-                    }
+                        el('message-view').classList.add('hidden'); el('admin-view').classList.remove('hidden');
+                        loadUsersByStatus();
+                    } else { el('admin-container').innerHTML = '<p class="text-red-500 font-bold text-center">অ্যাক্সেস ডিনাইড।</p>'; }
                 });
             } else { window.location.href = 'index.html'; }
         });
 
-        document.getElementById('create-notice-form').addEventListener('submit', e => {
+        el('create-notice-form').addEventListener('submit', e => {
             e.preventDefault();
-            const title = document.getElementById('notice-title').value;
-            db.collection('notices').add({ title, content: document.getElementById('notice-content').value, timestamp: firebase.firestore.FieldValue.serverTimestamp() })
-            .then(() => { alert('নোটিশ সফলভাবে পোস্ট করা হয়েছে!'); e.target.reset(); });
+            db.collection('notices').add({
+                title: el('notice-title').value, content: el('notice-content').value,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => { alert('নোটিশ পোস্ট হয়েছে!'); e.target.reset(); });
         });
 
-        function loadAdminLfPosts() {
-            db.collection('lostAndFound').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
-                const list = document.getElementById('lf-admin-list');
-                list.innerHTML = snapshot.empty ? '<p>কোনো পোস্ট নেই।</p>' : '';
-                snapshot.forEach(doc => {
-                    const post = doc.data();
-                    const div = document.createElement('div');
-                    div.className = 'flex justify-between items-center bg-gray-50 p-2 rounded';
-                    div.innerHTML = `
-                        <div><p class="font-semibold text-sm">${post.title}</p><p class="text-xs text-gray-600">${post.authorName}</p></div>
-                        <button onclick="db.collection('lostAndFound').doc('${doc.id}').delete()" class="bg-red-500 text-white px-2 py-1 text-xs rounded">মুছুন</button>
-                    `;
-                    list.appendChild(div);
-                });
-            });
-        }
+        el('create-event-form').addEventListener('submit', e => {
+            e.preventDefault();
+            db.collection('events').add({
+                title: el('event-title').value, date: el('event-date').value, description: el('event-description').value,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => { alert('ইভেন্ট তৈরি হয়েছে!'); e.target.reset(); });
+        });
     </script>
 </body>
 </html>
