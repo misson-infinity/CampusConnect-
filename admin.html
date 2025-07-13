@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>অ্যাডমিন প্যানেল</title>
+    <title>অ্যাডমিন প্যানেল - CampusConnect</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-200 min-h-screen">
@@ -15,15 +15,34 @@
     </header>
 
     <main id="admin-container" class="container mx-auto p-4">
-        <div id="message-view" class="text-center p-10"><p>লোড হচ্ছে...</p></div>
+        <div id="admin-view" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white p-4 rounded-lg shadow-md lg:col-span-2">
+                <h3 class="font-semibold text-lg border-b pb-2 mb-4">ব্যবহারকারী ব্যবস্থাপনা</h3>
+                <div class="border-b border-gray-200">
+                    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                        <button onclick="showTab('pending')" class="tab-btn border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">অনুমোদনের অপেক্ষায়</button>
+                        <button onclick="showTab('approved')" class="tab-btn border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">অনুমোদিত</button>
+                        <button onclick="showTab('suspended')" class="tab-btn border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">সাসপেন্ডেড</button>
+                    </nav>
+                </div>
+                <div id="users-list-container" class="mt-4 space-y-3"></div>
+            </div>
 
-        <div id="admin-view" class="hidden">
-            <h2 class="text-2xl font-bold mb-4">ব্যবহারকারী ব্যবস্থাপনা</h2>
             <div class="bg-white p-4 rounded-lg shadow-md">
-                <h3 class="font-semibold text-lg border-b pb-2 mb-4">অনুমোদনের জন্য আবেদন</h3>
-                <div id="pending-users-list" class="space-y-3"></div>
+                <h3 class="font-semibold text-lg border-b pb-2 mb-4">নতুন নোটিশ পোস্ট করুন</h3>
+                <form id="create-notice-form">
+                    <div class="mb-4"><label for="notice-title" class="block text-sm font-medium">শিরোনাম</label><input type="text" id="notice-title" class="mt-1 block w-full border rounded-md p-2" required></div>
+                    <div class="mb-4"><label for="notice-content" class="block text-sm font-medium">বিস্তারিত</label><textarea id="notice-content" rows="4" class="mt-1 block w-full border rounded-md p-2"></textarea></div>
+                    <button type="submit" class="w-full bg-purple-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-purple-700">প্রকাশ করুন</button>
+                </form>
+            </div>
+            
+             <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="font-semibold text-lg border-b pb-2 mb-4">Lost & Found মডারেশন</h3>
+                <div id="lf-admin-list" class="space-y-3 max-h-96 overflow-y-auto"></div>
             </div>
         </div>
+        <div id="message-view" class="text-center p-10"><p>লোড হচ্ছে...</p></div>
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -31,63 +50,99 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-        // !!! খুবই গুরুত্বপূর্ণ: আপনার নিজের Firebase কনফিগারেশন কোডটি নিচে পেস্ট করুন !!!
         const firebaseConfig = {
-            // আপনার সেভ করে রাখা কনফিগারেশন কোডটি এখানে পেস্ট করুন
+          apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
+          authDomain: "campusconnect-a8447.firebaseapp.com",
+          databaseURL: "https://campusconnect-a8447-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "campusconnect-a8447",
+          storageBucket: "campusconnect-a8447.firebasestorage.app",
+          messagingSenderId: "512467118728",
+          appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
+          measurementId: "G-62XR5TLSN7"
         };
-        
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        const msgView = document.getElementById('message-view');
-        const adminView = document.getElementById('admin-view');
-        const pendingList = document.getElementById('pending-users-list');
+        let currentTab = 'pending';
+        const userCache = { pending: [], approved: [], suspended: [], rejected: [] };
+        
+        function showTab(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('border-blue-500', btn.textContent.includes(event.target.textContent));
+                btn.classList.toggle('text-blue-600', btn.textContent.includes(event.target.textContent));
+                btn.classList.toggle('border-transparent', !btn.textContent.includes(event.target.textContent));
+                btn.classList.toggle('text-gray-500', !btn.textContent.includes(event.target.textContent));
+            });
+            renderUsers(currentTab);
+        }
+
+        function renderUsers(status) {
+            const container = document.getElementById('users-list-container');
+            container.innerHTML = userCache[status].length === 0 ? `<p class="text-gray-500">এই তালিকায় কোনো ব্যবহারকারী নেই।</p>` : '';
+            userCache[status].forEach(user => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-md';
+                div.innerHTML = `
+                    <div><p class="font-semibold">${user.name}</p><p class="text-sm text-gray-600">${user.email}</p></div>
+                    <div class="flex-shrink-0 space-x-2">
+                        ${status === 'pending' ? `<button onclick="updateUserStatus('${user.id}', 'approved')" class="bg-green-500 text-white px-3 py-1 text-xs rounded">Approve</button><button onclick="updateUserStatus('${user.id}', 'rejected')" class="bg-red-500 text-white px-3 py-1 text-xs rounded">Reject</button>` : ''}
+                        ${status === 'approved' ? `<button onclick="updateUserStatus('${user.id}', 'suspended')" class="bg-yellow-500 text-white px-3 py-1 text-xs rounded">Suspend</button>` : ''}
+                        ${status === 'suspended' ? `<button onclick="updateUserStatus('${user.id}', 'approved')" class="bg-green-500 text-white px-3 py-1 text-xs rounded">Un-suspend</button>` : ''}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function updateUserStatus(uid, newStatus) { db.collection('users').doc(uid).update({ status: newStatus }); }
 
         auth.onAuthStateChanged(user => {
             if (user) {
                 db.collection('users').doc(user.uid).get().then(doc => {
                     if (doc.exists && doc.data().role === 'admin') {
-                        msgView.classList.add('hidden');
-                        adminView.classList.remove('hidden');
-                        loadPendingUsers();
+                        document.getElementById('message-view').classList.add('hidden');
+                        document.getElementById('admin-view').classList.remove('hidden');
+                        
+                        db.collection('users').onSnapshot(snapshot => {
+                            Object.keys(userCache).forEach(key => userCache[key] = []);
+                            snapshot.forEach(doc => {
+                                const userData = { id: doc.id, ...doc.data() };
+                                if (userCache[userData.status]) userCache[userData.status].push(userData);
+                            });
+                            renderUsers(currentTab);
+                        });
+                        loadAdminLfPosts();
                     } else {
-                        msgView.innerHTML = '<p class="text-red-500 font-bold">অ্যাক্সেস ডিনাইড। শুধুমাত্র অ্যাডমিন এই পেজটি দেখতে পারবে।</p>';
+                         document.getElementById('admin-container').innerHTML = '<p class="text-red-500 font-bold text-center">অ্যাক্সেস ডিনাইড। শুধুমাত্র অ্যাডমিন এই পেজটি দেখতে পারবে।</p>';
                     }
                 });
-            } else {
-                window.location.href = 'index.html';
-            }
+            } else { window.location.href = 'index.html'; }
         });
 
-        function loadPendingUsers() {
-            db.collection('users').where('status', '==', 'pending').onSnapshot(snapshot => {
-                if (snapshot.empty) {
-                    pendingList.innerHTML = '<p class="text-gray-500">কোনো নতুন আবেদন নেই।</p>';
-                    return;
-                }
-                pendingList.innerHTML = '';
+        document.getElementById('create-notice-form').addEventListener('submit', e => {
+            e.preventDefault();
+            const title = document.getElementById('notice-title').value;
+            db.collection('notices').add({ title, content: document.getElementById('notice-content').value, timestamp: firebase.firestore.FieldValue.serverTimestamp() })
+            .then(() => { alert('নোটিশ সফলভাবে পোস্ট করা হয়েছে!'); e.target.reset(); });
+        });
+
+        function loadAdminLfPosts() {
+            db.collection('lostAndFound').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+                const list = document.getElementById('lf-admin-list');
+                list.innerHTML = snapshot.empty ? '<p>কোনো পোস্ট নেই।</p>' : '';
                 snapshot.forEach(doc => {
-                    const user = doc.data();
-                    const userDiv = document.createElement('div');
-                    userDiv.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-md flex-wrap';
-                    userDiv.innerHTML = `
-                        <div class='mb-2 sm:mb-0'>
-                            <p class="font-semibold">${user.name}</p>
-                            <p class="text-sm text-gray-600">${user.email} | ${user.roll}</p>
-                        </div>
-                        <div class='flex-shrink-0'>
-                            <button onclick="updateUserStatus('${doc.id}', 'approved')" class="bg-green-500 text-white px-3 py-1 text-sm rounded-md hover:bg-green-600 mr-2">Approve</button>
-                            <button onclick="updateUserStatus('${doc.id}', 'rejected')" class="bg-red-500 text-white px-3 py-1 text-sm rounded-md hover:bg-red-600">Reject</button>
-                        </div>
+                    const post = doc.data();
+                    const div = document.createElement('div');
+                    div.className = 'flex justify-between items-center bg-gray-50 p-2 rounded';
+                    div.innerHTML = `
+                        <div><p class="font-semibold text-sm">${post.title}</p><p class="text-xs text-gray-600">${post.authorName}</p></div>
+                        <button onclick="db.collection('lostAndFound').doc('${doc.id}').delete()" class="bg-red-500 text-white px-2 py-1 text-xs rounded">মুছুন</button>
                     `;
-                    pendingList.appendChild(userDiv);
+                    list.appendChild(div);
                 });
             });
-        }
-
-        function updateUserStatus(uid, status) {
-            db.collection('users').doc(uid).update({ status: status });
         }
     </script>
 </body>
