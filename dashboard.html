@@ -3,344 +3,288 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ড্যাশবোর্ড - CampusConnect</title>
+    <title>CampusConnect এ স্বাগতম</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Sidebar slide animation */
-        #sidebar { transition: transform 0.3s cubic-bezier(.4,0,.2,1); }
-        .loader { border-top: 3px solid #3498db; border-radius: 50%; width: 22px; height: 22px; animation: spin 1s linear infinite; display: inline-block; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .fade-in { animation: fadeIn 0.7s; }
+        /* CSS for fade-in animation */
+        .fade-in { animation: fadeIn .7s }
         @keyframes fadeIn { 0% {opacity:0;} 100%{opacity:1;} }
+        /* CSS for loader spinner */
+        .loader { border-top: 3px solid #3498db; border-radius: 50%; width: 16px; height: 16px; animation: spin 1s linear infinite; display: inline-block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-100 via-white to-green-100 min-h-screen">
-    <!-- Header -->
-    <header class="bg-white shadow-md sticky top-0 z-20 fade-in">
-        <nav class="container mx-auto p-4 flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <button id="menu-toggle-btn" class="p-2 rounded-md hover:bg-gray-200 transition">
-                    <svg class="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-                <img src="https://i.ibb.co/2qKq8Yk/campusconnect-logo.png" alt="CampusConnect Logo" class="h-8 rounded-full mr-2">
-                <h1 class="text-xl font-extrabold text-blue-700 tracking-wide">CampusConnect</h1>
-            </div>
-            <div class="flex items-center space-x-2 sm:space-x-4">
-                <a href="search.html" class="p-2 rounded-full hover:bg-gray-200" title="খুঁজুন">
-                    <svg class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </a>
-                <button id="logout-btn" class="bg-red-500 text-white py-2 px-3 rounded-md text-sm font-bold hover:bg-red-700 transition">লগআউট</button>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Sidebar -->
-    <aside id="sidebar" class="bg-white w-72 max-w-full h-full fixed top-0 left-0 z-30 shadow-xl transform -translate-x-full fade-in">
-        <div class="p-5 border-b text-center">
-            <div id="sidebar-user-avatar" class="w-20 h-20 bg-gray-200 rounded-full mx-auto mb-2 flex items-center justify-center overflow-hidden"></div>
-            <h3 id="sidebar-user-name" class="font-bold text-lg text-gray-800 mb-1">লোড হচ্ছে...</h3>
-            <a href="#" id="sidebar-profile-link" class="text-sm text-blue-600 hover:underline">প্রোফাইল দেখুন</a>
-            <a href="admin.html" id="admin-link" class="hidden mt-2 text-sm text-purple-600 font-semibold">অ্যাডমিন প্যানেল</a>
+<body class="bg-gradient-to-br from-blue-100 via-white to-green-100 flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-md fade-in">
+        <div class="text-center mb-6">
+            <img src="https://i.ibb.co/2qKq8Yk/campusconnect-logo.png" alt="CampusConnect" class="mx-auto h-14 mb-2 rounded-full shadow">
+            <h1 class="text-2xl font-extrabold text-blue-700 mb-1">CampusConnect</h1>
+            <p class="text-slate-600 text-sm font-medium">আপনার ক্যাম্পাস, আপনার কানেকশন</p>
         </div>
-        <nav class="p-5 space-y-2">
-            <h3 class="font-bold text-xs mb-2 text-gray-400 uppercase tracking-wider">মেনু</h3>
-            <a href="dashboard.html" class="flex items-center space-x-3 p-2 rounded-md bg-blue-100 text-blue-700 font-semibold"><span>🏠</span><span>নিউজ ফিড</span></a>
-            <a href="chat-list.html" class="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-100"><span>✉️</span><span>মেসেঞ্জার</span></a>
-            <a href="events.html" class="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-100"><span>🎉</span><span>ইভেন্টস</span></a>
-            <a href="noticeboard.html" class="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-100"><span>📢</span><span>নোটিশ বোর্ড</span></a>
-            <a href="lost-and-found.html" class="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-100"><span>❓</span><span>হারানো ও প্রাপ্তি</span></a>
-            <a href="marketplace.html" class="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-100"><span>🛍️</span><span>মার্কেটপ্লেস</span></a>
-            <a href="tutor-finder.html" class="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-100"><span>🧑‍🏫</span><span>টিউটর খুঁজুন</span></a>
-        </nav>
-    </aside>
-    <div id="overlay" class="hidden fixed inset-0 bg-black opacity-40 z-20"></div>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-2 sm:px-4 py-6 fade-in">
-        <div id="loading" class="text-center py-10">
-            <span class="loader"></span>
-            <p class="mt-2 font-semibold text-gray-600">লোড হচ্ছে...</p>
+        <!-- Login Form View -->
+        <div id="login-view" class="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
+            <h2 class="text-xl mb-6 text-center font-bold text-blue-900">লগইন করুন</h2>
+            <form id="login-form" autocomplete="off">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm mb-1" for="login-email">ইমেল</label>
+                    <input class="shadow border rounded w-full py-3 px-4 focus:outline-blue-400" id="login-email" type="email" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm mb-1" for="login-password">পাসওয়ার্ড</label>
+                    <input class="shadow border rounded w-full py-3 px-4 focus:outline-blue-400" id="login-password" type="password" required>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button id="login-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition" type="submit">
+                        <span id="login-btn-text">সাইন ইন</span>
+                        <span id="login-loader" class="loader ml-2 hidden"></span>
+                    </button>
+                    <a class="font-bold text-sm text-blue-500 hover:text-blue-800" href="#" id="forgot-password-link">পাসওয়ার্ড ভুলে গেছেন?</a>
+                </div>
+                <div class="text-center mt-4">
+                    <a class="font-bold text-sm text-green-500 hover:text-green-800" href="#" id="show-signup">অ্যাকাউন্ট নেই? সাইন আপ</a>
+                </div>
+            </form>
         </div>
-        <div id="message-view" class="hidden"></div>
-        <div id="main-view" class="hidden max-w-2xl mx-auto space-y-6">
-            <div class="bg-white p-4 rounded-lg shadow-md">
-                <form id="create-post-form" autocomplete="off">
-                    <textarea id="post-content" class="w-full border-2 rounded-md p-2 focus:outline-blue-400 resize-none" rows="3" maxlength="500" placeholder="আপনার মনের কথা লিখুন..."></textarea>
-                    <div class="mt-2 flex justify-between items-center">
-                        <div>
-                            <label for="post-image" class="cursor-pointer bg-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-md hover:bg-gray-300">ছবি</label>
-                            <input type="file" id="post-image" class="hidden" accept="image/*">
-                            <span id="image-name" class="text-sm text-gray-600 ml-2"></span>
-                        </div>
-                        <button type="submit" id="post-submit-btn" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-blue-600 transition">পোস্ট করুন</button>
+
+        <!-- Signup Form View -->
+        <div id="signup-view" class="hidden bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
+            <h2 class="text-xl mb-6 text-center font-bold text-green-900">অ্যাকাউন্ট তৈরি করুন</h2>
+            <form id="signup-form" autocomplete="off">
+                <div class="mb-3">
+                    <label class="block text-gray-700 text-sm mb-1">পুরো নাম</label>
+                    <input class="shadow border rounded w-full py-3 px-4 focus:outline-green-400" id="signup-name" type="text" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block text-gray-700 text-sm mb-1">রোল / আইডি নম্বর</label>
+                    <input class="shadow border rounded w-full py-3 px-4 focus:outline-green-400" id="signup-roll" type="text" required>
+                </div>
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <div>
+                        <label class="block text-gray-700 text-sm mb-1">বিভাগ</label>
+                        <input class="shadow border rounded w-full py-3 px-4 focus:outline-green-400" id="signup-department" type="text" required>
                     </div>
-                    <div id="upload-progress" class="hidden w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                        <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                    <div>
+                        <label class="block text-gray-700 text-sm mb-1">সেশন</label>
+                        <input class="shadow border rounded w-full py-3 px-4 focus:outline-green-400" id="signup-session" type="text" required>
                     </div>
-                </form>
-            </div>
-            <div id="news-feed" class="space-y-4"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="block text-gray-700 text-sm mb-1">ইমেল</label>
+                    <input class="shadow border rounded w-full py-3 px-4 focus:outline-green-400" id="signup-email" type="email" required>
+                </div>
+                <div class="mb-5">
+                    <label class="block text-gray-700 text-sm mb-1">পাসওয়ার্ড</label>
+                    <input class="shadow border rounded w-full py-3 px-4 focus:outline-green-400" id="signup-password" type="password" minlength="6" required>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button id="signup-submit-btn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center" type="submit">
+                        <span id="signup-btn-text">সাইন আপ</span>
+                        <span id="signup-loader" class="loader ml-2 hidden"></span>
+                    </button>
+                    <a class="font-bold text-sm text-green-500 hover:text-green-800" href="#" id="back-to-login-from-signup">ইতিমধ্যে অ্যাকাউন্ট আছে?</a>
+                </div>
+            </form>
         </div>
-    </main>
-    
 
-    <!-- Firebase SDKs -->
+        <!-- Forgot Password Form View -->
+        <div id="forgot-password-view" class="hidden bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
+            <h2 class="text-xl mb-6 text-center font-bold text-blue-900">পাসওয়ার্ড রিসেট</h2>
+            <form id="forgot-password-form" autocomplete="off">
+                <p class="mb-3 text-sm text-gray-600">আপনার অ্যাকাউন্টের ইমেল দিন। আমরা পাসওয়ার্ড রিসেটের জন্য একটি লিংক পাঠাব।</p>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm mb-1" for="reset-email">ইমেল</label>
+                    <input class="shadow border rounded w-full py-3 px-4 focus:outline-blue-400" id="reset-email" type="email" required>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button id="reset-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition" type="submit">লিংক পাঠান</button>
+                    <a class="font-bold text-sm text-blue-500 hover:text-blue-800" href="#" id="back-to-login-from-forgot">লগইনে ফিরে যান</a>
+                </div>
+            </form>
+        </div>
+        <!-- Message display area -->
+        <p id="message" class="text-center mt-4"></p>
+    </div>
+
+    <!-- Firebase SDKs (v8.10.0) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
     <script>
-        // ---- Firebase Config ----
+        // --- Firebase Configuration ---
+        // Replace with your actual Firebase project configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
-            authDomain: "campusconnect-a8447.firebaseapp.com",
-            projectId: "campusconnect-a8447",
-            storageBucket: "campusconnect-a8447.appspot.com",
-            messagingSenderId: "512467118728",
-            appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
-            measurementId: "G-62XR5TLSN7"
+            apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY", // Your API Key
+            authDomain: "campusconnect-a8447.firebaseapp.com", // Your Auth Domain
+            projectId: "campusconnect-a8447", // Your Project ID
+            storageBucket: "campusconnect-a8447.appspot.com", // Your Storage Bucket
+            messagingSenderId: "512467118728", // Your Messaging Sender ID
+            appId: "1:512467118728:web:2c8cb155422e6e181d0d3d", // Your App ID
+            measurementId: "G-62XR5TLSN7" // Your Measurement ID (for Google Analytics)
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const storage = firebase.storage();
-        let currentUserData = null;
 
-        // ---- Elements ----
+        // --- Helper Functions to easily access elements and switch views ---
         const el = id => document.getElementById(id);
-        const sidebar = el('sidebar');
-        const overlay = el('overlay');
-        const menuToggleBtn = el('menu-toggle-btn');
-        menuToggleBtn.onclick = () => { sidebar.classList.toggle('-translate-x-full'); overlay.classList.toggle('hidden'); }
-        overlay.onclick = () => { sidebar.classList.add('-translate-x-full'); overlay.classList.add('hidden'); }
+        const views = { login: el('login-view'), signup: el('signup-view'), forgot: el('forgot-password-view') };
+        const msgEl = el('message'); // Element to display messages to the user
 
-        // ---- Auth & User Data ----
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                db.collection('users').doc(user.uid).onSnapshot(doc => {
-                    el('loading').classList.add('hidden');
-                    if (!doc.exists) { showError("ইউজার ডেটা পাওয়া যায়নি।"); return; }
-                    currentUserData = { id: doc.id, ...doc.data() };
-                    if (currentUserData.status === 'approved') {
-                        el('main-view').classList.remove('hidden');
-                        el('message-view').classList.add('hidden');
-                        loadSidebarInfo(); 
-                        loadAllPosts();
-                    } else {
-                        handleUnapprovedUser(currentUserData.status);
-                    }
-                }, error => showError("ইউজার ডেটা লোড করতে সমস্যা হয়েছে।"));
-            } else {
-                window.location.href = 'index.html';
-            }
-        });
-
-        // ---- Unapproved User ----
-        function handleUnapprovedUser(status) {
-            el('main-view').classList.add('hidden');
-            const msgView = el('message-view');
-            const titles = { pending: "অ্যাকাউন্টটি অনুমোদনের অপেক্ষায়", rejected: "অ্যাকাউন্ট বাতিল", suspended: "অ্যাকাউন্ট বরখাস্ত" };
-            const bodies = {
-                pending: "অ্যাডমিন অনুমোদন করার পরেই আপনি সব ফিচার ব্যবহার করতে পারবেন।",
-                rejected: "আপনার অ্যাকাউন্টের স্ট্যাটাস: বাতিল।",
-                suspended: "আপনার অ্যাকাউন্টের স্ট্যাটাস: বরখাস্ত।"
-            };
-            const colors = { pending: 'yellow', rejected: 'red', suspended: 'red' };
-            msgView.innerHTML = `
-                <div class="text-center bg-${colors[status]}-100 border-l-4 border-${colors[status]}-500 text-${colors[status]}-700 p-4 rounded-md" role="alert">
-                    <p class="font-bold">${titles[status]}</p>
-                    <p>${bodies[status]}</p>
-                </div>
-            `;
-            msgView.classList.remove('hidden');
+        function showView(viewName) {
+            // Hide all views except the one specified
+            Object.keys(views).forEach(v => {
+                views[v].classList.toggle('hidden', v !== viewName);
+            });
+            // Clear any previous messages and their styling
+            msgEl.textContent = '';
+            msgEl.className = '';
         }
 
-        // ---- Error Handler ----
-        function showError(msg) {
-            el('loading').classList.add('hidden');
-            el('main-view').classList.add('hidden');
-            el('message-view').classList.remove('hidden');
-            el('message-view').innerHTML = `<div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md text-center"><p class="font-bold">ত্রুটি</p><p>${msg}</p></div>`;
-        }
+        // --- Navigation Handlers ---
+        el('show-signup').onclick = () => showView('signup'); // Link to show signup form
+        el('forgot-password-link').onclick = () => showView('forgot'); // Link to show forgot password form
+        el('back-to-login-from-signup').onclick = () => showView('login'); // Link to go back to login from signup
+        el('back-to-login-from-forgot').onclick = () => showView('login'); // Link to go back to login from forgot password
 
-        // ---- Post Creation ----
-        el('create-post-form').onsubmit = async e => {
-            e.preventDefault();
-            const content = el('post-content').value.trim();
-            const imageFile = el('post-image').files[0];
-            if (content === '' && !imageFile) return alert("কিছু লিখুন অথবা একটি ছবি দিন।");
-            el('post-submit-btn').disabled = true;
+        // --- Login Form Submission Handler ---
+        el('login-form').onsubmit = async e => {
+            e.preventDefault(); // Prevent default form submission
+            // Disable button and show loader for user feedback
+            el('login-btn').disabled = true;
+            el('login-btn-text').textContent = 'লোড হচ্ছে...';
+            el('login-loader').classList.remove('hidden');
+            msgEl.textContent = '';
+            msgEl.className = ''; // Clear previous message styling
 
             try {
-                let imageUrl = null;
-                if (imageFile) {
-                    const uploadRef = storage.ref(`posts/${Date.now()}-${imageFile.name}`);
-                    const uploadTask = uploadRef.put(imageFile);
-                    el('upload-progress').classList.remove('hidden');
-                    uploadTask.on('state_changed',
-                        s => el('progress-bar').style.width = (s.bytesTransferred / s.totalBytes) * 100 + '%',
-                        err => { throw err; },
-                        async () => {
-                            imageUrl = await uploadRef.getDownloadURL();
-                            await savePostToFirestore(content, imageUrl);
-                            el('upload-progress').classList.add('hidden');
-                        }
-                    );
-                } else {
-                    await savePostToFirestore(content, null);
+                // Attempt to sign in user with email and password
+                await auth.signInWithEmailAndPassword(el('login-email').value, el('login-password').value);
+                // On successful login
+                msgEl.textContent = "লগইন সফল হয়েছে, রিডাইরেক্ট হচ্ছে...";
+                msgEl.className = "text-green-500";
+                // Redirect to dashboard after a short delay for message visibility
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
+            } catch(err) {
+                // Handle various authentication errors for login
+                let errorMessage = "ভুল ইমেল অথবা পাসওয়ার্ড।";
+                if (err.code === 'auth/user-not-found') {
+                    errorMessage = 'এই ইমেলের সাথে কোন ইউজার পাওয়া যায়নি।';
+                } else if (err.code === 'auth/wrong-password') {
+                    errorMessage = 'ভুল পাসওয়ার্ড।';
+                } else if (err.code === 'auth/invalid-email') {
+                    errorMessage = 'অকার্যকর ইমেল ফরম্যাট।';
                 }
-            } catch (err) {
-                showError("পোস্ট তৈরি করতে সমস্যা হয়েছে।");
+                msgEl.textContent = errorMessage;
+                msgEl.className = 'text-red-500';
             } finally {
-                el('post-submit-btn').disabled = false;
+                // Re-enable button and hide loader after operation completes
+                el('login-btn').disabled = false;
+                el('login-btn-text').textContent = 'সাইন ইন';
+                el('login-loader').classList.add('hidden');
             }
         };
 
-        async function savePostToFirestore(content, imageUrl) {
-            await db.collection('posts').add({
-                authorId: currentUserData.id,
-                authorName: currentUserData.name,
-                authorPhoto: currentUserData.photoURL || null,
-                content,
-                imageUrl,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                likes: []
-            });
-            el('create-post-form').reset();
-            el('image-name').textContent = '';
-        }
+        // --- Signup Form Submission Handler ---
+        el('signup-form').onsubmit = async e => {
+            e.preventDefault(); // Prevent default form submission
+            // Cache elements and show loading state
+            const signupBtn = el('signup-submit-btn');
+            const loader = el('signup-loader');
+            const btnText = el('signup-btn-text');
+            signupBtn.disabled = true; btnText.textContent = 'প্রসেসিং...'; loader.classList.remove('hidden');
+            msgEl.textContent = '';
+            msgEl.className = ''; // Clear previous message styling
 
-        el('post-image').onchange = e => {
-            const file = e.target.files[0];
-            el('image-name').textContent = file ? file.name : '';
-        };
+            // Collect user data from form fields
+            const userData = {
+                name: el('signup-name').value.trim(),
+                roll: el('signup-roll').value.trim(),
+                department: el('signup-department').value.trim(),
+                session: el('signup-session').value.trim(),
+                email: el('signup-email').value.trim(),
+                status: 'pending', // Initial status is 'pending' for admin approval
+                role: 'student', // Default role
+                createdAt: firebase.firestore.FieldValue.serverTimestamp() // Timestamp for creation
+            };
+            const password = el('signup-password').value;
 
-        // ---- News Feed ----
-        function loadAllPosts() {
-            db.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
-                const newsFeed = el('news-feed'); newsFeed.innerHTML = '';
-                snapshot.forEach(doc => {
-                    const post = doc.data(), postId = doc.id;
-                    const postDate = post.timestamp?.toDate().toLocaleString('bn-BD') || '';
-                    const canDelete = currentUserData?.id === post.authorId || currentUserData?.role === 'admin';
-                    const hasLiked = post.likes?.includes(currentUserData?.id);
-
-                    const postDiv = document.createElement('div');
-                    postDiv.className = 'bg-white p-4 rounded-lg shadow-md fade-in';
-                    postDiv.innerHTML = `
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center space-x-2">
-                                ${post.authorPhoto ? `<img src="${post.authorPhoto}" class="w-8 h-8 rounded-full">` : `<div class="w-8 h-8 bg-gray-300 rounded-full"></div>`}
-                                <a href="profile.html?id=${post.authorId}" class="font-bold text-gray-800 hover:underline">${post.authorName}</a>
-                            </div>
-                            ${canDelete ? `<button class="text-red-500 text-sm font-semibold hover:underline" onclick="deletePost('${postId}')">মুছুন</button>` : ''}
-                        </div>
-                        ${post.content ? `<p class="text-gray-700 whitespace-pre-wrap mb-3">${post.content}</p>` : ''}
-                        ${post.imageUrl ? `<img src="${post.imageUrl}" class="w-full max-h-96 object-cover rounded-md mb-2">` : ''}
-                        <div class="mt-4 pt-2 border-t flex items-center justify-between text-gray-500">
-                            <button class="flex items-center space-x-1 hover:text-blue-600 ${hasLiked ? 'text-blue-600' : ''}" onclick="toggleLike('${postId}')">
-                                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                                <span>${post.likes?.length || 0}</span>
-                            </button>
-                            <button class="flex items-center space-x-1 hover:text-blue-600" onclick="toggleComments('${postId}')">
-                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-                                <span>কমেন্ট</span>
-                            </button>
-                            <p class="text-xs text-right">${postDate}</p>
-                        </div>
-                        <div id="comments-section-${postId}" class="hidden mt-4 pt-4 border-t">
-                            <form onsubmit="postComment(event, '${postId}')" class="flex mb-3">
-                                <input type="text" id="comment-input-${postId}" class="w-full border rounded-l-md p-2 text-sm" placeholder="আপনার মন্তব্য লিখুন...">
-                                <button type="submit" class="bg-blue-500 text-white px-3 rounded-r-md text-sm font-semibold">পাঠান</button>
-                            </form>
-                            <div id="comments-list-${postId}" class="space-y-2"></div>
-                        </div>
-                    `;
-                    newsFeed.appendChild(postDiv);
-                });
-            });
-        }
-
-        // ---- Delete Post ----
-        window.deletePost = async function(postId) {
-            if (!confirm('আপনি কি নিশ্চিতভাবে এই পোস্টটি মুছে ফেলতে চান?')) return;
-            const postRef = db.collection('posts').doc(postId);
-            const doc = await postRef.get();
-            if (doc.exists && doc.data().imageUrl) {
-                try { await storage.refFromURL(doc.data().imageUrl).delete(); } catch(e) {}
+            // Validate password length
+            if(password.length < 6){
+                msgEl.textContent = "পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে।";
+                msgEl.className = 'text-red-500';
+                signupBtn.disabled = false; btnText.textContent = 'সাইন আপ'; loader.classList.add('hidden');
+                return;
             }
-            await postRef.delete();
-        };
 
-        // ---- Like Post ----
-        window.toggleLike = function(postId) {
-            if (!currentUserData) return;
-            const postRef = db.collection('posts').doc(postId);
-            db.runTransaction(async t => {
-                const doc = await t.get(postRef);
-                if (!doc.exists) throw "Document does not exist!";
-                let newLikes = doc.data().likes || [];
-                if (newLikes.includes(currentUserData.id)) {
-                    newLikes = newLikes.filter(id => id !== currentUserData.id);
-                } else {
-                    newLikes.push(currentUserData.id);
+            try {
+                // 1. Create user in Firebase Authentication
+                const cred = await auth.createUserWithEmailAndPassword(userData.email, password);
+
+                // 2. Create user document in Firestore's 'users' collection
+                // The user's UID (cred.user.uid) is used as the document ID, matching security rules.
+                await db.collection('users').doc(cred.user.uid).set(userData);
+
+                // On successful signup and data write
+                msgEl.textContent = "অ্যাকাউন্ট তৈরি হয়েছে, রিডাইরেক্ট হচ্ছে...";
+                msgEl.className = "text-green-500";
+                // Redirect to dashboard only after both auth and firestore writes are complete
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 700);
+            } catch(err) {
+                // Handle various authentication and Firestore write errors
+                let errorMessage = "সাইন আপ করার সময় সমস্যা।";
+                if (err.code === 'auth/email-already-in-use') {
+                    errorMessage = 'এই ইমেলটি ইতিমধ্যেই ব্যবহার করা হয়েছে।';
+                } else if (err.code === 'auth/invalid-email') {
+                    errorMessage = 'অকার্যকর ইমেল ফরম্যাট।';
+                } else if (err.code === 'auth/weak-password') {
+                    errorMessage = 'পাসওয়ার্ডটি খুব দুর্বল।';
                 }
-                t.update(postRef, { likes: newLikes });
-            });
-        };
-
-        // ---- Comments ----
-        window.toggleComments = function(postId) {
-            const commentsSection = el(`comments-section-${postId}`);
-            const commentsList = el(`comments-list-${postId}`);
-            if (commentsSection.classList.toggle('hidden')) return;
-            db.collection('posts').doc(postId).collection('comments').orderBy('timestamp').onSnapshot(snapshot => {
-                commentsList.innerHTML = '';
-                snapshot.forEach(doc => {
-                    const comment = doc.data();
-                    const div = document.createElement('div');
-                    div.className = 'bg-gray-100 p-2 rounded-md';
-                    div.innerHTML = `<p><a href="profile.html?id=${comment.authorId}" class="font-semibold hover:underline">${comment.authorName}</a>: ${comment.text}</p>`;
-                    commentsList.appendChild(div);
-                });
-            });
-        };
-
-        window.postComment = function(event, postId) {
-            event.preventDefault();
-            const input = el(`comment-input-${postId}`);
-            const text = input.value.trim();
-            if (text === '' || !currentUserData) return;
-            db.collection('posts').doc(postId).collection('comments').add({
-                text: text,
-                authorId: currentUserData.id,
-                authorName: currentUserData.name,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            input.value = '';
-        };
-
-        // ---- Sidebar User Info ----
-        function loadSidebarInfo() {
-            if (!currentUserData) return;
-            el('sidebar-user-name').textContent = currentUserData.name;
-            el('sidebar-profile-link').href = `profile.html?id=${currentUserData.id}`;
-            if (currentUserData.role === 'admin') el('admin-link').classList.remove('hidden');
-            // If user has photo, show it
-            if (currentUserData.photoURL) {
-                el('sidebar-user-avatar').innerHTML = `<img src="${currentUserData.photoURL}" class="w-full h-full object-cover rounded-full">`;
-            } else {
-                el('sidebar-user-avatar').innerHTML = `<svg class="w-9 h-9 text-gray-400 mx-auto my-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M6 20c0-2.21 3.58-4 8-4s8 1.79 8 4"/></svg>`;
+                msgEl.textContent = errorMessage + " (" + err.message + ")"; // Display error details for debugging
+                msgEl.className = 'text-red-500';
+            } finally {
+                // Re-enable button and hide loader
+                signupBtn.disabled = false; btnText.textContent = 'সাইন আপ'; loader.classList.add('hidden');
             }
-        }
+        };
 
-        // ---- Logout ----
-        el('logout-btn').onclick = () => auth.signOut();
+        // --- Forgot Password Form Submission Handler ---
+        el('forgot-password-form').onsubmit = async e => {
+            e.preventDefault(); // Prevent default form submission
+            // Show loading state
+            el('reset-btn').disabled = true;
+            el('reset-btn').textContent = 'লোড হচ্ছে...';
+            msgEl.textContent = '';
+            msgEl.className = ''; // Clear previous message styling
 
+            try {
+                // Send password reset email
+                await auth.sendPasswordResetEmail(el('reset-email').value.trim());
+                msgEl.textContent = 'পাসওয়ার্ড রিসেটের লিংক পাঠানো হয়েছে! আপনার ইমেল চেক করুন।';
+                msgEl.className = 'text-green-500';
+            } catch(err) {
+                // Handle errors for password reset
+                let errorMessage = "পাসওয়ার্ড রিসেট করতে সমস্যা।";
+                if (err.code === 'auth/user-not-found') {
+                    errorMessage = 'এই ইমেলের সাথে কোন ইউজার পাওয়া যায়নি।';
+                } else if (err.code === 'auth/invalid-email') {
+                    errorMessage = 'অকার্যকর ইমেল ফরম্যাট।';
+                }
+                msgEl.textContent = errorMessage + " (" + err.message + ")"; // Display error details
+                msgEl.className = 'text-red-500';
+            } finally {
+                // Re-enable button
+                el('reset-btn').disabled = false;
+                el('reset-btn').textContent = 'লিংক পাঠান';
+            }
+        };
+
+        // --- Initial View Load ---
+        // Display the login view by default when the page loads.
+        // Automatic redirection based on authentication state will be handled in 'dashboard.html'
+        // to ensure that Firestore data is written before redirection for new signups.
+        showView('login');
     </script>
 </body>
 </html>
