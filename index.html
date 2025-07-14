@@ -5,43 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusConnect এ স্বাগতম</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in { animation: fadeIn 0.6s; }
+        @keyframes fadeIn { 0% {opacity:0;} 100%{opacity:1;} }
+        .loader { border-top: 3px solid #3498db; border-radius: 50%; width: 18px; height: 18px; animation: spin 1s linear infinite; display: inline-block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
-    <div class="w-full max-w-md">
+<body class="bg-gradient-to-br from-blue-100 via-white to-green-100 flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-md fade-in">
+        <div class="text-center mb-6">
+            <img src="https://i.ibb.co/2qKq8Yk/campusconnect-logo.png" alt="CampusConnect" class="mx-auto h-16 mb-2 rounded-full shadow">
+            <h1 class="text-2xl font-extrabold text-blue-700 mb-1">CampusConnect</h1>
+            <p class="text-slate-600 text-sm font-medium">আপনার ক্যাম্পাস, আপনার কানেকশন</p>
+        </div>
+
         <!-- Login Form -->
         <div id="login-view" class="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
-            <h2 class="text-2xl mb-6 text-center font-bold text-gray-800">লগইন করুন</h2>
-            <form id="login-form">
-                <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2" for="login-email">ইমেল</label><input class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700" id="login-email" type="email" placeholder="আপনার ইমেল" required></div>
-                <div class="mb-6"><label class="block text-gray-700 text-sm font-bold mb-2" for="login-password">পাসওয়ার্ড</label><input class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700" id="login-password" type="password" placeholder="********" required></div>
-                <div class="flex items-center justify-between"><button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">সাইন ইন</button><a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#" id="forgot-password-link">পাসওয়ার্ড ভুলে গেছেন?</a></div>
-                <div class="text-center mt-4"><a class="inline-block align-baseline font-bold text-sm text-green-500 hover:text-green-800" href="#" id="show-signup">অ্যাকাউন্ট নেই? সাইন আপ</a></div>
+            <h2 class="text-xl mb-6 text-center font-bold text-blue-900">লগইন করুন</h2>
+            <form id="login-form" autocomplete="off">
+                <div class="mb-4"><label class="block text-gray-700 text-sm mb-1" for="login-email">ইমেল</label>
+                    <input class="shadow border rounded w-full py-3 px-4 focus:outline-blue-400" id="login-email" type="email" placeholder="আপনার ইমেল" required>
+                </div>
+                <div class="mb-6"><label class="block text-gray-700 text-sm mb-1" for="login-password">পাসওয়ার্ড</label>
+                    <input class="shadow border rounded w-full py-3 px-4 focus:outline-blue-400" id="login-password" type="password" placeholder="********" required>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button id="login-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition" type="submit">সাইন ইন</button>
+                    <a class="font-bold text-sm text-blue-500 hover:text-blue-800" href="#" id="forgot-password-link">পাসওয়ার্ড ভুলে গেছেন?</a>
+                </div>
+                <div class="text-center mt-4">
+                    <a class="font-bold text-sm text-green-500 hover:text-green-800" href="#" id="show-signup">অ্যাকাউন্ট নেই? সাইন আপ</a>
+                </div>
             </form>
         </div>
 
         <!-- Signup Form -->
         <div id="signup-view" class="hidden bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
-            <h2 class="text-2xl mb-6 text-center font-bold text-gray-800">অ্যাকাউন্ট তৈরি করুন</h2>
-            <form id="signup-form">
-                <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2">পুরো নাম</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-name" type="text" placeholder="আপনার পুরো নাম" required></div>
-                <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2">রোল / আইডি নম্বর</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-roll" type="text" placeholder="যেমন: C183001" required></div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div><label class="block text-gray-700 text-sm font-bold mb-2">বিভাগ</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-department" type="text" placeholder="যেমন: CSE" required></div>
-                    <div><label class="block text-gray-700 text-sm font-bold mb-2">সেশন</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-session" type="text" placeholder="যেমন: 2018-19" required></div>
+            <h2 class="text-xl mb-6 text-center font-bold text-green-900">অ্যাকাউন্ট তৈরি করুন</h2>
+            <form id="signup-form" autocomplete="off">
+                <div class="mb-3"><label class="block text-gray-700 text-sm mb-1">পুরো নাম</label>
+                    <input class="shadow border rounded w-full py-3 px-4 focus:outline-green-400" id="signup-name" type="text" required>
                 </div>
-                <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2">ইমেল</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-email" type="email" placeholder="প্রাতিষ্ঠানিক ইমেল দিন" required></div>
-                <div class="mb-6"><label class="block text-gray-700 text-sm font-bold mb-2">পাসওয়ার্ড</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-password" type="password" placeholder="কমপক্ষে ৬ অক্ষর" required></div>
-                <div class="flex items-center justify-between"><button id="signup-submit-btn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" type="submit">সাইন আপ</button><a class="inline-block align-baseline font-bold text-sm text-green-500 hover:text-green-800" href="#" id="back-to-login-from-signup">ইতিমধ্যে অ্যাকাউন্ট আছে?</a></div>
+                <div class="mb-3"><label class="block text-gray-700 text-sm mb-1">রোল / আইডি নম্বর</label>
+                    <input class="shadow border rounded w-full py-3 px-4 focus:outline-green-400" id="signup-roll" type="text" required>
+                </div>
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <div><label class="block text-gray-700 text-sm mb-1">বিভাগ</label>
+                        <input class="shadow border rounded w-full py-3 px-4 focus:outline-green-400" id="signup-department" type="text" required>
+                    </div>
+                    <div><label class="block text-gray-700 text-sm mb-1">সেশন</label>
+                        <input class="shadow border rounded w-full py-3 px-4 focus:outline-green-400" id="signup-session" type="text" required>
+                    </div>
+                </div>
+                <div class="mb-3"><label class="block text-gray-700 text-sm mb-1">ইমেল</label>
+                    <input class="shadow border rounded w-full py-3 px-4 focus:outline-green-400" id="signup-email" type="email" required>
+                </div>
+                <div class="mb-5"><label class="block text-gray-700 text-sm mb-1">পাসওয়ার্ড</label>
+                    <input class="shadow border rounded w-full py-3 px-4 focus:outline-green-400" id="signup-password" type="password" minlength="6" required>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button id="signup-submit-btn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center" type="submit">
+                        <span id="signup-btn-text">সাইন আপ</span>
+                        <span id="signup-loader" class="loader ml-2 hidden"></span>
+                    </button>
+                    <a class="font-bold text-sm text-green-500 hover:text-green-800" href="#" id="back-to-login-from-signup">ইতিমধ্যে অ্যাকাউন্ট আছে?</a>
+                </div>
             </form>
         </div>
 
         <!-- Forgot Password Form -->
         <div id="forgot-password-view" class="hidden bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
-            <h2 class="text-2xl mb-6 text-center font-bold text-gray-800">পাসওয়ার্ড রিসেট</h2>
-            <form id="forgot-password-form">
-                <p class="mb-4 text-sm text-gray-600">আপনার অ্যাকাউন্টের ইমেল দিন। আমরা পাসওয়ার্ড রিসেট করার জন্য একটি লিংক পাঠাব।</p>
-                <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2" for="reset-email">ইমেল</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="reset-email" type="email" placeholder="আপনার ইমেল" required></div>
-                <div class="flex items-center justify-between"><button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">লিংক পাঠান</button><a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#" id="back-to-login-from-forgot">লগইনে ফিরে যান</a></div>
+            <h2 class="text-xl mb-6 text-center font-bold text-blue-900">পাসওয়ার্ড রিসেট</h2>
+            <form id="forgot-password-form" autocomplete="off">
+                <p class="mb-3 text-sm text-gray-600">আপনার অ্যাকাউন্টের ইমেল দিন। আমরা পাসওয়ার্ড রিসেটের জন্য একটি লিংক পাঠাব।</p>
+                <div class="mb-4"><label class="block text-gray-700 text-sm mb-1" for="reset-email">ইমেল</label>
+                    <input class="shadow border rounded w-full py-3 px-4 focus:outline-blue-400" id="reset-email" type="email" required>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button id="reset-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition" type="submit">লিংক পাঠান</button>
+                    <a class="font-bold text-sm text-blue-500 hover:text-blue-800" href="#" id="back-to-login-from-forgot">লগইনে ফিরে যান</a>
+                </div>
             </form>
         </div>
         <p id="message" class="text-center mt-4"></p>
@@ -67,63 +111,103 @@
         const el = id => document.getElementById(id);
         const views = { login: el('login-view'), signup: el('signup-view'), forgot: el('forgot-password-view') };
         const msgEl = el('message');
-        const showView = viewName => { Object.keys(views).forEach(v => views[v].classList.toggle('hidden', v !== viewName)); msgEl.textContent = ''; };
-        
-        el('show-signup').addEventListener('click', () => showView('signup'));
-        el('forgot-password-link').addEventListener('click', () => showView('forgot'));
-        el('back-to-login-from-signup').addEventListener('click', () => showView('login'));
-        el('back-to-login-from-forgot').addEventListener('click', () => showView('login'));
-        
-        el('login-form').addEventListener('submit', e => {
+
+        function showView(viewName) {
+            Object.keys(views).forEach(v => {
+                views[v].classList.toggle('hidden', v !== viewName);
+            });
+            msgEl.textContent = '';
+        }
+
+        // Navigation
+        el('show-signup').onclick = () => showView('signup');
+        el('forgot-password-link').onclick = () => showView('forgot');
+        el('back-to-login-from-signup').onclick = () => showView('login');
+        el('back-to-login-from-forgot').onclick = () => showView('login');
+
+        // LOGIN
+        el('login-form').onsubmit = async e => {
             e.preventDefault();
-            auth.signInWithEmailAndPassword(el('login-email').value, el('login-password').value)
-                .then(() => { window.location.href = 'dashboard.html'; })
-                .catch(err => { msgEl.textContent = "ভুল ইমেল অথবা পাসওয়ার্ড।"; msgEl.className = 'text-red-500'; });
-        });
-        
-        el('signup-form').addEventListener('submit', e => {
+            el('login-btn').disabled = true;
+            el('login-btn').textContent = 'লোড হচ্ছে...';
+            msgEl.textContent = '';
+            try {
+                await auth.signInWithEmailAndPassword(el('login-email').value, el('login-password').value);
+                msgEl.textContent = "লগইন সফল হয়েছে, রিডাইরেক্ট হচ্ছে...";
+                msgEl.className = "text-green-500";
+                setTimeout(()=>{ window.location.href = 'dashboard.html'; }, 500);
+            } catch(err) {
+                msgEl.textContent = "ভুল ইমেল অথবা পাসওয়ার্ড।";
+                msgEl.className = 'text-red-500';
+            }
+            el('login-btn').disabled = false;
+            el('login-btn').textContent = 'সাইন ইন';
+        };
+
+        // SIGNUP
+        el('signup-form').onsubmit = async e => {
             e.preventDefault();
             const signupBtn = el('signup-submit-btn');
-            signupBtn.disabled = true;
-            signupBtn.textContent = 'প্রসেসিং...';
+            const loader = el('signup-loader');
+            const btnText = el('signup-btn-text');
+            signupBtn.disabled = true; btnText.textContent = 'প্রসেসিং...'; loader.classList.remove('hidden');
             msgEl.textContent = '';
 
             const userData = {
-                name: el('signup-name').value, roll: el('signup-roll').value,
-                department: el('signup-department').value, session: el('signup-session').value,
-                email: el('signup-email').value, status: 'pending', role: 'student'
+                name: el('signup-name').value.trim(),
+                roll: el('signup-roll').value.trim(),
+                department: el('signup-department').value.trim(),
+                session: el('signup-session').value.trim(),
+                email: el('signup-email').value.trim(),
+                status: 'pending',
+                role: 'student'
             };
             const password = el('signup-password').value;
-            
-            auth.createUserWithEmailAndPassword(userData.email, password)
-                .then(cred => {
-                    return db.collection('users').doc(cred.user.uid).set(userData);
-                })
-                .then(() => {
-                    window.location.href = 'dashboard.html';
-                })
-                .catch(err => {
-                    msgEl.textContent = "সাইন আপ করার সময় একটি সমস্যা হয়েছে: " + err.message;
-                    msgEl.className = 'text-red-500';
-                    signupBtn.disabled = false;
-                    signupBtn.textContent = 'সাইন আপ';
-                });
+
+            if(password.length < 6){
+                msgEl.textContent = "পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে।";
+                msgEl.className = 'text-red-500';
+                signupBtn.disabled = false; btnText.textContent = 'সাইন আপ'; loader.classList.add('hidden');
+                return;
+            }
+
+            try {
+                const cred = await auth.createUserWithEmailAndPassword(userData.email, password);
+                await db.collection('users').doc(cred.user.uid).set(userData);
+                msgEl.textContent = "অ্যাকাউন্ট তৈরি হয়েছে, রিডাইরেক্ট হচ্ছে...";
+                msgEl.className = "text-green-500";
+                setTimeout(()=>{ window.location.href = 'dashboard.html'; }, 700);
+            } catch(err) {
+                msgEl.textContent = "সাইন আপ করার সময় সমস্যা: " + err.message;
+                msgEl.className = 'text-red-500';
+            }
+            signupBtn.disabled = false; btnText.textContent = 'সাইন আপ'; loader.classList.add('hidden');
+        };
+
+        // FORGOT PASSWORD
+        el('forgot-password-form').onsubmit = async e => {
+            e.preventDefault();
+            el('reset-btn').disabled = true;
+            el('reset-btn').textContent = 'লোড হচ্ছে...';
+            msgEl.textContent = '';
+            try {
+                await auth.sendPasswordResetEmail(el('reset-email').value.trim());
+                msgEl.textContent = 'পাসওয়ার্ড রিসেটের লিংক পাঠানো হয়েছে!';
+                msgEl.className = 'text-green-500';
+            } catch(err) {
+                msgEl.textContent = err.message;
+                msgEl.className = 'text-red-500';
+            }
+            el('reset-btn').disabled = false;
+            el('reset-btn').textContent = 'লিংক পাঠান';
+        };
+
+        // Authenticated User Redirect
+        auth.onAuthStateChanged(user => {
+            if (user) window.location.href = 'dashboard.html';
         });
 
-        el('forgot-password-form').addEventListener('submit', e => {
-            e.preventDefault();
-            auth.sendPasswordResetEmail(el('reset-email').value)
-                .then(() => { msgEl.textContent = 'পাসওয়ার্ড রিসেটের লিংক পাঠানো হয়েছে।'; msgEl.className = 'text-green-500'; })
-                .catch(err => { msgEl.textContent = err.message; msgEl.className = 'text-red-500'; });
-        });
-        
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                // If user is already logged in, redirect to dashboard
-                // This prevents logged-in users from seeing the signup/login page
-                window.location.href = 'dashboard.html';
-            }
-        });
+        showView('login');
     </script>
 </body>
 </html>
