@@ -6,45 +6,48 @@
     <title>ড্যাশবোর্ড - CampusConnect</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Sidebar transition for smooth slide in/out */
-        #sidebar {
-            transition: transform 0.3s ease-in-out;
-        }
+        /* Sidebar slide animation */
+        #sidebar { transition: transform 0.3s cubic-bezier(.4,0,.2,1); }
+        .loader { border-top: 3px solid #3498db; border-radius: 50%; width: 22px; height: 22px; animation: spin 1s linear infinite; display: inline-block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .fade-in { animation: fadeIn 0.7s; }
+        @keyframes fadeIn { 0% {opacity:0;} 100%{opacity:1;} }
     </style>
 </head>
-<body class="bg-gray-100">
-    <!-- Header Section with Menu Toggle Button -->
-    <header class="bg-white shadow-md sticky top-0 z-20">
+<body class="bg-gradient-to-br from-blue-100 via-white to-green-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-20 fade-in">
         <nav class="container mx-auto p-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <button id="menu-toggle-btn" class="p-2 rounded-md hover:bg-gray-200">
+                <button id="menu-toggle-btn" class="p-2 rounded-md hover:bg-gray-200 transition">
                     <svg class="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
-                <h1 class="text-xl font-bold text-blue-600">CampusConnect</h1>
+                <img src="https://i.ibb.co/2qKq8Yk/campusconnect-logo.png" alt="CampusConnect Logo" class="h-8 rounded-full mr-2">
+                <h1 class="text-xl font-extrabold text-blue-700 tracking-wide">CampusConnect</h1>
             </div>
             <div class="flex items-center space-x-2 sm:space-x-4">
                 <a href="search.html" class="p-2 rounded-full hover:bg-gray-200" title="খুঁজুন">
-                    <svg class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    <svg class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
                 </a>
-                <button id="logout-btn" class="bg-red-500 text-white py-2 px-3 rounded-md text-sm hover:bg-red-700">লগআউট</button>
+                <button id="logout-btn" class="bg-red-500 text-white py-2 px-3 rounded-md text-sm font-bold hover:bg-red-700 transition">লগআউট</button>
             </div>
         </nav>
     </header>
 
-    <!-- Sidebar (Initially Hidden, slides from left) -->
-    <aside id="sidebar" class="bg-white w-72 h-full fixed top-0 left-0 z-30 shadow-lg transform -translate-x-full">
-        <!-- Sidebar Header -->
-        <div class="p-4 border-b text-center">
-             <div class="w-24 h-24 bg-gray-300 rounded-full mx-auto mb-3"></div>
-             <h3 id="sidebar-user-name" class="font-bold text-lg">লোড হচ্ছে...</h3>
-             <a href="#" id="sidebar-profile-link" class="text-sm text-blue-600 hover:underline">প্রোফাইল দেখুন</a>
-             <a href="admin.html" id="admin-link" class="hidden mt-2 text-sm text-purple-600 font-semibold" >অ্যাডমিন প্যানেল</a>
+    <!-- Sidebar -->
+    <aside id="sidebar" class="bg-white w-72 max-w-full h-full fixed top-0 left-0 z-30 shadow-xl transform -translate-x-full fade-in">
+        <div class="p-5 border-b text-center">
+            <div id="sidebar-user-avatar" class="w-20 h-20 bg-gray-200 rounded-full mx-auto mb-2 flex items-center justify-center overflow-hidden"></div>
+            <h3 id="sidebar-user-name" class="font-bold text-lg text-gray-800 mb-1">লোড হচ্ছে...</h3>
+            <a href="#" id="sidebar-profile-link" class="text-sm text-blue-600 hover:underline">প্রোফাইল দেখুন</a>
+            <a href="admin.html" id="admin-link" class="hidden mt-2 text-sm text-purple-600 font-semibold">অ্যাডমিন প্যানেল</a>
         </div>
-        <!-- Sidebar Links -->
-        <nav class="p-4 space-y-2">
-            <h3 class="font-bold text-md mb-2 text-gray-500 uppercase tracking-wider">মেনু</h3>
+        <nav class="p-5 space-y-2">
+            <h3 class="font-bold text-xs mb-2 text-gray-400 uppercase tracking-wider">মেনু</h3>
             <a href="dashboard.html" class="flex items-center space-x-3 p-2 rounded-md bg-blue-100 text-blue-700 font-semibold"><span>🏠</span><span>নিউজ ফিড</span></a>
             <a href="chat-list.html" class="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-100"><span>✉️</span><span>মেসেঞ্জার</span></a>
             <a href="events.html" class="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-100"><span>🎉</span><span>ইভেন্টস</span></a>
@@ -54,24 +57,26 @@
             <a href="tutor-finder.html" class="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-100"><span>🧑‍🏫</span><span>টিউটর খুঁজুন</span></a>
         </nav>
     </aside>
-    <!-- Overlay for closing sidebar on outside click -->
-    <div id="overlay" class="hidden fixed inset-0 bg-black opacity-50 z-20"></div>
+    <div id="overlay" class="hidden fixed inset-0 bg-black opacity-40 z-20"></div>
 
-    <!-- Main Content (Simplified Layout for News Feed) -->
-    <main class="container mx-auto p-4">
-        <div id="loading" class="text-center p-10"><p>লোড হচ্ছে...</p></div>
+    <!-- Main Content -->
+    <main class="container mx-auto px-2 sm:px-4 py-6 fade-in">
+        <div id="loading" class="text-center py-10">
+            <span class="loader"></span>
+            <p class="mt-2 font-semibold text-gray-600">লোড হচ্ছে...</p>
+        </div>
         <div id="message-view" class="hidden"></div>
         <div id="main-view" class="hidden max-w-2xl mx-auto space-y-6">
             <div class="bg-white p-4 rounded-lg shadow-md">
-                <form id="create-post-form">
-                    <textarea id="post-content" class="w-full border-2 rounded-md p-2" rows="3" placeholder="আপনার মনের কথা লিখুন..."></textarea>
+                <form id="create-post-form" autocomplete="off">
+                    <textarea id="post-content" class="w-full border-2 rounded-md p-2 focus:outline-blue-400 resize-none" rows="3" maxlength="500" placeholder="আপনার মনের কথা লিখুন..."></textarea>
                     <div class="mt-2 flex justify-between items-center">
                         <div>
                             <label for="post-image" class="cursor-pointer bg-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-md hover:bg-gray-300">ছবি</label>
                             <input type="file" id="post-image" class="hidden" accept="image/*">
                             <span id="image-name" class="text-sm text-gray-600 ml-2"></span>
                         </div>
-                        <button type="submit" id="post-submit-btn" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-blue-600">পোস্ট করুন</button>
+                        <button type="submit" id="post-submit-btn" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-blue-600 transition">পোস্ট করুন</button>
                     </div>
                     <div id="upload-progress" class="hidden w-full bg-gray-200 rounded-full h-2.5 mt-2">
                         <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
@@ -82,21 +87,22 @@
         </div>
     </main>
     
+
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-    
     <script>
+        // ---- Firebase Config ----
         const firebaseConfig = {
-          apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
-          authDomain: "campusconnect-a8447.firebaseapp.com",
-          databaseURL: "https://campusconnect-a8447-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "campusconnect-a8447",
-          storageBucket: "campusconnect-a8447.firebasestorage.app",
-          messagingSenderId: "512467118728",
-          appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
-          measurementId: "G-62XR5TLSN7"
+            apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
+            authDomain: "campusconnect-a8447.firebaseapp.com",
+            projectId: "campusconnect-a8447",
+            storageBucket: "campusconnect-a8447.appspot.com",
+            messagingSenderId: "512467118728",
+            appId: "1:512467118728:web:2c8cb155422e6e181d0d3d",
+            measurementId: "G-62XR5TLSN7"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -104,27 +110,21 @@
         const storage = firebase.storage();
         let currentUserData = null;
 
-        const el = (id) => document.getElementById(id);
-
+        // ---- Elements ----
+        const el = id => document.getElementById(id);
         const sidebar = el('sidebar');
         const overlay = el('overlay');
         const menuToggleBtn = el('menu-toggle-btn');
+        menuToggleBtn.onclick = () => { sidebar.classList.toggle('-translate-x-full'); overlay.classList.toggle('hidden'); }
+        overlay.onclick = () => { sidebar.classList.add('-translate-x-full'); overlay.classList.add('hidden'); }
 
-        function toggleSidebar() {
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
-        }
-
-        menuToggleBtn.addEventListener('click', toggleSidebar);
-        overlay.addEventListener('click', toggleSidebar);
-        
+        // ---- Auth & User Data ----
         auth.onAuthStateChanged(user => {
             if (user) {
                 db.collection('users').doc(user.uid).onSnapshot(doc => {
                     el('loading').classList.add('hidden');
-                    if (!doc.exists) return;
+                    if (!doc.exists) { showError("ইউজার ডেটা পাওয়া যায়নি।"); return; }
                     currentUserData = { id: doc.id, ...doc.data() };
-                    
                     if (currentUserData.status === 'approved') {
                         el('main-view').classList.remove('hidden');
                         el('message-view').classList.add('hidden');
@@ -133,90 +133,127 @@
                     } else {
                         handleUnapprovedUser(currentUserData.status);
                     }
-                }, error => console.error("Error fetching user data:", error));
+                }, error => showError("ইউজার ডেটা লোড করতে সমস্যা হয়েছে।"));
             } else {
                 window.location.href = 'index.html';
             }
         });
 
+        // ---- Unapproved User ----
         function handleUnapprovedUser(status) {
             el('main-view').classList.add('hidden');
             const msgView = el('message-view');
-            const titles = { pending: "অ্যাকাউন্টটি অনুমোদনের অপেক্ষায়", rejected: "অ্যাকাউন্ট অ্যাক্সেস বাতিল", suspended: "অ্যাকাউন্ট সাময়িক বরখাস্ত" };
-            const bodies = { pending: "অ্যাডমিন অনুমোদন করার পরেই আপনি সব ফিচার ব্যবহার করতে পারবেন।", rejected: `আপনার অ্যাকাউন্টের স্ট্যাটাস: ${status}.`, suspended: `আপনার অ্যাকাউন্টের স্ট্যাটাস: ${status}.`};
+            const titles = { pending: "অ্যাকাউন্টটি অনুমোদনের অপেক্ষায়", rejected: "অ্যাকাউন্ট বাতিল", suspended: "অ্যাকাউন্ট বরখাস্ত" };
+            const bodies = {
+                pending: "অ্যাডমিন অনুমোদন করার পরেই আপনি সব ফিচার ব্যবহার করতে পারবেন।",
+                rejected: "আপনার অ্যাকাউন্টের স্ট্যাটাস: বাতিল।",
+                suspended: "আপনার অ্যাকাউন্টের স্ট্যাটাস: বরখাস্ত।"
+            };
             const colors = { pending: 'yellow', rejected: 'red', suspended: 'red' };
-            msgView.innerHTML = `<div class="text-center bg-${colors[status]}-100 border-l-4 border-${colors[status]}-500 text-${colors[status]}-700 p-4 rounded-md" role="alert"><p class="font-bold">${titles[status]}</p><p>${bodies[status]}</p></div>`;
+            msgView.innerHTML = `
+                <div class="text-center bg-${colors[status]}-100 border-l-4 border-${colors[status]}-500 text-${colors[status]}-700 p-4 rounded-md" role="alert">
+                    <p class="font-bold">${titles[status]}</p>
+                    <p>${bodies[status]}</p>
+                </div>
+            `;
             msgView.classList.remove('hidden');
         }
-        
-        el('create-post-form').addEventListener('submit', e => {
+
+        // ---- Error Handler ----
+        function showError(msg) {
+            el('loading').classList.add('hidden');
+            el('main-view').classList.add('hidden');
+            el('message-view').classList.remove('hidden');
+            el('message-view').innerHTML = `<div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md text-center"><p class="font-bold">ত্রুটি</p><p>${msg}</p></div>`;
+        }
+
+        // ---- Post Creation ----
+        el('create-post-form').onsubmit = async e => {
             e.preventDefault();
             const content = el('post-content').value.trim();
             const imageFile = el('post-image').files[0];
-            if (content === '' && !imageFile) { alert("কিছু লিখুন অথবা একটি ছবি দিন।"); return; }
-            
+            if (content === '' && !imageFile) return alert("কিছু লিখুন অথবা একটি ছবি দিন।");
             el('post-submit-btn').disabled = true;
 
-            if (imageFile) {
-                const uploadTask = storage.ref(`posts/${Date.now()}-${imageFile.name}`).put(imageFile);
-                const progressContainer = el('upload-progress');
-                progressContainer.classList.remove('hidden');
-                uploadTask.on('state_changed', s => { el('progress-bar').style.width = (s.bytesTransferred / s.totalBytes) * 100 + '%'; }, 
-                err => { console.error(err); alert("ছবি আপলোডে সমস্যা হয়েছে।"); el('post-submit-btn').disabled = false; }, 
-                () => {
-                    uploadTask.snapshot.ref.getDownloadURL().then(url => {
-                        savePostToFirestore(content, url);
-                        progressContainer.classList.add('hidden');
-                    });
-                });
-            } else {
-                savePostToFirestore(content, null);
-            }
-        });
-
-        function savePostToFirestore(content, imageUrl) {
-            db.collection('posts').add({
-                authorId: currentUserData.id, authorName: currentUserData.name, content, imageUrl,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(), likes: []
-            }).then(() => {
-                el('create-post-form').reset();
-                el('image-name').textContent = '';
+            try {
+                let imageUrl = null;
+                if (imageFile) {
+                    const uploadRef = storage.ref(`posts/${Date.now()}-${imageFile.name}`);
+                    const uploadTask = uploadRef.put(imageFile);
+                    el('upload-progress').classList.remove('hidden');
+                    uploadTask.on('state_changed',
+                        s => el('progress-bar').style.width = (s.bytesTransferred / s.totalBytes) * 100 + '%',
+                        err => { throw err; },
+                        async () => {
+                            imageUrl = await uploadRef.getDownloadURL();
+                            await savePostToFirestore(content, imageUrl);
+                            el('upload-progress').classList.add('hidden');
+                        }
+                    );
+                } else {
+                    await savePostToFirestore(content, null);
+                }
+            } catch (err) {
+                showError("পোস্ট তৈরি করতে সমস্যা হয়েছে।");
+            } finally {
                 el('post-submit-btn').disabled = false;
-            });
-        }
-        
-        el('post-image').addEventListener('change', e => { if (e.target.files.length > 0) el('image-name').textContent = e.target.files[0].name; });
+            }
+        };
 
+        async function savePostToFirestore(content, imageUrl) {
+            await db.collection('posts').add({
+                authorId: currentUserData.id,
+                authorName: currentUserData.name,
+                authorPhoto: currentUserData.photoURL || null,
+                content,
+                imageUrl,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                likes: []
+            });
+            el('create-post-form').reset();
+            el('image-name').textContent = '';
+        }
+
+        el('post-image').onchange = e => {
+            const file = e.target.files[0];
+            el('image-name').textContent = file ? file.name : '';
+        };
+
+        // ---- News Feed ----
         function loadAllPosts() {
             db.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
                 const newsFeed = el('news-feed'); newsFeed.innerHTML = '';
                 snapshot.forEach(doc => {
-                    const post = doc.data(), postId = doc.id, postDate = post.timestamp?.toDate().toLocaleString('bn-BD') || '';
+                    const post = doc.data(), postId = doc.id;
+                    const postDate = post.timestamp?.toDate().toLocaleString('bn-BD') || '';
                     const canDelete = currentUserData?.id === post.authorId || currentUserData?.role === 'admin';
                     const hasLiked = post.likes?.includes(currentUserData?.id);
-                    
+
                     const postDiv = document.createElement('div');
-                    postDiv.className = 'bg-white p-4 rounded-lg shadow-md';
+                    postDiv.className = 'bg-white p-4 rounded-lg shadow-md fade-in';
                     postDiv.innerHTML = `
                         <div class="flex items-center justify-between mb-2">
-                            <a href="profile.html?id=${post.authorId}" class="font-bold text-gray-800 hover:underline">${post.authorName}</a>
-                            ${canDelete ? `<button onclick="deletePost('${postId}')" class="text-red-500 text-sm font-semibold">মুছুন</button>` : ''}
+                            <div class="flex items-center space-x-2">
+                                ${post.authorPhoto ? `<img src="${post.authorPhoto}" class="w-8 h-8 rounded-full">` : `<div class="w-8 h-8 bg-gray-300 rounded-full"></div>`}
+                                <a href="profile.html?id=${post.authorId}" class="font-bold text-gray-800 hover:underline">${post.authorName}</a>
+                            </div>
+                            ${canDelete ? `<button class="text-red-500 text-sm font-semibold hover:underline" onclick="deletePost('${postId}')">মুছুন</button>` : ''}
                         </div>
                         ${post.content ? `<p class="text-gray-700 whitespace-pre-wrap mb-3">${post.content}</p>` : ''}
-                        ${post.imageUrl ? `<img src="${post.imageUrl}" class="w-full max-h-96 object-cover rounded-md">` : ''}
+                        ${post.imageUrl ? `<img src="${post.imageUrl}" class="w-full max-h-96 object-cover rounded-md mb-2">` : ''}
                         <div class="mt-4 pt-2 border-t flex items-center justify-between text-gray-500">
-                             <button onclick="toggleLike('${postId}')" class="flex items-center space-x-1 hover:text-blue-600 ${hasLiked ? 'text-blue-600' : ''}">
+                            <button class="flex items-center space-x-1 hover:text-blue-600 ${hasLiked ? 'text-blue-600' : ''}" onclick="toggleLike('${postId}')">
                                 <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                                 <span>${post.likes?.length || 0}</span>
                             </button>
-                            <button onclick="toggleComments('${postId}')" class="flex items-center space-x-1 hover:text-blue-600">
+                            <button class="flex items-center space-x-1 hover:text-blue-600" onclick="toggleComments('${postId}')">
                                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
                                 <span>কমেন্ট</span>
                             </button>
                             <p class="text-xs text-right">${postDate}</p>
                         </div>
                         <div id="comments-section-${postId}" class="hidden mt-4 pt-4 border-t">
-                             <form onsubmit="postComment(event, '${postId}')" class="flex mb-3">
+                            <form onsubmit="postComment(event, '${postId}')" class="flex mb-3">
                                 <input type="text" id="comment-input-${postId}" class="w-full border rounded-l-md p-2 text-sm" placeholder="আপনার মন্তব্য লিখুন...">
                                 <button type="submit" class="bg-blue-500 text-white px-3 rounded-r-md text-sm font-semibold">পাঠান</button>
                             </form>
@@ -227,22 +264,24 @@
                 });
             });
         }
-        
-        function deletePost(postId) {
-             if (!confirm('আপনি কি নিশ্চিতভাবে এই পোস্টটি মুছে ফেলতে চান?')) return;
-             const postRef = db.collection('posts').doc(postId);
-             postRef.get().then(doc => {
-                 if (doc.exists && doc.data().imageUrl) {
-                     storage.refFromURL(doc.data().imageUrl).delete().catch(e => console.error("Error removing image:", e));
-                 }
-                 postRef.delete();
-             });
-        }
 
-        function toggleLike(postId) {
-            if(!currentUserData) return;
+        // ---- Delete Post ----
+        window.deletePost = async function(postId) {
+            if (!confirm('আপনি কি নিশ্চিতভাবে এই পোস্টটি মুছে ফেলতে চান?')) return;
             const postRef = db.collection('posts').doc(postId);
-            db.runTransaction(t => t.get(postRef).then(doc => {
+            const doc = await postRef.get();
+            if (doc.exists && doc.data().imageUrl) {
+                try { await storage.refFromURL(doc.data().imageUrl).delete(); } catch(e) {}
+            }
+            await postRef.delete();
+        };
+
+        // ---- Like Post ----
+        window.toggleLike = function(postId) {
+            if (!currentUserData) return;
+            const postRef = db.collection('posts').doc(postId);
+            db.runTransaction(async t => {
+                const doc = await t.get(postRef);
                 if (!doc.exists) throw "Document does not exist!";
                 let newLikes = doc.data().likes || [];
                 if (newLikes.includes(currentUserData.id)) {
@@ -251,14 +290,14 @@
                     newLikes.push(currentUserData.id);
                 }
                 t.update(postRef, { likes: newLikes });
-            }));
-        }
-        
-        function toggleComments(postId) {
+            });
+        };
+
+        // ---- Comments ----
+        window.toggleComments = function(postId) {
             const commentsSection = el(`comments-section-${postId}`);
             const commentsList = el(`comments-list-${postId}`);
             if (commentsSection.classList.toggle('hidden')) return;
-
             db.collection('posts').doc(postId).collection('comments').orderBy('timestamp').onSnapshot(snapshot => {
                 commentsList.innerHTML = '';
                 snapshot.forEach(doc => {
@@ -269,29 +308,39 @@
                     commentsList.appendChild(div);
                 });
             });
-        }
-        
-        function postComment(event, postId) {
+        };
+
+        window.postComment = function(event, postId) {
             event.preventDefault();
             const input = el(`comment-input-${postId}`);
             const text = input.value.trim();
             if (text === '' || !currentUserData) return;
-            
             db.collection('posts').doc(postId).collection('comments').add({
-                text: text, authorId: currentUserData.id, authorName: currentUserData.name,
+                text: text,
+                authorId: currentUserData.id,
+                authorName: currentUserData.name,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
             input.value = '';
-        }
+        };
 
+        // ---- Sidebar User Info ----
         function loadSidebarInfo() {
-            if(!currentUserData) return;
+            if (!currentUserData) return;
             el('sidebar-user-name').textContent = currentUserData.name;
             el('sidebar-profile-link').href = `profile.html?id=${currentUserData.id}`;
-            if(currentUserData.role === 'admin') el('admin-link').classList.remove('hidden');
+            if (currentUserData.role === 'admin') el('admin-link').classList.remove('hidden');
+            // If user has photo, show it
+            if (currentUserData.photoURL) {
+                el('sidebar-user-avatar').innerHTML = `<img src="${currentUserData.photoURL}" class="w-full h-full object-cover rounded-full">`;
+            } else {
+                el('sidebar-user-avatar').innerHTML = `<svg class="w-9 h-9 text-gray-400 mx-auto my-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M6 20c0-2.21 3.58-4 8-4s8 1.79 8 4"/></svg>`;
+            }
         }
-        
-        el('logout-btn').addEventListener('click', () => auth.signOut());
+
+        // ---- Logout ----
+        el('logout-btn').onclick = () => auth.signOut();
+
     </script>
 </body>
 </html>
