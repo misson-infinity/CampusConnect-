@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Test</title>
+    <style>
+        body { font-family: sans-serif; display: grid; place-content: center; min-height: 100vh; }
+        .container { border: 1px solid #ccc; padding: 2rem; border-radius: 8px; }
+        input { display: block; width: 100%; padding: 8px; margin-bottom: 10px; }
+        button { width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        #log { margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px; font-family: monospace; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Signup Test Page</h2>
+        <form id="test-form">
+            <input type="email" id="test-email" placeholder="নতুন ইমেল দিন" required>
+            <input type="password" id="test-password" placeholder="পাসওয়ার্ড দিন" required>
+            <button type="submit">Test Signup</button>
+        </form>
+        <div id="log"></div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZ2_WsSGU_xM3IUa2-rqKK1YppIXI-SoY",
+            authDomain: "campusconnect-a8447.firebaseapp.com",
+            projectId: "campusconnect-a8447",
+            storageBucket: "campusconnect-a8447.appspot.com",
+            messagingSenderId: "512467118728",
+            appId: "1:512467118728:web:2c8cb155422e6e181d0d3d"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const logDiv = document.getElementById('log');
+        function log(message, type = 'normal') {
+            const p = document.createElement('p');
+            p.textContent = message;
+            if (type === 'success') p.className = 'success';
+            if (type === 'error') p.className = 'error';
+            logDiv.appendChild(p);
+        }
+
+        document.getElementById('test-form').addEventListener('submit', e => {
+            e.preventDefault();
+            log('--- Starting Test ---');
+            const email = document.getElementById('test-email').value;
+            const password = document.getElementById('test-password').value;
+
+            log('Step 1: Attempting to create user in Authentication...');
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(cred => {
+                    log('Step 1 SUCCESS: User created in Authentication. UID: ' + cred.user.uid, 'success');
+                    
+                    const userData = { name: "Test User", email: email, status: 'pending', role: 'student' };
+                    
+                    log('Step 2: Attempting to save user data to Firestore...');
+                    return db.collection('users').doc(cred.user.uid).set(userData);
+                })
+                .then(() => {
+                    log('Step 2 SUCCESS: User data saved to Firestore.', 'success');
+                    log('--- TEST COMPLETE: EVERYTHING WORKED! ---', 'success');
+                })
+                .catch(err => {
+                    log(`TEST FAILED: An error occurred.`, 'error');
+                    log(`Error Code: ${err.code}`, 'error');
+                    log(`Error Message: ${err.message}`, 'error');
+                });
+        });
+    </script>
+</body>
+</html>
