@@ -25,12 +25,8 @@
             <form id="signup-form">
                 <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2">পুরো নাম</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-name" type="text" placeholder="আপনার পুরো নাম" required></div>
                 <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2">রোল / আইডি নম্বর</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-roll" type="text" placeholder="যেমন: C183001" required></div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div><label class="block text-gray-700 text-sm font-bold mb-2">বিভাগ</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-department" type="text" placeholder="যেমন: CSE" required></div>
-                    <div><label class="block text-gray-700 text-sm font-bold mb-2">সেশন</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-session" type="text" placeholder="যেমন: 2018-19" required></div>
-                </div>
                 <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2">ইমেল</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-email" type="email" placeholder="প্রাতিষ্ঠানিক ইমেল দিন" required></div>
-                <div class="mb-6"><label class="block text-gray-700 text-sm font-bold mb-2">পাসওয়ার্ড</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-password" type="password" placeholder="কমপক্ষে ৬ অক্ষর" required></div>   <div><label class="block text-gray-700 text-sm font-bold mb-2">কনফার্ম পাসওয়ার্ড</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-session" type="text" placeholder="১২৩৪" required></div>
+                <div class="mb-6"><label class="block text-gray-700 text-sm font-bold mb-2">পাসওয়ার্ড</label><input class="shadow appearance-none border rounded w-full py-3 px-4" id="signup-password" type="password" placeholder="কমপক্ষে ৬ অক্ষর" required></div>
                 <div class="flex items-center justify-between"><button id="signup-submit-btn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" type="submit">সাইন আপ</button><a class="inline-block align-baseline font-bold text-sm text-green-500 hover:text-green-800" href="#" id="back-to-login-from-signup">ইতিমধ্যে অ্যাকাউন্ট আছে?</a></div>
             </form>
         </div>
@@ -84,39 +80,29 @@
         el('signup-form').addEventListener('submit', e => {
             e.preventDefault();
             const signupBtn = el('signup-submit-btn');
-            signupBtn.disabled = true;
-            signupBtn.textContent = 'প্রসেসিং...';
+            signupBtn.disabled = true; signupBtn.textContent = 'প্রসেসিং...';
             msgEl.textContent = '';
 
             const userData = {
                 name: el('signup-name').value, roll: el('signup-roll').value,
-                department: el('signup-department').value, session: el('signup-session').value,
                 email: el('signup-email').value, status: 'pending', role: 'student'
             };
             const password = el('signup-password').value;
             
             auth.createUserWithEmailAndPassword(userData.email, password)
-                .then(cred => {
-                    console.log("Authentication successful. User UID:", cred.user.uid);
-                    return db.collection('users').doc(cred.user.uid).set(userData);
-                })
-                .then(() => {
-                    console.log("User data saved to Firestore successfully.");
-                    window.location.href = 'dashboard.html';
-                })
+                .then(cred => db.collection('users').doc(cred.user.uid).set(userData))
+                .then(() => { window.location.href = 'dashboard.html'; })
                 .catch(err => {
-                    console.error("SIGNUP ERROR:", err.code, err.message);
-                    msgEl.textContent = `একটি সমস্যা হয়েছে: ${err.message}`;
+                    msgEl.textContent = "সাইন আপ করার সময় একটি সমস্যা হয়েছে: " + err.message;
                     msgEl.className = 'text-red-500';
-                    signupBtn.disabled = false;
-                    signupBtn.textContent = 'সাইন আপ';
+                    signupBtn.disabled = false; signupBtn.textContent = 'সাইন আপ';
                 });
         });
 
         el('forgot-password-form').addEventListener('submit', e => {
             e.preventDefault();
             auth.sendPasswordResetEmail(el('reset-email').value)
-                .then(() => { msgEl.textContent = 'পাসওয়ার্ড রিসেটের লিংক আপনার ইমেলে পাঠানো হয়েছে।'; msgEl.className = 'text-green-500'; })
+                .then(() => { msgEl.textContent = 'পাসওয়ার্ড রিসেটের লিংক পাঠানো হয়েছে।'; msgEl.className = 'text-green-500'; })
                 .catch(err => { msgEl.textContent = err.message; msgEl.className = 'text-red-500'; });
         });
         
